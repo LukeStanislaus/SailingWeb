@@ -1,18 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorPagesContacts.Data;
+using SailingWeb;
+using SailingWeb.Data;
+using static SailingWeb.Program;
 
-namespace SailingWeb.Pages
+namespace RazorPagesContacts.Pages
 {
-    public class AboutModel : PageModel
-    {
-        public string Message { get; set; }
 
-        public void OnGet()
+    public class CreateModel : PageModel
+    {
+
+        protected void Submit(object sender, EventArgs e)
         {
-            Message = "Your application description page.";
+            //string name = Request.Form["Name"];
+            //string email = autocomplete.Value;
+        }
+
+        public readonly AppDbContext _db;
+
+        public CreateModel(AppDbContext db)
+        {
+            _db = db;
+        }
+
+        [BindProperty]
+        public Boats Boats { get; set; }
+        
+        public async Task<IActionResult> OnPostAsync()
+        {
+            //ScriptManager.RegisterStartupScript
+            //if (!ModelState.IsValid)
+            {
+            //    return Page();
+            }
+            
+            _db.Boatss.Add(Boats);
+            //Globals.name = _db.Boatss.Find(Boats.name);
+            Globals.name = Boats;
+            await _db.SaveChangesAsync();
+            Program.SetBoats(Boats);
+            //@Program.Globals.bla1 = $('#autocomplete').val();
+            var value = Globals.bla1;
+            return RedirectToPage("/Index");
         }
     }
 }
