@@ -13,8 +13,13 @@ namespace SailingWeb.Data
 {
     public class Boats
     {
+
+        //      adding some random text
+
+
         //public static Dictionary<string, Boats> LoadFullExcel(string path)
         /*
+         
         public static void LoadFullExcel(string path)
         {
             
@@ -113,7 +118,7 @@ new StreamWriter(@path + @"\Full List.txt", true))
             }
         }
         */
-        
+
         public string boatName { get; set; }
         public int boatNumber { get; set; }
         
