@@ -4,6 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.34.0.1244" />
+    <PackageReference Include="Google.Apis.Tasks.v1" Version="1.34.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.5" />
     <PackageReference Include="MySql.Data" Version="8.0.11" />
