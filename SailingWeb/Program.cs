@@ -14,6 +14,12 @@ using Newtonsoft.Json;
 using RazorPagesContacts.Data;
 using RazorPagesContacts.Pages;
 using SailingWeb.Data;
+using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Calendar;
+using Google.Apis.Services;
+using System.Security.Cryptography.X509Certificates;
+using Google.Apis.Auth.OAuth2;
 
 namespace SailingWeb
 {
@@ -23,7 +29,26 @@ namespace SailingWeb
         {
             public static Boats name = new Boats(); // Modifiable
             public static string bla1 = "";
+            public static Events Event1 = new Events(); 
         }
+        public static async Task<Events> GetCalendar()
+        {
+            string[] scopes = new string[] {
+     CalendarService.Scope.Calendar, // Manage your calendars
+ 	CalendarService.Scope.CalendarReadonly // View your Calendars
+ };
+
+
+
+
+            CalendarService service = new CalendarService(new BaseClientService.Initializer()
+            {
+                ApiKey = "AIzaSyDSFKJPXA5vQfDAM6iBpo9ShYCnQNEhMZQ",
+                
+            });
+
+            return await service.Events.List("wfscweb@gmail.com").ExecuteAsync();
+                }
         public static String[] GetNames()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
@@ -59,6 +84,22 @@ namespace SailingWeb
 
                 //string json = jsonSerializer.Serialize(hi2);
                 return hi2;
+            }
+        }
+        public static List<Boats> GetRacers()
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                return connection.Query<Boats>("call returnracers").ToList();
+            }
+        }
+        public static List<Boats> GetBoats(string name)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                return connection.Query<Boats>("call returnboats(@name)", new
+                    { name = name}
+                    ).ToList();
             }
         }
         public static String[] GetBoats()
@@ -115,6 +156,7 @@ namespace SailingWeb
         }
         public static void Main(string[] args)
         {
+
             //CreateModel();
             BuildWebHost(args).Run();
         }

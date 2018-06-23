@@ -13,8 +13,9 @@ namespace RazorPagesContacts.Pages
     public class CreateModel : PageModel
     {
 
-        protected void Submit(object sender, EventArgs e)
+        protected void autocomplete(object sender, EventArgs e)
         {
+
             //string name = Request.Form["Name"];
             //string email = autocomplete.Value;
         }
