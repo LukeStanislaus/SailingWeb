@@ -7,7 +7,7 @@
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:53136/",
+      "applicationUrl": "http://Localhost:53136/",
       "sslPort": 0
     }
   },
@@ -25,7 +25,14 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:53137"
+      "applicationUrl": "http://Localhost:53137"
+    },
+    "SailingWebLuke": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DEVELOPMENT"
+      },
+      "applicationUrl": "http://SSGDYHFG-PC:53137/"
     }
   }
 }
