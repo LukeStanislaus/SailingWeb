@@ -70,27 +70,40 @@ namespace RazorPagesContacts.Pages
                 Program.Globals.name.boatName = RazorPagesContacts.Pages.CreateModel.selectbox(0);
             }
             if (Boats1.name != null)
+            {
+                Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
+                SQL.SetBoats(boat2, 1);
+                Globals.name = new Boats();
+                Globals.namecrew = new Boats();
+                Globals.askedCrew = 0;
+                return RedirectToPage("/Index");
+            }
+
+            else if (Boats.name != null && Boats.boatName != null && Boats1.name == null && Program.Globals.askedCrew == 1)
+
+            {
+                Globals.name = new Boats();
+                Globals.namecrew = new Boats();
+                Globals.askedCrew = 0;
+                return RedirectToPage("/Index");
+            }
+            else if (Boats.name != null && Boats.boatName != null)
+            {
+                Boats.boatNumber = SQL.GetBoats(Globals.name.name).Find(x => x.boatName.Equals(Boats.boatName)).boatNumber;
+                Boats boat1 = new Boats(Globals.name.name, Boats.boatName, Boats.boatNumber);
+                Globals.name.boatName = Boats.boatName;
+                Globals.name.boatNumber = Boats.boatNumber;
+                SQL.SetBoats(boat1);
+                if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
                 {
-                    Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
-                    SQL.SetBoats(boat2, 1);
                     Globals.name = new Boats();
                     Globals.namecrew = new Boats();
+                    Globals.askedCrew = 0;
                     return RedirectToPage("/Index");
-            }
-            
-
-                else if (Boats.name != null && Boats.boatName != null)
-                {
-                    Boats.boatNumber = SQL.GetBoats(Globals.name.name).Find(x => x.boatName.Equals(Boats.boatName)).boatNumber;
-                    Boats boat1 = new Boats(Globals.name.name, Boats.boatName, Boats.boatNumber);
-                    Globals.name.boatName = Boats.boatName;
-                    Globals.name.boatNumber = Boats.boatNumber;
-                    SQL.SetBoats(boat1);
-                if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
-                    return Page();
+                }
                 else return Page();
 
-                }
+            }
 
             //@Program.Globals.bla1 = $('#autocomplete').val();
             var value = Globals.bla1;

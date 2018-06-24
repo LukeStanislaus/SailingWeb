@@ -12,7 +12,7 @@ namespace SailingWeb
         public static string CnnVal(string name)
         {
             //return ConfigurationManager.ConnectionStrings[name].ConnectionString;
-            string connect = @"Server=localhost;Database=sailing;Uid=root;Pwd=abc123;Encrypt=false;";
+            string connect = @"Server=ClearSD3;Database=sailing;Uid=root;Pwd=abc123;Encrypt=false;";
             //;  providerName=MySQL.Data.MySqlClient";
             return connect;
         }

@@ -27,6 +27,7 @@ namespace SailingWeb
     {
         public static class Globals
         {
+            public static int askedCrew = 0; // Modifiable
             public static Boats name = new Boats(); // Modifiable
             public static Boats namecrew = new Boats(); // Modifiable
             public static string bla1 = "";

@@ -49,14 +49,14 @@
         @if (Program.Globals.name.boatName != null)
         {
             if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 2)
-            {
+            { Program.Globals.askedCrew = 1;
 
                     <label for="autocomplete1">If you have a crew, enter their name here: </label>
                     <input asp-for="Boats1.name" id="autocomplete1" />
                     <script type="text/javascript">
 
         $("#autocomplete1").autocomplete({
-            source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+                        source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
         }
             );
 
