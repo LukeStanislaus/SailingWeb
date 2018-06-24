@@ -21,16 +21,22 @@
         <script type="text/javascript">
 
         $("#autocomplete").autocomplete({
-            source: [ '@Html.Raw(string.Join("', '", Program.GetNames()))' ]
+            source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
         }
             );
 
 
         </script>
+        <div>
         <select id="select">
-        @foreach (SailingWeb.Data.Boats boat in Program.Get
-            <option value=" ">text</option>
-        </select>>
+            @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.countofboats(); i++)
+            {
+
+
+            <option value="@RazorPagesContacts.Pages.CreateModel.selectbox(i)">@RazorPagesContacts.Pages.CreateModel.selectbox(i)</option>
+            }
+        </select>
+            </div>
 
 
         <div>BoatName: <input asp-for="Boats.boatName" /></div>

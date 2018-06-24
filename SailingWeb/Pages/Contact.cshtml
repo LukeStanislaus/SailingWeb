@@ -23,7 +23,7 @@
             <th>Boat Name</th>
             <th>Boat Number</th>
         </tr>
-        @foreach (SailingWeb.Data.Boats boat in Program.GetRacers())
+        @foreach (SailingWeb.Data.Boats boat in SQL.GetRacers())
         {
             <tr>
                 <td>@boat.name</td>
