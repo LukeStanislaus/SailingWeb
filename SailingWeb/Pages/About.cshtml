@@ -17,7 +17,7 @@
         <div asp-validation-summary="All"></div>
 
         <label for="autocomplete">Select a programming language: </label>
-        <input asp-for="Boats.name" id="autocomplete"/>
+        <input asp-for="Boats.name" id="autocomplete" />
         <script type="text/javascript">
 
         $("#autocomplete").autocomplete({
@@ -27,16 +27,18 @@
 
 
         </script>
+        <input type="submit">
         <div>
-        <select id="select">
-            @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.countofboats(); i++)
-            {
+            <select id="select" asp-for="Boats.boatName">
+
+                @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.countofboats(); i++)
+                {
 
 
-            <option value="@RazorPagesContacts.Pages.CreateModel.selectbox(i)">@RazorPagesContacts.Pages.CreateModel.selectbox(i)</option>
-            }
-        </select>
-            </div>
+                    <option value="@RazorPagesContacts.Pages.CreateModel.selectbox(i)">@RazorPagesContacts.Pages.CreateModel.selectbox(i)</option>
+                }
+            </select>
+        </div>
 
 
         <div>BoatName: <input asp-for="Boats.boatName" /></div>
@@ -45,7 +47,6 @@
         <input type="submit">
 
     </form>
-
 
 
 </body>

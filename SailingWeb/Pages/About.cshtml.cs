@@ -60,6 +60,7 @@ namespace RazorPagesContacts.Pages
             //Globals.name = _db.Boatss.Find(Boats.name);
             Globals.name = Boats;
             await _db.SaveChangesAsync();
+            if (Boats.name != "" && Boats.boatName != "" && Boats.boatNumber != 0)
             SQL.SetBoats(Boats);
             //@Program.Globals.bla1 = $('#autocomplete').val();
             var value = Globals.bla1;
