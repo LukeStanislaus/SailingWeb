@@ -29,6 +29,8 @@ namespace RazorPagesContacts.Pages
 
         [BindProperty]
         public Boats Boats { get; set; }
+        [BindProperty]
+        public Boats Boats1 { get; set; }
         public static string selectbox(int i)
         {
 
@@ -55,20 +57,44 @@ namespace RazorPagesContacts.Pages
             {
             //    return Page();
             }
-            
+
             _db.Boatss.Add(Boats);
             //Globals.name = _db.Boatss.Find(Boats.name);
             if (Globals.name.name == null)
             Globals.name = Boats;
             await _db.SaveChangesAsync();
-            if (Boats.name != null && Boats.boatName != null)
+
+            if (RazorPagesContacts.Pages.CreateModel.countofboats() == 1)
             {
-                Boats.boatNumber = SQL.GetBoats(Globals.name.name).Find(x => x.boatName.Equals(Boats.boatName)).boatNumber;
-                SQL.SetBoats(Globals.name);
+                Boats.boatName = RazorPagesContacts.Pages.CreateModel.selectbox(0);
+                Program.Globals.name.boatName = RazorPagesContacts.Pages.CreateModel.selectbox(0);
             }
+            if (Boats1.name != null)
+                {
+                    Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
+                    SQL.SetBoats(boat2, 1);
+                    Globals.name = new Boats();
+                    Globals.namecrew = new Boats();
+                    return RedirectToPage("/Index");
+            }
+            
+
+                else if (Boats.name != null && Boats.boatName != null)
+                {
+                    Boats.boatNumber = SQL.GetBoats(Globals.name.name).Find(x => x.boatName.Equals(Boats.boatName)).boatNumber;
+                    Boats boat1 = new Boats(Globals.name.name, Boats.boatName, Boats.boatNumber);
+                    Globals.name.boatName = Boats.boatName;
+                    Globals.name.boatNumber = Boats.boatNumber;
+                    SQL.SetBoats(boat1);
+                if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
+                    return Page();
+                else return Page();
+
+                }
+
             //@Program.Globals.bla1 = $('#autocomplete').val();
             var value = Globals.bla1;
-            return RedirectToPage("/About");
+            return Page();
         }
     }
 }

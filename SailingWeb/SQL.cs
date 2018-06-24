@@ -118,5 +118,37 @@ namespace SailingWeb
             }
 
         }
+        public static void SetBoats(Boats Boats, int crew)
+        {
+            //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
+            Console.WriteLine(Boats.name);
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew)", new
+                {
+                    name = Boats.name,
+                    boatName = Boats.boatName,
+                    boatNumber = Boats.boatNumber,
+                    crew = crew
+
+                });
+            }
+
+        }
+        public static int GetCrew(string boatName)
+        {
+            //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                return connection.Query<int>("call returncrew(@boatName)", new
+                {
+                    boatName = boatName,
+                }).FirstOrDefault();
+            }
+
+        }
     }
+
 }
