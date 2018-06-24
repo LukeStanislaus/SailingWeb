@@ -13,6 +13,7 @@ namespace RazorPagesContacts.Pages
     public class CreateModel : PageModel
     {
 
+
         protected void autocomplete(object sender, EventArgs e)
         {
 
@@ -52,6 +53,7 @@ namespace RazorPagesContacts.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            Program.Globals.alerttext = null;
             //ScriptManager.RegisterStartupScript
             //if (!ModelState.IsValid)
             {
@@ -73,24 +75,19 @@ namespace RazorPagesContacts.Pages
             {
                 Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
                 SQL.SetBoats(boat2, 1);
-                Globals.name = new Boats();
-                Globals.namecrew = new Boats();
-                Globals.askedCrew = 0;
+                exit(Globals.name, Boats1);
                 _db.Dispose();
-                SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
-                alert.Index();
+
+
                 return RedirectToPage("/Index");
             }
 
             else if (Boats.name != null && Boats.boatName != null && Boats1.name == null && Program.Globals.askedCrew == 1)
 
             {
-                Globals.name = new Boats();
-                Globals.namecrew = new Boats();
-                Globals.askedCrew = 0;
+                exit(Globals.name, Boats1);
                 _db.Dispose();
-                SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
-                alert.Index();
+
                 return RedirectToPage("/Index");
             }
             else if (Boats.name != null && Boats.boatName != null)
@@ -102,13 +99,10 @@ namespace RazorPagesContacts.Pages
                 SQL.SetBoats(boat1);
                 if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
                 {
-                    Globals.name = new Boats();
-                    Globals.namecrew = new Boats();
-                    Globals.askedCrew = 0;
+                    exit(Boats);
                     _db.Dispose();
-                    SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
-                    alert.Index();
-                    return RedirectToPage("/Index"); ;
+
+                    return RedirectToPage("/Index");
                 }
                 else return Page();
 

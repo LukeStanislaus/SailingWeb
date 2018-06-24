@@ -25,6 +25,7 @@ namespace SailingWeb
 {
     public class Program
     {
+
         public static class Globals
         {
             public static string alerttext = ""; //Modifiable
@@ -52,7 +53,24 @@ namespace SailingWeb
 
             return await service.Events.List("wfscweb@gmail.com").ExecuteAsync();
                 }
-        
+        public static void exit(Boats boat1, Boats boat2)
+        {
+            Globals.name = new Boats();
+            Globals.namecrew = new Boats();
+            Globals.askedCrew = 0;
+            Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number"
+                + boat1.boatNumber + ". Your crew is + "+ boat2.name + " Good Luck!";
+
+        }
+        public static void exit(Boats boat1)
+        {
+            Globals.name = new Boats();
+            Globals.namecrew = new Boats();
+            Globals.askedCrew = 0;
+            Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number"
+                + boat1.boatNumber + ". Good Luck!";
+
+        }
         public static void Main(string[] args)
         {
 

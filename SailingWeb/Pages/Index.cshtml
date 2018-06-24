@@ -2,12 +2,14 @@
 @model IndexModel
 
 @{ ViewBag.Title = "alert message";}
-<h2>This is alert message on load</h2>
 
+@if (Program.Globals.alerttext != "")
+{
     <script language="javascript">
-        alert(@ViewData["Message"]);
+        alert('@Program.Globals.alerttext');
     </script>
-
+    
+}
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
