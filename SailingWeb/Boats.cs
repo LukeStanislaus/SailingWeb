@@ -120,10 +120,10 @@ new StreamWriter(@path + @"\Full List.txt", true))
         public int boatNumber { get; set; }
         
         [Key]
-        [Required, StringLength(100)]
+        [StringLength(100)]
         public string name { get; set; }
 
-        /*
+        
         public Boats(string Name, string Boat, int BoatNumber)
         {
 
@@ -135,7 +135,7 @@ new StreamWriter(@path + @"\Full List.txt", true))
             boatName = Boat;
 
         }
-        */
+        
         public Boats(string Name)
         {
             name = Name;
