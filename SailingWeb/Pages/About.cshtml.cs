@@ -58,10 +58,14 @@ namespace RazorPagesContacts.Pages
             
             _db.Boatss.Add(Boats);
             //Globals.name = _db.Boatss.Find(Boats.name);
+            if (Globals.name.name == null)
             Globals.name = Boats;
             await _db.SaveChangesAsync();
-            if (Boats.name != "" && Boats.boatName != "" && Boats.boatNumber != 0)
-            SQL.SetBoats(Boats);
+            if (Boats.name != null && Boats.boatName != null)
+            {
+                Boats.boatNumber = SQL.GetBoats(Globals.name.name).Find(x => x.boatName.Equals(Boats.boatName)).boatNumber;
+                SQL.SetBoats(Globals.name);
+            }
             //@Program.Globals.bla1 = $('#autocomplete').val();
             var value = Globals.bla1;
             return RedirectToPage("/About");
