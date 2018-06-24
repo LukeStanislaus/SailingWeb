@@ -14,11 +14,6 @@ namespace SailingWeb.Data
     public class Boats
     {
 
-        //      adding some random text
-        // adding more text
-        //  adding test again
-
-
         //public static Dictionary<string, Boats> LoadFullExcel(string path)
         /*
          
