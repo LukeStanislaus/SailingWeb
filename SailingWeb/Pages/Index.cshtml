@@ -1,8 +1,13 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
+
+@{ ViewBag.Title = "alert message";}
+<h2>This is alert message on load</h2>
+
+    <script language="javascript">
+        alert(@ViewData["Message"]);
+    </script>
+
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">

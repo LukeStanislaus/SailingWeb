@@ -62,7 +62,7 @@ namespace RazorPagesContacts.Pages
             //Globals.name = _db.Boatss.Find(Boats.name);
             if (Globals.name.name == null)
             Globals.name = Boats;
-            await _db.SaveChangesAsync();
+
 
             if (RazorPagesContacts.Pages.CreateModel.countofboats() == 1)
             {
@@ -76,6 +76,9 @@ namespace RazorPagesContacts.Pages
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
                 Globals.askedCrew = 0;
+                _db.Dispose();
+                SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
+                alert.Index();
                 return RedirectToPage("/Index");
             }
 
@@ -85,6 +88,9 @@ namespace RazorPagesContacts.Pages
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
                 Globals.askedCrew = 0;
+                _db.Dispose();
+                SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
+                alert.Index();
                 return RedirectToPage("/Index");
             }
             else if (Boats.name != null && Boats.boatName != null)
@@ -99,7 +105,10 @@ namespace RazorPagesContacts.Pages
                     Globals.name = new Boats();
                     Globals.namecrew = new Boats();
                     Globals.askedCrew = 0;
-                    return RedirectToPage("/Index");
+                    _db.Dispose();
+                    SailingWeb.Pages.AlertController alert = new SailingWeb.Pages.AlertController();
+                    alert.Index();
+                    return RedirectToPage("/Index"); ;
                 }
                 else return Page();
 
@@ -107,6 +116,7 @@ namespace RazorPagesContacts.Pages
 
             //@Program.Globals.bla1 = $('#autocomplete').val();
             var value = Globals.bla1;
+            await _db.SaveChangesAsync();
             return Page();
         }
     }
