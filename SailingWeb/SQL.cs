@@ -109,7 +109,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
                 //connection.Query("call removeperson('" + race + "', '" + name + "')");
-                connection.Query("call enterraceperson(@name, @boatName, @boatNumber, 0)", new
+                connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, 0)", new
                 {
                     name = Boats.name,
                     boatName = Boats.boatName,
@@ -125,7 +125,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
                 //connection.Query("call removeperson('" + race + "', '" + name + "')");
-                connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew)", new
+                connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, @crew)", new
                 {
                     name = Boats.name,
                     boatName = Boats.boatName,
@@ -133,6 +133,74 @@ namespace SailingWeb
                     crew = crew
 
                 });
+            }
+
+        }
+        public static void SetBoats(Boats Boats, string race)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                try
+                {
+                    connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, 0, @race)", new
+                    {
+                        name = Boats.name,
+                        boatName = Boats.boatName,
+                        boatNumber = Boats.boatNumber,
+                        race = race
+                    });
+                }
+
+                catch
+                {
+                    connection.Query("call newrace(@race)", new
+                    {
+                        race = race
+
+                    });
+                    connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, 0, @race)", new
+                    {
+                        name = Boats.name,
+                        boatName = Boats.boatName,
+                        boatNumber = Boats.boatNumber,
+                        race = race
+                    });
+                }
+                }
+        }
+        public static void SetBoats(Boats Boats, int crew, string race)
+        {
+
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                try
+                {
+                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew, @race)", new
+                    {
+                        name = Boats.name,
+                        boatName = Boats.boatName,
+                        boatNumber = Boats.boatNumber,
+                        crew = crew,
+                        race = race
+                    });
+                }
+                catch
+                {
+                    connection.Query("call newrace(@race)", new
+                    {
+                        race = race
+
+                    });
+                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew, @race)", new
+                    {
+                        name = Boats.name,
+                        boatName = Boats.boatName,
+                        boatNumber = Boats.boatNumber,
+                        crew = crew,
+                        race = race
+                    });
+                }
             }
 
         }
@@ -162,6 +230,16 @@ namespace SailingWeb
                     date = cal.dateTime
 
                 });
+            }
+
+        }
+        public static List<string> todaysevent()
+        {
+            //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                return connection.Query<string>("call todaysevent").ToList();
             }
 
         }

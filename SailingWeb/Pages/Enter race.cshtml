@@ -15,7 +15,7 @@
 <body>
     <form method="POST">
         <div asp-validation-summary="All"></div>
-        @if (Program.Globals.name.name == null)
+        @if (Program.Globals.name.name == null && SQL.todaysevent().Count == 1 || Program.Globals.racename != "")
         {
             <label for="autocomplete">Enter your name: </label>
             <input asp-for="Boats.name" id="autocomplete" />
@@ -27,6 +27,23 @@
             );
 
             </script>
+        }
+
+        else if(SQL.todaysevent().Count==0)
+        {
+            <p1>I'm afraid there is no race on today.</p1>
+
+        }
+        else if (Program.Globals.racename == "")
+        {
+
+        <select asp-for="race">
+            @foreach (var race in SQL.todaysevent())
+            {
+                <option value="@race">@race</option>
+            }
+        </select>
+
         }
         @if (Program.Globals.name.name != null && Program.Globals.name.boatName == null)
         {

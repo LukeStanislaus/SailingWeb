@@ -32,6 +32,8 @@ namespace RazorPagesContacts.Pages
         public Boats Boats { get; set; }
         [BindProperty]
         public Boats Boats1 { get; set; }
+        [BindProperty]
+        public string race { get; set; }
         public static string selectbox(int i)
         {
 
@@ -76,7 +78,7 @@ namespace RazorPagesContacts.Pages
                 Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
                 try
                 {
-                    SQL.SetBoats(boat2, 1);
+                    SQL.SetBoats(boat2, 1, race);
                 }
                 catch
                 {
@@ -106,7 +108,7 @@ namespace RazorPagesContacts.Pages
                 Globals.name.boatNumber = Boats.boatNumber;
                 try
                 {
-                    SQL.SetBoats(boat1);
+                    SQL.SetBoats(boat1, race);
                 }
                 catch
                 {
