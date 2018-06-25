@@ -30,6 +30,7 @@ namespace SailingWeb
 
         public static class Globals
         {
+            public static Boats removeboat = new Boats();
             public static string racename = ""; //Modifiable
             public static string alerttext = ""; //Modifiable
             public static int askedCrew = 0; // Modifiable

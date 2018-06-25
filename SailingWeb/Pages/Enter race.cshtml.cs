@@ -55,6 +55,7 @@ namespace RazorPagesContacts.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            Program.Globals.removeboat = new Boats();
             Program.Globals.alerttext = null;
             //ScriptManager.RegisterStartupScript
             //if (!ModelState.IsValid)
@@ -84,6 +85,7 @@ namespace RazorPagesContacts.Pages
                 catch
                 {
                     Program.Globals.alerttext = "You have already been entered into the race";
+                    Program.Globals.removeboat = boat2;
                     return RedirectToPage("/Index");
                 }
                 exit(Globals.name, Boats1);
@@ -115,6 +117,7 @@ namespace RazorPagesContacts.Pages
                 catch
                 {
                     Program.Globals.alerttext = "You have already been entered into the race";
+                    Program.Globals.removeboat = boat1;
                     return RedirectToPage("/Index");
                 }
                 

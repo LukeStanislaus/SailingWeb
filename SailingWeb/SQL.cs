@@ -118,6 +118,25 @@ namespace SailingWeb
             }
 
         }
+        public static void RemoveBoats(Boats Boats, string race)
+        {
+            race = race.Replace(" ", "");
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+
+                var sql = new StringBuilder();
+                sql.Append("delete from ");
+                sql.Append(race);
+                sql.Append(" where name ='");
+                sql.Append(Boats.name);
+                sql.Append("';");
+
+                connection.Query(sql.ToString());
+
+
+            }
+        }
         public static void SetBoats(Boats Boats, int crew)
         {
             //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
@@ -177,7 +196,7 @@ namespace SailingWeb
                 }
             }
             }
-            public static void SetBoats(Boats Boats, int crew, string race)
+        public static void SetBoats(Boats Boats, int crew, string race)
             {
                 race = race.Replace(" ", "");
                 using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
