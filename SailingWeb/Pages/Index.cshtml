@@ -10,7 +10,10 @@
     </script>
     Program.Globals.alerttext = "";
 }
-
+@if (Program.Globals.removeboat.name != null)
+{
+    <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
+}
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
