@@ -142,7 +142,7 @@ namespace SailingWeb
             {
                 try
                 {
-                    connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, 0, @race)", new
+                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, 0, @race)", new
                     {
                         name = Boats.name,
                         boatName = Boats.boatName,
@@ -153,12 +153,12 @@ namespace SailingWeb
 
                 catch
                 {
-                    connection.Query("call newrace(@race)", new
+                    connection.Query("call newtable(@race)", new
                     {
                         race = race
 
                     });
-                    connection.Query("call enterracepersonold(@name, @boatName, @boatNumber, 0, @race)", new
+                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, 0, @race)", new
                     {
                         name = Boats.name,
                         boatName = Boats.boatName,

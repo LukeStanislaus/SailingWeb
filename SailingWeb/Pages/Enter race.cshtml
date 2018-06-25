@@ -15,14 +15,15 @@
 <body>
     <form method="POST">
         <div asp-validation-summary="All"></div>
-        @if (Program.Globals.name.name == null && SQL.todaysevent().Count == 1 || Program.Globals.racename != "")
+        @if (Program.Globals.name.name == null && SQL.todaysevent().Count == 1 || Program.Globals.name.name == null && Program.Globals.racename != "")
         {
+            Program.Globals.racename = SQL.todaysevent()[0];
             <label for="autocomplete">Enter your name: </label>
             <input asp-for="Boats.name" id="autocomplete" />
             <script type="text/javascript">
 
         $("#autocomplete").autocomplete({
-            source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+                    source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
         }
             );
 

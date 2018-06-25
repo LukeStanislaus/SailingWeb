@@ -63,6 +63,7 @@ namespace RazorPagesContacts.Pages
             }
 
             _db.Boatss.Add(Boats);
+            race = Program.Globals.racename;
             //Globals.name = _db.Boatss.Find(Boats.name);
             if (Globals.name.name == null)
             Globals.name = Boats;
