@@ -11,7 +11,24 @@ using System.Threading.Tasks;
 
 namespace SailingWeb.Data
 {
-    public class Boats
+    public class BoatsRacing
+    {
+        [Key]
+        [StringLength(100)]
+        public string name { get; set; }
+        public string boat { get; set; }
+        public int boatNumber { get; set; }
+        public int crew { get; set; }
+        public BoatsRacing(string Name, string Boat, int BoatNumber, int Crew)
+        {
+            name = Name;
+            boatNumber = BoatNumber;
+            boat = Boat;
+            crew = Crew;
+        }
+    }
+
+        public class Boats
     {
 
         //public static Dictionary<string, Boats> LoadFullExcel(string path)
@@ -116,14 +133,15 @@ new StreamWriter(@path + @"\Full List.txt", true))
         }
         */
 
-        public string boatName { get; set; }
-        public int boatNumber { get; set; }
+
         
         [Key]
         [StringLength(100)]
         public string name { get; set; }
+        public string boatName { get; set; }
+        public int boatNumber { get; set; }
 
-        
+
         public Boats(string Name, string Boat, int BoatNumber)
         {
 

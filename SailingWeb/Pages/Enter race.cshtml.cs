@@ -66,15 +66,23 @@ namespace RazorPagesContacts.Pages
             Globals.name = Boats;
 
 
-            if (RazorPagesContacts.Pages.CreateModel.countofboats() == 1)
+            if (CreateModel.countofboats() == 1)
             {
-                Boats.boatName = RazorPagesContacts.Pages.CreateModel.selectbox(0);
-                Program.Globals.name.boatName = RazorPagesContacts.Pages.CreateModel.selectbox(0);
+                Boats.boatName = CreateModel.selectbox(0);
+                Program.Globals.name.boatName = CreateModel.selectbox(0);
             }
             if (Boats1.name != null)
             {
                 Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
-                SQL.SetBoats(boat2, 1);
+                try
+                {
+                    SQL.SetBoats(boat2, 1);
+                }
+                catch
+                {
+                    Program.Globals.alerttext = "You have already been entered into the race";
+                    return RedirectToPage("/Index");
+                }
                 exit(Globals.name, Boats1);
                 _db.Dispose();
 
@@ -85,7 +93,7 @@ namespace RazorPagesContacts.Pages
             else if (Boats.name != null && Boats.boatName != null && Boats1.name == null && Program.Globals.askedCrew == 1)
 
             {
-                exit(Globals.name, Boats1);
+                exit(Globals.name);
                 _db.Dispose();
 
                 return RedirectToPage("/Index");
@@ -96,7 +104,15 @@ namespace RazorPagesContacts.Pages
                 Boats boat1 = new Boats(Globals.name.name, Boats.boatName, Boats.boatNumber);
                 Globals.name.boatName = Boats.boatName;
                 Globals.name.boatNumber = Boats.boatNumber;
-                SQL.SetBoats(boat1);
+                try
+                {
+                    SQL.SetBoats(boat1);
+                }
+                catch
+                {
+                    Program.Globals.alerttext = "You have already been entered into the race";
+                    return RedirectToPage("/Index");
+                }
                 if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
                 {
                     exit(Boats);

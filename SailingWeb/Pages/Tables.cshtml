@@ -1,0 +1,151 @@
+﻿@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@Model.Message</h3>
+
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            width: 100%;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <label for="table1">List of racers: </label>
+    <table id="table1">
+        <tr>
+            <th>Racer Name</th>
+            <th>Boat Name</th>
+            <th>Boat Number</th>
+            <th>Crew?</th>
+        </tr>
+        @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers())
+        {
+            <tr>
+                <td>@boat.name</td>
+                <td>@boat.boat</td>
+                <td>@boat.boatNumber</td>
+                <td>@boat.crew</td>
+            </tr>
+
+        }
+
+
+    </table>
+
+    <label for="table2">List of events: </label>
+    <form method="post">
+        <input type="submit" value="Enter calendar into database?" />
+    </form>
+    <table id="table2">
+        <tr>
+            <th>Event Name</th>
+            <th>Event notes</th>
+            <th>Event date/time</th>
+        </tr>
+
+        @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
+        {
+            try
+            {
+
+                @if (Program.Globals.Event1.Items[i].Summary != null)
+                {
+                    if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
+                    {
+                        <tr>
+
+
+
+                            <td> @Program.Globals.Event1.Items[i].Summary </td>
+                            <td>@Program.Globals.Event1.Items[i].Description</td>
+                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                            }
+
+                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                            }
+                            else
+                            {
+
+                                <td> null entry </td>
+                                <td> null entry </td>
+                                <td> null entry </td>
+                            }
+
+                        </tr>
+                    }
+                    else
+                    {
+                        throw new InsufficientExecutionStackException();
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td> null entry </td>
+                        <td> null entry </td>
+                        <td> null entry </td>
+                    </tr>
+
+                }
+
+
+
+            }
+            catch
+            {
+
+                @if (Program.Globals.Event1.Items[i].Summary != null)
+                {
+                    if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
+                    {
+                        <tr>
+
+
+
+                            <td> @Program.Globals.Event1.Items[i].Summary </td>
+                            <td>@Program.Globals.Event1.Items[i].Description</td>
+                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                            }
+
+                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                            }
+
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td> null entry </td>
+                        <td> null entry </td>
+                        <td> null entry </td>
+                    </tr>
+                }
+
+
+
+            }
+        }
+
+
+    </table>
+
+</body>
+

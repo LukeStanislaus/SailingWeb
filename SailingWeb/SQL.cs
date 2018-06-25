@@ -49,11 +49,11 @@ namespace SailingWeb
                 return hi2;
             }
         }
-        public static List<Boats> GetRacers()
+        public static List<BoatsRacing> GetRacers()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
-                return connection.Query<Boats>("call returnracers").ToList();
+                return connection.Query<BoatsRacing>("call returnracers").ToList();
             }
         }
         public static List<Boats> GetBoats(string name)
@@ -146,6 +146,22 @@ namespace SailingWeb
                 {
                     boatName = boatName,
                 }).FirstOrDefault();
+            }
+
+        }
+        public static void newcalendar(Calendar cal)
+        {
+            //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                connection.Query("call newcalendar(@summary, @description, @date)", new
+                {
+                    summary = cal.summary,
+                    description = cal.description,
+                    date = cal.dateTime
+
+                });
             }
 
         }

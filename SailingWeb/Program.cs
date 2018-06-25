@@ -20,6 +20,8 @@ using Google.Apis.Calendar;
 using Google.Apis.Services;
 using System.Security.Cryptography.X509Certificates;
 using Google.Apis.Auth.OAuth2;
+using static Google.Apis.Calendar.v3.AclResource;
+using static Google.Apis.Calendar.v3.EventsResource.ListRequest;
 
 namespace SailingWeb
 {
@@ -50,17 +52,25 @@ namespace SailingWeb
                 ApiKey = "AIzaSyDSFKJPXA5vQfDAM6iBpo9ShYCnQNEhMZQ",
                 
             });
-
-            return await service.Events.List("wfscweb@gmail.com").ExecuteAsync();
+            EventsResource.ListRequest req = service.Events.List("wfscweb@gmail.com");
+            req.TimeMin = new DateTime(DateTime.Now.Year, 
+                DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+            //OrderByEnum.StartTime startTime = new OrderByEnum.StartTime();
+            req.OrderBy = OrderByEnum.StartTime;
+            req.SingleEvents = true;
+            
+            return await req.ExecuteAsync();
                 }
         public static void exit(Boats boat1, Boats boat2)
         {
-            Globals.name = new Boats();
-            Globals.namecrew = new Boats();
-            Globals.askedCrew = 0;
-            Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number"
-                + boat1.boatNumber + ". Your crew is + "+ boat2.name + " Good Luck!";
-
+            if (Globals.alerttext == "")
+            {
+                Globals.name = new Boats();
+                Globals.namecrew = new Boats();
+                Globals.askedCrew = 0;
+                Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number"
+                    + boat1.boatNumber + ". Your crew is + " + boat2.name + " Good Luck!";
+            }
         }
         public static void exit(Boats boat1)
         {
