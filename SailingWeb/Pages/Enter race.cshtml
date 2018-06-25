@@ -13,6 +13,17 @@
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
+    @if (Program.Globals.alerttext != "")
+    {
+        <script language="javascript">
+        alert('@Program.Globals.alerttext');
+        </script>
+        Program.Globals.alerttext = "";
+    }
+    @if (Program.Globals.removeboat.name != null)
+    {
+        <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
+    }
     <form method="POST">
         <div asp-validation-summary="All"></div>
         @if (Program.Globals.name.name == null && SQL.todaysevent().Count == 1 || Program.Globals.name.name == null && Program.Globals.racename != "")
@@ -30,7 +41,7 @@
             </script>
         }
 
-        else if(SQL.todaysevent().Count==0)
+        else if (SQL.todaysevent().Count == 0)
         {
             <p1>I'm afraid there is no race on today.</p1>
 
@@ -38,12 +49,12 @@
         else if (Program.Globals.racename == "")
         {
 
-        <select asp-for="race">
-            @foreach (var race in SQL.todaysevent())
-            {
-                <option value="@race">@race</option>
-            }
-        </select>
+            <select asp-for="race">
+                @foreach (var race in SQL.todaysevent())
+                {
+                    <option value="@race">@race</option>
+                }
+            </select>
 
         }
         @if (Program.Globals.name.name != null && Program.Globals.name.boatName == null)
@@ -87,7 +98,9 @@
 
     </form>
     <div><a asp-page="/New Boat">Bought a new boat?</a></div>
-        @if (!string.IsNullOrEmpty(ViewBag.AlertMessage)){<script> alert("@ViewBag.AlertMessage");</script>}
+    @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
+    {
+        <script> alert("@ViewBag.AlertMessage");</script>}
 </body>
 
 </html>

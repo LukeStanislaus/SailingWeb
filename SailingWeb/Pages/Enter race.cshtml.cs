@@ -53,10 +53,26 @@ namespace RazorPagesContacts.Pages
             }
             else return 0;
         }
+        public async void OnGetAsyc()
+        {
+            Boats boat2 = new Boats(Boats1.name, Globals.name.boatName, Globals.name.boatNumber);
+            try
+            {
+                SQL.SetBoats(boat2, 1, race);
+                Program.Globals.alerttext = null;
+                Program.Globals.removeboat = null;
+            }
+            catch
+            {
+                Program.Globals.alerttext = "You have already been entered into the race";
+                Program.Globals.removeboat = boat2;
+                
+            }
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             Program.Globals.removeboat = new Boats();
-            Program.Globals.alerttext = null;
+            Program.Globals.alerttext = "";
             //ScriptManager.RegisterStartupScript
             //if (!ModelState.IsValid)
             {
@@ -68,7 +84,7 @@ namespace RazorPagesContacts.Pages
             //Globals.name = _db.Boatss.Find(Boats.name);
             if (Globals.name.name == null)
             Globals.name = Boats;
-
+            Program.Globals.Boats1 = Boats1;
 
             if (CreateModel.countofboats() == 1)
             {
@@ -86,7 +102,7 @@ namespace RazorPagesContacts.Pages
                 {
                     Program.Globals.alerttext = "You have already been entered into the race";
                     Program.Globals.removeboat = boat2;
-                    return RedirectToPage("/Index");
+                    return Page();
                 }
                 exit(Globals.name, Boats1);
                 _db.Dispose();
@@ -118,7 +134,7 @@ namespace RazorPagesContacts.Pages
                 {
                     Program.Globals.alerttext = "You have already been entered into the race";
                     Program.Globals.removeboat = boat1;
-                    return RedirectToPage("/Index");
+                    return Page();
                 }
                 
                 if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
