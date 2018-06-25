@@ -131,20 +131,22 @@ namespace SailingWeb
                 sql1.Append("' and boatNumber=");
                 sql1.Append(Boats.boatNumber);
                 sql1.Append(" and crew=1;");
-
-                if (connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name == null)
+                try
                 {
-                    var sql = new StringBuilder();
-                    sql.Append("delete from ");
-                    sql.Append(race);
-                    sql.Append(" where name ='");
-                    sql.Append(Boats.name);
-                    sql.Append("';");
+                    if (connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name == null)
+                    {
+                        var sql = new StringBuilder();
+                        sql.Append("delete from ");
+                        sql.Append(race);
+                        sql.Append(" where name ='");
+                        sql.Append(Boats.name);
+                        sql.Append("';");
 
-                    connection.Query(sql.ToString());
+                        connection.Query(sql.ToString());
+                    }
                 }
                 //connection.Query("call removeperson('" + race + "', '" + name + "')");
-                else
+                catch
                 {
                     var sql = new StringBuilder();
                     sql.Append("delete from ");
