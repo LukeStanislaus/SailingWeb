@@ -69,7 +69,7 @@ namespace SailingWeb
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
                 Globals.askedCrew = 0;
-                Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number "
+                Globals.alerttext = "You have been entered into the race \""+Globals.racename+"\" sailing a " + boat1.boatName + " with boat number "
                     + boat1.boatNumber + ". Your crew is + " + boat2.name + " Good Luck!";
             }
         }
@@ -80,7 +80,7 @@ namespace SailingWeb
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
                 Globals.askedCrew = 0;
-                Globals.alerttext = "You have been entered into the race sailing a " + boat1.boatName + " with boat number "
+                Globals.alerttext = "You have been entered into the race \"" + Globals.racename + "\" sailing a " + boat1.boatName + " with boat number "
                     + boat1.boatNumber + ". Good Luck!";
             }
         }

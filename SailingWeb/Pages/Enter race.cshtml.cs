@@ -111,11 +111,13 @@ namespace RazorPagesContacts.Pages
                 {
                     SQL.SetBoats(boat1, race);
                 }
+                
                 catch
                 {
                     Program.Globals.alerttext = "You have already been entered into the race";
                     return RedirectToPage("/Index");
                 }
+                
                 if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 1)
                 {
                     exit(Boats);

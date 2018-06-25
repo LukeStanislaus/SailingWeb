@@ -138,6 +138,7 @@ namespace SailingWeb
         }
         public static void SetBoats(Boats Boats, string race)
         {
+            race = race.Replace(" ", "");
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
                 try
@@ -153,57 +154,53 @@ namespace SailingWeb
 
                 catch
                 {
-                    connection.Query("call newtable(@race)", new
-                    {
-                        race = race
-
-                    });
-                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, 0, @race)", new
-                    {
-                        name = Boats.name,
-                        boatName = Boats.boatName,
-                        boatNumber = Boats.boatNumber,
-                        race = race
-                    });
-                }
-                }
-        }
-        public static void SetBoats(Boats Boats, int crew, string race)
-        {
-
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
-            {
-                //connection.Query("call removeperson('" + race + "', '" + name + "')");
-                try
-                {
-                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew, @race)", new
-                    {
-                        name = Boats.name,
-                        boatName = Boats.boatName,
-                        boatNumber = Boats.boatNumber,
-                        crew = crew,
-                        race = race
-                    });
-                }
-                catch
-                {
-                    connection.Query("call newrace(@race)", new
-                    {
-                        race = race
-
-                    });
-                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, @crew, @race)", new
-                    {
-                        name = Boats.name,
-                        boatName = Boats.boatName,
-                        boatNumber = Boats.boatNumber,
-                        crew = crew,
-                        race = race
-                    });
+                    var sql = new StringBuilder();
+                    sql.Append("CREATE TABLE if not exists  ");
+                    sql.Append(race);
+                    sql.Append(
+                    " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
+                    "`boatNumber` int(11) DEFAULT NULL," +
+                    "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
+                    " = utf8mb4;");
+                    connection.Execute(sql.ToString());
+                    sql = new StringBuilder();
+                    sql.Append("insert into ");
+                    sql.Append(race);
+                    sql.Append(" values('");
+                    sql.Append(Boats.name);
+                    sql.Append("','");
+                    sql.Append(Boats.boatName);
+                    sql.Append("','");
+                    sql.Append(Boats.boatNumber);
+                    sql.Append("',0);");
+                    connection.Query(sql.ToString());
                 }
             }
+            }
+            public static void SetBoats(Boats Boats, int crew, string race)
+            {
+                race = race.Replace(" ", "");
+                using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+                {
+                    //connection.Query("call removeperson('" + race + "', '" + name + "')");
 
-        }
+                    var sql = new StringBuilder();
+                    sql.Append("insert into ");
+                    sql.Append(race);
+                    sql.Append(" values('");
+                    sql.Append(Boats.name);
+                    sql.Append("','");
+                    sql.Append(Boats.boatName);
+                    sql.Append("','");
+                    sql.Append(Boats.boatNumber);
+                    sql.Append("',");
+                    sql.Append(crew);
+                    sql.Append(");");
+                    connection.Query(sql.ToString());
+
+
+                }
+            }
         public static int GetCrew(string boatName)
         {
             //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
