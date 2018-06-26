@@ -13,6 +13,7 @@ namespace SailingWeb.Pages
     {
         public void OnGet()
         {
+            //Reset and return to page.
             SQL.RemoveBoats(Program.Globals.removeboat);
             Program.Globals.removeboat = new Data.Boats();
             Globals.Boat = new Boats();

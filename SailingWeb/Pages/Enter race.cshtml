@@ -16,19 +16,24 @@
     @if (Program.Globals.alerttext != "")
     {
         <script language="javascript">
+            // Create popup
             var r = confirm('@Program.Globals.alerttext');
+
+            // If they respond yes, remove their stuff and reset. TODO Why doesn't this return to index?
             if (r == true) {
-                alert("You have been removed from the race.")
+                alert(@Program.Globals.alerttext)
                 @if (1 == 1)
                 {
                     SQL.RemoveBoats(Program.Globals.removeboat);
-                    Program.Globals.removeboat = new Data.Boats();
                     Program.Globals.Boat = new Data.Boats();
-                    Program.Globals.Crew = "";
                     Program.Globals.askedCrew = 0;
+                    Program.Globals.Crew = "";
+                    Program.Globals.racename = "";
+                    Program.Globals.removeboat = new Data.Boats();
                 }
 
             }
+            // Else set response back.
             else {
                                 @if (1 == 1)
                                 {
@@ -38,19 +43,23 @@
         </script>
         Program.Globals.alerttext = "";
     }
+
+    <!--Create text. Should be depreciated soon due to popup. TODO Remove this.-->
     @if (Program.Globals.removeboat.name != null)
     {
         <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
     }
         <form method="POST">
             <div asp-validation-summary="All"></div>
+            <!--If there is only one race today and they haven't entered their name or they
+        haven't entered their name but have entered the race from dropdown, ask their name.-->
             @if (Program.Globals.Boat.name == null && SQL.todaysevent().Count == 1 || Program.Globals.Boat.name == null && Program.Globals.racename != "")
             {
 
                 <label for="autocomplete">Enter your name: </label>
-                <input asp-for="Boats.name" id="autocomplete" value=""/>
+                <input asp-for="Boats.name" id="autocomplete" value="" />
                 <script type="text/javascript">
- 
+
         $("#autocomplete").autocomplete({
                     source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
         }
@@ -59,43 +68,47 @@
                 </script>
             }
 
+
             else if (SQL.todaysevent().Count == 0)
-            {
-                <p1>I'm afraid there is no race on today.</p1>
+            {//If there are no races today
+            <p1>I'm afraid there is no race on today.</p1>
 
             }
-            else if (Program.Globals.racename == "")
-            {
 
-                <select asp-for="race">
-                    @foreach (var race in SQL.todaysevent())
-                    {
-                        <option value="@race">@race</option>
-                    }
-                </select>
-                <input type="submit" />
+            else if (Program.Globals.racename == "")
+            {// If they have not entered their name, create select to enter. 
+
+            <select asp-for="race">
+                @foreach (var race in SQL.todaysevent())
+                {
+                    <option value="@race">@race</option>
+                }
+            </select>
+            <!--Select needed - TODO ajaxify this.-->
+            <input type="submit" />
 
             }
             @if (Program.Globals.Boat.name != null && Program.Globals.Boat.boatName == null)
-            {
+            {// If they have not entered their boat name yet but we do have their own name then ask their boat name. 
 
                 <div>
                     <select id="select" asp-for="Boats.boatName">
 
                         @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.countofboats(); i++)
-                        {
+                        {//Dropdown for boats they have sailed before.
 
 
                             <option value="@RazorPagesContacts.Pages.CreateModel.selectbox(i)">@RazorPagesContacts.Pages.CreateModel.selectbox(i)</option>
                         }
                     </select>
+                    <!--TODO Ajaxify.-->
                     <input type="submit" />
                 </div>
             }
 
 
             @if (Program.Globals.Boat.boatName != null)
-            {
+            {// If they have entered their boat name then check if they have crew and ask for crew if we need to.
                 if (SQL.GetCrew(Program.Globals.Boat.boatName.ToUpper()) == 2)
                 {
                     Program.Globals.askedCrew = 1;
@@ -113,10 +126,15 @@
                     </script>
 
                 }
+                else if (SQL.GetCrew(Program.Globals.Boat.boatName.ToUpper()) == 0)
+                {//In case their name is not in the db. Remember due to db column being type int
+                    //it should return 0 instead of null.
+                    <p1>I am afraid your boat is not in my records. Ensure that the name is correct. You have been entered nonetheless</p1>
+                }
             }
 
         </form>
-    <div><a asp-page="/New Boat">Bought a new boat?</a></div>
+    <div><a asp-page="/New Boat">Bought a new boat/New to the club?</a></div>
     @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
     {
         <script> alert("@ViewBag.AlertMessage");</script>}

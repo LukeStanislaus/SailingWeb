@@ -12,6 +12,7 @@
 </head>
 <h2>Test</h2>
 <form method="POST">
+    <!--Enter their name.-->
     <label for="autocomplete">Enter your name: </label>
     <input asp-for="boat.name" id="autocomplete" />
     <script type="text/javascript">
@@ -22,7 +23,7 @@
             );
 
     </script>
-
+    <!--Enter their boat name.-->
     <label for="boatName">Enter your Boat Name: </label>
     <input asp-for="boat.boatName" id="boatName" />
     <script type="text/javascript">
@@ -33,6 +34,7 @@
             );
 
     </script>
+    <!--Enter their boat number.-->
     <label for="boatNumber">Enter your Boat Number: </label>
     <input asp-for="boat.boatNumber" id="boatNumber" />
     <button type="submit">Enter boat to database.</button>

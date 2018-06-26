@@ -12,11 +12,14 @@ namespace SailingWeb.Pages
     public class IndexModel : PageModel
     {
 
-            public void OnGet()
+        public void OnGet()
         {
-            Globals.racename = "";
+            //Reset globals. Untidy.
             Globals.Boat = new Boats();
             Globals.askedCrew = 0;
+            Globals.Crew = "";
+            Globals.racename = "";
+            Globals.removeboat = new Boats();
         }
     }
 }

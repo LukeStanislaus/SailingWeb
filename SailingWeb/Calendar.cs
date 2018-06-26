@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace SailingWeb
 {
+    /// <summary>
+    /// Calendar data type, stores information about an event.
+    /// </summary>
     public class Calendar
     {
         public string summary { get; set; }

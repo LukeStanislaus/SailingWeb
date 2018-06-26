@@ -23,18 +23,21 @@
         </script>
         Program.Globals.alerttext = "";
     }
-
+    <!--If we have a race name, print the race data.-->
     @if (Program.Globals.racename != "")
-    {<label for="table1">List of racers: </label>
-        <table id="table1">
-            <tr>
-                <th>Racer Name</th>
-                <th>Boat Name</th>
-                <th>Boat Number</th>
-                <th>Crew?</th>
-            </tr>
-            @try
-            {
+    {
+
+        <!--Try to display-->
+        @try
+        {
+            <label for="table1">List of racers: </label>
+            <table id="table1">
+                <tr>
+                    <th>Racer Name</th>
+                    <th>Boat Name</th>
+                    <th>Boat Number</th>
+                    <th>Crew?</th>
+                </tr>
                 @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers(Program.Globals.racename))
                 {
                     <tr>
@@ -43,17 +46,17 @@
                         <td>@boat.boatNumber</td>
                         <td>@boat.crew</td>
                     </tr>
-
                 }
-            }
-            catch
-            {
-                Program.Globals.alerttext = "The race does not exist.";
+            </table>
+        }
+        catch
+        {
+            <p1> This race does not exist.</p1>
 
 
-            }
+        }
 
-        </table>
+
     }
     <label for="table2">List of events: </label>
     <form method="post">
@@ -79,6 +82,7 @@
 
     </form>
     <iframe src="https://calendar.google.com/calendar/embed?showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=wfscweb%40gmail.com&amp;color=%236B3304&amp;ctz=Europe%2FLondon" style="border:solid 1px #777" width="400" height="600" frameborder="0" scrolling="no"></iframe>
+    <!--TODO Create a new page for this.-->
     @if (1 == 0)
     {
         <table id="table2">

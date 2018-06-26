@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace SailingWeb.Data
 {
+
+    /// <summary>
+    /// Boat data, contains data for an individual sailor including if they are a crew or not.
+    /// </summary>
+    /// TODO Migrate to this instead of Boats type.
     public class BoatsRacing
     {
         [Key]
@@ -28,7 +33,10 @@ namespace SailingWeb.Data
         }
     }
 
-        public class Boats
+    /// <summary>
+    /// Boat data, contains data for an individual sailor.
+    /// </summary>
+    public class Boats
     {
 
         //public static Dictionary<string, Boats> LoadFullExcel(string path)
@@ -134,7 +142,7 @@ new StreamWriter(@path + @"\Full List.txt", true))
         */
 
 
-        
+
         [Key]
         [StringLength(100)]
         public string name { get; set; }
@@ -147,13 +155,13 @@ new StreamWriter(@path + @"\Full List.txt", true))
 
 
 
-        name = Name;
+            name = Name;
 
             boatNumber = BoatNumber;
             boatName = Boat;
 
         }
-        
+
         public Boats(string Name)
         {
             name = Name;
@@ -161,6 +169,6 @@ new StreamWriter(@path + @"\Full List.txt", true))
         public Boats()
         {
         }
-        }
+    }
 
 }

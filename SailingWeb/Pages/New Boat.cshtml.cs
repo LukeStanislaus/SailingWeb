@@ -19,8 +19,11 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            // Remove boat from db
             SQL.SetNewFullBoat(boat);
+            // Create boat alerttext
             Program.Globals.alerttext = "You have added your boat, a " + boat.boatName + " with boat number " + boat.boatNumber + ".";
+            //Return home.
             return RedirectToPage("/Index");
         }
     }
