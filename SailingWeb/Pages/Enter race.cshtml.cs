@@ -60,7 +60,7 @@ namespace RazorPagesContacts.Pages
             Boats boat2 = new Boats(Crew, Globals.Boat.boatName, Globals.Boat.boatNumber);
             try
             {
-                SQL.SetBoats(boat2, 1);
+                SQL.SetBoats(boat2);
                 Program.Globals.alerttext = null;
                 Program.Globals.removeboat = null;
             }
@@ -105,7 +105,7 @@ namespace RazorPagesContacts.Pages
                 Boats boat2 = new Boats(Crew, Boats.boatName, Globals.Boat.boatNumber);
                 try
                 {
-                    SQL.SetBoats(boat2, 1);
+                    SQL.SetBoats(boat2);
                 }
                 catch
                 {

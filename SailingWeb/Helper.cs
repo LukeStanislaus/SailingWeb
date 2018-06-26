@@ -9,12 +9,16 @@ namespace SailingWeb
 {
     public static class Helper
     {
-        public static string CnnVal(string name)
+
+        /// <summary>
+        /// Returns the SQL connection string.
+        /// </summary>
+        /// <returns>The SQL connection string.</returns>
+        public static string CnnVal()
         {
-            //return ConfigurationManager.ConnectionStrings[name].ConnectionString;
-            string connect = @"Server=ClearSD3;Database=sailing;Uid=root;Pwd=abc123;Encrypt=false;";
-            //;  providerName=MySQL.Data.MySqlClient";
-            return connect;
+
+            return @"Server=ClearSD3;Database=sailing;Uid=root;Pwd=abc123;Encrypt=false;";
+
         }
 
     }

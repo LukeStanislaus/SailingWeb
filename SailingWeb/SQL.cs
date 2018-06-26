@@ -18,7 +18,7 @@ namespace SailingWeb
         /// <returns>List of all classes.</returns>
         public static List<String> ReturnClass()
         {
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Runs query.
                 return connection.Query<String>("call returnclass").ToList();
@@ -33,7 +33,7 @@ namespace SailingWeb
         /// <returns>List of names.</returns>
         public static String[] GetNames()
         {
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Returns a list of all the distinct names in the fulllist db.
                 string[] listOfNames = connection.Query<string>("call returnnames").Distinct().ToArray();
@@ -56,7 +56,7 @@ namespace SailingWeb
             string race = racename.Replace(" ", "");
 
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 // Appends together the query. Stops SQL injection.
@@ -78,7 +78,7 @@ namespace SailingWeb
         public static List<Boats> GetBoats(string name)
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 //Runs stored procedure.
@@ -97,7 +97,7 @@ namespace SailingWeb
         public static String[] GetBoats()
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 // Query.
@@ -115,7 +115,7 @@ namespace SailingWeb
         public static void SetNewFullBoat(Boats Boat)
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 //Appends together the query, stops SQL injection.
@@ -146,7 +146,7 @@ namespace SailingWeb
             // Cannot have table name with space 
             string race = Program.Globals.racename.Replace(" ", "");
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
 
@@ -210,7 +210,7 @@ namespace SailingWeb
         /// <param name="race">Name of race.</param>
         public static void InsertInto(Boats Boats, string race)
         {
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 var sql = new StringBuilder();
@@ -237,7 +237,7 @@ namespace SailingWeb
         public static void SetBoats(Boats Boats)
         {
             string race = Program.Globals.racename.Replace(" ", "");
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 // If they don't have crew remove single.
@@ -321,7 +321,7 @@ namespace SailingWeb
         public static int GetCrew(string boatName)
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 return connection.Query<int>("call returncrew(@boatName)", new{boatName = boatName}).FirstOrDefault();
@@ -336,7 +336,7 @@ namespace SailingWeb
         public static void newcalendar(Calendar cal)
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 connection.Query("call newcalendar(@summary, @description, @date)", new
@@ -358,7 +358,7 @@ namespace SailingWeb
         public static List<string> todaysevent()
         {
 
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
                 return connection.Query<string>("call todaysevent").ToList();
