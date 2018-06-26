@@ -14,6 +14,7 @@ namespace SailingWeb.Pages
 
             public void OnGet()
         {
+            Globals.racename = "";
             Globals.name = new Boats();
             Globals.namecrew = new Boats();
             Globals.askedCrew = 0;

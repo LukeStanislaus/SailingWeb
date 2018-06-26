@@ -12,6 +12,13 @@ namespace SailingWeb
 {
     public class SQL
     {
+        public static List<String> ReturnClass()
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                return connection.Query<String>("call returnclass").ToList();
+            }
+        }
         public static String[] GetNames()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
@@ -108,6 +115,19 @@ namespace SailingWeb
                 return hi2;
             }
         }
+        public static void SetNewFullBoat(Boats boat)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
+            {
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                connection.Query("call enterperson(@name, @boatName, @boatNumber)", new
+                {
+                    name = boat.name,
+                    boatName = boat.boatName,
+                    boatNumber = boat.boatNumber
+                });
+            }
+        }
         public static void SetBoats(Boats Boats)
         {
             //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
@@ -139,7 +159,7 @@ namespace SailingWeb
                 sql1.Append(" and crew=1;");
                 try
                 {
-                    if (connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name == null)
+                    if (connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name != null)
                     {
                         var sql = new StringBuilder();
                         sql.Append("delete from ");
@@ -149,6 +169,16 @@ namespace SailingWeb
                         sql.Append("';");
 
                         connection.Query(sql.ToString());
+                        sql = new StringBuilder();
+                        sql.Append("delete from ");
+                        sql.Append(race);
+                        sql.Append(" where name ='");
+                        sql.Append(connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name);
+                        sql.Append("';");
+
+                        connection.Query(sql.ToString());
+
+
                     }
                 }
                 //connection.Query("call removeperson('" + race + "', '" + name + "')");
@@ -159,14 +189,6 @@ namespace SailingWeb
                     sql.Append(race);
                     sql.Append(" where name ='");
                     sql.Append(Boats.name);
-                    sql.Append("';");
-
-                    connection.Query(sql.ToString());
-                    sql = new StringBuilder();
-                    sql.Append("delete from ");
-                    sql.Append(race);
-                    sql.Append(" where name ='");
-                    sql.Append(connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name);
                     sql.Append("';");
 
                     connection.Query(sql.ToString());
@@ -199,13 +221,17 @@ namespace SailingWeb
             {
                 try
                 {
-                    connection.Query("call enterraceperson(@name, @boatName, @boatNumber, 0, @race)", new
-                    {
-                        name = Boats.name,
-                        boatName = Boats.boatName,
-                        boatNumber = Boats.boatNumber,
-                        race = race
-                    });
+                    var sql = new StringBuilder();
+                    sql.Append("insert into ");
+                    sql.Append(race);
+                    sql.Append(" values('");
+                    sql.Append(Boats.name);
+                    sql.Append("','");
+                    sql.Append(Boats.boatName);
+                    sql.Append("','");
+                    sql.Append(Boats.boatNumber);
+                    sql.Append("',0);");
+                    connection.Query(sql.ToString());
                 }
 
                 catch

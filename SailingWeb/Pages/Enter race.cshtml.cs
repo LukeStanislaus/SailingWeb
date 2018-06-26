@@ -34,6 +34,8 @@ namespace RazorPagesContacts.Pages
         public Boats Boats1 { get; set; }
         [BindProperty]
         public string race { get; set; }
+        [BindProperty]
+        public string response { get; set; }
         public static string selectbox(int i)
         {
 
@@ -58,19 +60,22 @@ namespace RazorPagesContacts.Pages
             Boats boat2 = new Boats(Boats1.name, Globals.name.boatName, Globals.name.boatNumber);
             try
             {
-                SQL.SetBoats(boat2, 1, race);
+                SQL.SetBoats(boat2, 1, Program.Globals.racename);
                 Program.Globals.alerttext = null;
                 Program.Globals.removeboat = null;
             }
             catch
             {
-                Program.Globals.alerttext = "You have already been entered into the race";
+                Program.Globals.alerttext = "You have already been entered into the race, " +
+                    "would you like to remove yourself?";
                 Program.Globals.removeboat = boat2;
                 
             }
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            if(race!=null)
+            Program.Globals.racename = race;
             Program.Globals.removeboat = new Boats();
             Program.Globals.alerttext = "";
             //ScriptManager.RegisterStartupScript
@@ -78,12 +83,16 @@ namespace RazorPagesContacts.Pages
             {
             //    return Page();
             }
-
+            if (Program.Globals.name.name == null && Boats.name != null && Boats.boatName == null && Boats.boatNumber == 0)
+                Program.Globals.name.name = Boats.name;
+            else if (Program.Globals.name.name != null && Boats.boatName != null && Boats.boatNumber == 0)
+                Program.Globals.name.boatName = Boats.boatName;
+            else if (Program.Globals.name.boatName != null && Boats.boatNumber != 0)
+                Program.Globals.name.boatNumber = Boats.boatNumber;
             _db.Boatss.Add(Boats);
-            race = Program.Globals.racename;
+            //Program.Globals.racename = race;
             //Globals.name = _db.Boatss.Find(Boats.name);
-            if (Globals.name.name == null)
-            Globals.name = Boats;
+
             Program.Globals.Boats1 = Boats1;
 
             if (CreateModel.countofboats() == 1)
@@ -96,11 +105,12 @@ namespace RazorPagesContacts.Pages
                 Boats boat2 = new Boats(Boats1.name, Boats.boatName, Globals.name.boatNumber);
                 try
                 {
-                    SQL.SetBoats(boat2, 1, race);
+                    SQL.SetBoats(boat2, 1, Program.Globals.racename);
                 }
                 catch
                 {
-                    Program.Globals.alerttext = "You have already been entered into the race";
+                    Program.Globals.alerttext = "You have already been entered into the race, " +
+                        "would you like to remove yourself?";
                     Program.Globals.removeboat = boat2;
                     return Page();
                 }
@@ -127,12 +137,13 @@ namespace RazorPagesContacts.Pages
                 Globals.name.boatNumber = Boats.boatNumber;
                 try
                 {
-                    SQL.SetBoats(boat1, race);
+                    SQL.SetBoats(boat1, Program.Globals.racename);
                 }
                 
                 catch
                 {
-                    Program.Globals.alerttext = "You have already been entered into the race";
+                    Program.Globals.alerttext = "You have already been entered into the race, " +
+                        "would you like to remove yourself?";
                     Program.Globals.removeboat = boat1;
                     return Page();
                 }

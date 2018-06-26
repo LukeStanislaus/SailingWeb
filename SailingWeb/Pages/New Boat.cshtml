@@ -5,4 +5,28 @@
 }
 
 <h2>Test</h2>
+<form method="POST">
+    <label for="autocomplete">Enter your name: </label>
+    <input asp-for="boat.name" id="autocomplete" />
+    <script type="text/javascript">
 
+        $("#autocomplete").autocomplete({
+                    source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+        }
+            );
+
+    </script>
+
+    <label for="boatName">Enter your Boat Name: </label>
+    <input asp-for="boat.boatName" id="boatName" />
+    <script type="text/javascript">
+
+        $("#autocomplete").autocomplete({
+                    source: [ '@Html.Raw(string.Join("', '", SQL.ReturnClass()))' ]
+        }
+            );
+
+    </script>
+    <label for="boatNumber">Enter your Boat Number: </label>
+    <input asp-for="boat.boatNumber" id="boatNumber" />
+</form>

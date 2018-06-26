@@ -30,6 +30,7 @@ namespace SailingWeb
 
         public static class Globals
         {
+            public static bool response = false; //Modifiable
             public static string racenametable = ""; //Modifiable
             public static Boats Boats1 = new Boats();
             public static Boats removeboat = new Boats();
@@ -67,7 +68,7 @@ namespace SailingWeb
                 }
         public static void exit(Boats boat1, Boats boat2)
         {
-            if (Globals.alerttext == null)
+            if (Globals.alerttext == "")
             {
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
@@ -78,7 +79,7 @@ namespace SailingWeb
         }
         public static void exit(Boats boat1)
         {
-            if (Globals.alerttext == null)
+            if (Globals.alerttext == "")
             {
                 Globals.name = new Boats();
                 Globals.namecrew = new Boats();
