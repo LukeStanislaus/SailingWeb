@@ -19,7 +19,7 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Program.Globals.racenametable = race;
+            Program.Globals.racename = race;
             Calendar cal = new Calendar();
             if (1 == 0)
             {

@@ -24,7 +24,7 @@
         Program.Globals.alerttext = "";
     }
 
-    @if (Program.Globals.racenametable != "")
+    @if (Program.Globals.racename != "")
     {<label for="table1">List of racers: </label>
         <table id="table1">
             <tr>
@@ -35,7 +35,7 @@
             </tr>
             @try
             {
-                @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers(Program.Globals.racenametable))
+                @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers(Program.Globals.racename))
                 {
                     <tr>
                         <td>@boat.name</td>
@@ -62,7 +62,7 @@
             <p1>I'm afraid there is no race on today.</p1>
 
         }
-        else if (Program.Globals.racenametable == "")
+        else if (Program.Globals.racename == "")
         {
 
             <select asp-for="race">

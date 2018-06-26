@@ -21,10 +21,10 @@
                 alert("You have been removed from the race.")
                 @if (1 == 1)
                 {
-                    SQL.RemoveBoats(Program.Globals.removeboat, Program.Globals.racename);
+                    SQL.RemoveBoats(Program.Globals.removeboat);
                     Program.Globals.removeboat = new Data.Boats();
-                    Program.Globals.name = new Data.Boats();
-                    Program.Globals.namecrew = new Data.Boats();
+                    Program.Globals.Boat = new Data.Boats();
+                    Program.Globals.Crew = "";
                     Program.Globals.askedCrew = 0;
                 }
 
@@ -44,7 +44,7 @@
     }
         <form method="POST">
             <div asp-validation-summary="All"></div>
-            @if (Program.Globals.name.name == null && SQL.todaysevent().Count == 1 || Program.Globals.name.name == null && Program.Globals.racename != "")
+            @if (Program.Globals.Boat.name == null && SQL.todaysevent().Count == 1 || Program.Globals.Boat.name == null && Program.Globals.racename != "")
             {
 
                 <label for="autocomplete">Enter your name: </label>
@@ -76,7 +76,7 @@
                 <input type="submit" />
 
             }
-            @if (Program.Globals.name.name != null && Program.Globals.name.boatName == null)
+            @if (Program.Globals.Boat.name != null && Program.Globals.Boat.boatName == null)
             {
 
                 <div>
@@ -94,14 +94,14 @@
             }
 
 
-            @if (Program.Globals.name.boatName != null)
+            @if (Program.Globals.Boat.boatName != null)
             {
-                if (SQL.GetCrew(Program.Globals.name.boatName.ToUpper()) == 2)
+                if (SQL.GetCrew(Program.Globals.Boat.boatName.ToUpper()) == 2)
                 {
                     Program.Globals.askedCrew = 1;
 
                     <label for="autocomplete1">If you have a crew, enter their name here: </label>
-                    <input asp-for="Boats1.name" id="autocomplete1" />
+                    <input asp-for="Crew" id="autocomplete1" />
                     <script type="text/javascript">
 
         $("#autocomplete1").autocomplete({

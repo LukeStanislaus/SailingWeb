@@ -13,10 +13,9 @@ namespace SailingWeb.Pages
     {
         public void OnGet()
         {
-            SQL.RemoveBoats(Program.Globals.removeboat, Program.Globals.racename);
+            SQL.RemoveBoats(Program.Globals.removeboat);
             Program.Globals.removeboat = new Data.Boats();
-            Globals.name = new Boats();
-            Globals.namecrew = new Boats();
+            Globals.Boat = new Boats();
             Globals.askedCrew = 0;
         }
     }
