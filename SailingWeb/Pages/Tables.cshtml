@@ -74,112 +74,118 @@
 
         }
         <input type="submit" value="Submit" />
-        <input type="submit" value="Enter calendar into database?" />
+        <div><label for="cal">Manage Calendar Data: </label></div>
+        <div id="cal"><input type="submit" value="Enter calendar into database?" /></div>
+
     </form>
-    <table id="table2">
-        <tr>
-            <th>Event Name</th>
-            <th>Event notes</th>
-            <th>Event date/time</th>
-        </tr>
+    <iframe src="https://calendar.google.com/calendar/embed?showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=wfscweb%40gmail.com&amp;color=%236B3304&amp;ctz=Europe%2FLondon" style="border:solid 1px #777" width="400" height="600" frameborder="0" scrolling="no"></iframe>
+    @if (1 == 0)
+    {
+        <table id="table2">
+            <tr>
+                <th>Event Name</th>
+                <th>Event notes</th>
+                <th>Event date/time</th>
+            </tr>
 
-        @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
-        {
-            try
+            @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
             {
-
-                @if (Program.Globals.Event1.Items[i].Summary != null)
+                try
                 {
-                    if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
+
+                    @if (Program.Globals.Event1.Items[i].Summary != null)
                     {
-                        <tr>
+                        if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
+                        {
+                            <tr>
 
 
 
-                            <td> @Program.Globals.Event1.Items[i].Summary </td>
-                            <td>@Program.Globals.Event1.Items[i].Description</td>
-                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
-                            {
-                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
-                            }
+                                <td> @Program.Globals.Event1.Items[i].Summary </td>
+                                <td>@Program.Globals.Event1.Items[i].Description</td>
+                                @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                                {
+                                    <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                                }
 
-                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
-                            {
-                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
-                            }
-                            else
-                            {
+                                else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                                {
+                                    <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                                }
+                                else
+                                {
 
-                                <td> null entry </td>
-                                <td> null entry </td>
-                                <td> null entry </td>
-                            }
+                                    <td> null entry </td>
+                                    <td> null entry </td>
+                                    <td> null entry </td>
+                                }
 
-                        </tr>
+                            </tr>
+                        }
+                        else
+                        {
+                            throw new InsufficientExecutionStackException();
+                        }
                     }
                     else
                     {
-                        throw new InsufficientExecutionStackException();
+                        <tr>
+
+                            <td> null entry </td>
+                            <td> null entry </td>
+                            <td> null entry </td>
+                        </tr>
+
                     }
-                }
-                else
-                {
-                    <tr>
 
-                        <td> null entry </td>
-                        <td> null entry </td>
-                        <td> null entry </td>
-                    </tr>
+
 
                 }
-
-
-
-            }
-            catch
-            {
-
-                @if (Program.Globals.Event1.Items[i].Summary != null)
+                catch
                 {
-                    if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
+
+                    @if (Program.Globals.Event1.Items[i].Summary != null)
+                    {
+                        if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
+                        {
+                            <tr>
+
+
+
+                                <td> @Program.Globals.Event1.Items[i].Summary </td>
+                                <td>@Program.Globals.Event1.Items[i].Description</td>
+                                @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                                {
+                                    <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                                }
+
+                                else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                                {
+                                    <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                                }
+
+
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
 
-
-
-                            <td> @Program.Globals.Event1.Items[i].Summary </td>
-                            <td>@Program.Globals.Event1.Items[i].Description</td>
-                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
-                            {
-                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
-                            }
-
-                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
-                            {
-                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
-                            }
-
-
+                            <td> null entry </td>
+                            <td> null entry </td>
+                            <td> null entry </td>
                         </tr>
                     }
+
+
+
                 }
-                else
-                {
-                    <tr>
-
-                        <td> null entry </td>
-                        <td> null entry </td>
-                        <td> null entry </td>
-                    </tr>
-                }
-
-
-
             }
-        }
 
 
-    </table>
+        </table>
+    }
 
 </body>
 
