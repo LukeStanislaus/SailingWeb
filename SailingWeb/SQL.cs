@@ -119,13 +119,16 @@ namespace SailingWeb
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
-                //connection.Query("call removeperson('" + race + "', '" + name + "')");
-                connection.Query("call enterperson(@name, @boatName, @boatNumber)", new
-                {
-                    name = boat.name,
-                    boatName = boat.boatName,
-                    boatNumber = boat.boatNumber
-                });
+                var sql = new StringBuilder();
+                sql.Append("insert into fulllist values ('");
+                sql.Append(boat.name);
+                sql.Append("', '");
+                sql.Append(boat.boatName);
+                sql.Append("', ");
+                sql.Append(boat.boatNumber);
+                sql.Append(");");
+
+                connection.Query(sql.ToString());
             }
         }
         public static void SetBoats(Boats Boats)

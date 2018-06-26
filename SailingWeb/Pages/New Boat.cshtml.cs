@@ -20,7 +20,8 @@ namespace SailingWeb.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             SQL.SetNewFullBoat(boat);
-            return Page();
+            Program.Globals.alerttext = "You have added your boat, a " + boat.boatName + " with boat number " + boat.boatNumber + ".";
+            return RedirectToPage("/Index");
         }
     }
 }
