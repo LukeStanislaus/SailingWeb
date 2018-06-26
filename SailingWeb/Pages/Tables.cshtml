@@ -16,30 +16,64 @@
     </style>
 </head>
 <body>
-    <label for="table1">List of racers: </label>
-    <table id="table1">
-        <tr>
-            <th>Racer Name</th>
-            <th>Boat Name</th>
-            <th>Boat Number</th>
-            <th>Crew?</th>
-        </tr>
-        @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers())
-        {
+    @if (Program.Globals.alerttext != "")
+    {
+        <script language="javascript">
+        alert('@Program.Globals.alerttext');
+        </script>
+        Program.Globals.alerttext = "";
+    }
+
+    @if (Program.Globals.racenametable != "")
+    {<label for="table1">List of racers: </label>
+        <table id="table1">
             <tr>
-                <td>@boat.name</td>
-                <td>@boat.boat</td>
-                <td>@boat.boatNumber</td>
-                <td>@boat.crew</td>
+                <th>Racer Name</th>
+                <th>Boat Name</th>
+                <th>Boat Number</th>
+                <th>Crew?</th>
             </tr>
+            @try
+            {
+                @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers(Program.Globals.racenametable))
+                {
+                    <tr>
+                        <td>@boat.name</td>
+                        <td>@boat.boat</td>
+                        <td>@boat.boatNumber</td>
+                        <td>@boat.crew</td>
+                    </tr>
 
-        }
+                }
+            }
+            catch
+            {
+                Program.Globals.alerttext = "The race does not exist.";
 
 
-    </table>
+            }
 
+        </table>
+    }
     <label for="table2">List of events: </label>
     <form method="post">
+        @if (SQL.todaysevent().Count == 0)
+        {
+            <p1>I'm afraid there is no race on today.</p1>
+
+        }
+        else if (Program.Globals.racenametable == "")
+        {
+
+            <select asp-for="race">
+                @foreach (var race in SQL.todaysevent())
+                {
+                    <option value="@race">@race</option>
+                }
+            </select>
+
+        }
+        <input type="submit" value="Submit" />
         <input type="submit" value="Enter calendar into database?" />
     </form>
     <table id="table2">

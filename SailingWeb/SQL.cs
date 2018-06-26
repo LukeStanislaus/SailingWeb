@@ -49,11 +49,17 @@ namespace SailingWeb
                 return hi2;
             }
         }
-        public static List<BoatsRacing> GetRacers()
+        public static List<BoatsRacing> GetRacers(string race)
         {
+
+            race = race.Replace(" ", "");
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
-                return connection.Query<BoatsRacing>("call returnracers").ToList();
+                var sql1 = new StringBuilder();
+                sql1.Append("select * from ");
+                sql1.Append(race);
+                sql1.Append(";");
+                return connection.Query<BoatsRacing>(sql1.ToString()).ToList();
             }
         }
         public static List<Boats> GetBoats(string name)
@@ -226,31 +232,31 @@ namespace SailingWeb
                     connection.Query(sql.ToString());
                 }
             }
-            }
+        }
         public static void SetBoats(Boats Boats, int crew, string race)
+        {
+            race = race.Replace(" ", "");
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
             {
-                race = race.Replace(" ", "");
-                using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal("sailingDB")))
-                {
-                    //connection.Query("call removeperson('" + race + "', '" + name + "')");
+                //connection.Query("call removeperson('" + race + "', '" + name + "')");
 
-                    var sql = new StringBuilder();
-                    sql.Append("insert into ");
-                    sql.Append(race);
-                    sql.Append(" values('");
-                    sql.Append(Boats.name);
-                    sql.Append("','");
-                    sql.Append(Boats.boatName);
-                    sql.Append("','");
-                    sql.Append(Boats.boatNumber);
-                    sql.Append("',");
-                    sql.Append(crew);
-                    sql.Append(");");
-                    connection.Query(sql.ToString());
+                var sql = new StringBuilder();
+                sql.Append("insert into ");
+                sql.Append(race);
+                sql.Append(" values('");
+                sql.Append(Boats.name);
+                sql.Append("','");
+                sql.Append(Boats.boatName);
+                sql.Append("','");
+                sql.Append(Boats.boatNumber);
+                sql.Append("',");
+                sql.Append(crew);
+                sql.Append(");");
+                connection.Query(sql.ToString());
 
 
-                }
             }
+        }
         public static int GetCrew(string boatName)
         {
             //return (Globals.name.name + " " + Globals.name.boatName + " " + Globals.name.boatNumber.ToString());
@@ -291,5 +297,6 @@ namespace SailingWeb
 
         }
     }
-
 }
+
+
