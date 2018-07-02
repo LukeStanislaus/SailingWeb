@@ -1,27 +1,25 @@
 ﻿using Dapper;
-using Newtonsoft.Json;
 using SailingWeb.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SailingWeb
 {
-    public class SQL
+    public class Sql
     {
         /// <summary>
         /// Returns a stored procedure that returns all classes from boat data db.
         /// </summary>
         /// <returns>List of all classes.</returns>
-        public static List<String> ReturnClass()
+        public static List<string> ReturnClass()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Runs query.
-                return connection.Query<String>("call returnclass").ToList();
+                return connection.Query<string>("call returnclass").ToList();
             }
         }
 
@@ -73,7 +71,7 @@ namespace SailingWeb
         /// <summary>
         /// Get boats of a specific person.
         /// </summary>
-        /// <param name="Name">Person to search for boats.</param>
+        /// <param name="name">Person to search for boats.</param>
         /// <returns></returns>
         public static List<Boats> GetBoats(string name)
         {
@@ -111,8 +109,8 @@ namespace SailingWeb
         /// <summary>
         /// Adds a new boat/person
         /// </summary>
-        /// <param name="Boat">Boat data to add.</param>
-        public static void SetNewFullBoat(Boats Boat)
+        /// <param name="boat">Boat data to add.</param>
+        public static void SetNewFullBoat(Boats boat)
         {
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
@@ -121,11 +119,11 @@ namespace SailingWeb
                 //Appends together the query, stops SQL injection.
                 var sql = new StringBuilder();
                 sql.Append("insert into fulllist values ('");
-                sql.Append(Boat.name);
+                sql.Append(boat.Name);
                 sql.Append("', '");
-                sql.Append(Boat.boatName);
+                sql.Append(boat.BoatName);
                 sql.Append("', ");
-                sql.Append(Boat.boatNumber);
+                sql.Append(boat.BoatNumber);
                 sql.Append(");");
 
                 // Query.
@@ -139,12 +137,12 @@ namespace SailingWeb
         /// <summary>
         /// Removes boats, knows if they are crew or not.
         /// </summary>
-        /// <param name="Boats"></param>
-        public static void RemoveBoats(Boats Boats)
+        /// <param name="boat"></param>
+        public static void RemoveBoats(Boats boat)
         {
 
             // Cannot have table name with space 
-            string race = Program.Globals.racename.Replace(" ", "");
+            var race = Program.Globals.Racename.Replace(" ", "");
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
@@ -155,21 +153,21 @@ namespace SailingWeb
                 sql1.Append("select * from ");
                 sql1.Append(race);
                 sql1.Append(" where boat ='");
-                sql1.Append(Boats.boatName);
+                sql1.Append(boat.BoatName);
                 sql1.Append("' and boatNumber=");
-                sql1.Append(Boats.boatNumber);
+                sql1.Append(boat.BoatNumber);
                 sql1.Append(" and crew=1;");
-                string Name = connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().name;
+                var name = connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().Name;
 
 
                 // If they have a crew, remove both.
-                if (Name != null)
+                if (name != null)
                 {
                     var sql = new StringBuilder();
                     sql.Append("delete from ");
                     sql.Append(race);
                     sql.Append(" where name ='");
-                    sql.Append(Boats.name);
+                    sql.Append(boat.Name);
                     sql.Append("';");
 
                     connection.Query(sql.ToString());
@@ -177,7 +175,7 @@ namespace SailingWeb
                     sql.Append("delete from ");
                     sql.Append(race);
                     sql.Append(" where name ='");
-                    sql.Append(Name);
+                    sql.Append(name);
                     sql.Append("';");
 
                     connection.Query(sql.ToString());
@@ -192,7 +190,7 @@ namespace SailingWeb
                     sql.Append("delete from ");
                     sql.Append(race);
                     sql.Append(" where name ='");
-                    sql.Append(Boats.name);
+                    sql.Append(boat.Name);
                     sql.Append("';");
 
                     connection.Query(sql.ToString());
@@ -206,9 +204,9 @@ namespace SailingWeb
         /// <summary>
         /// Inserts sailor into a named race.
         /// </summary>
-        /// <param name="Boats">Boat data of person to add.</param>
+        /// <param name="boat">Boat data of person to add.</param>
         /// <param name="race">Name of race.</param>
-        public static void InsertInto(Boats Boats, string race)
+        public static void InsertInto(Boats boat, string race)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
@@ -217,11 +215,11 @@ namespace SailingWeb
                 sql.Append("insert into ");
                 sql.Append(race);
                 sql.Append(" values('");
-                sql.Append(Boats.name);
+                sql.Append(boat.Name);
                 sql.Append("','");
-                sql.Append(Boats.boatName);
+                sql.Append(boat.BoatName);
                 sql.Append("','");
-                sql.Append(Boats.boatNumber);
+                sql.Append(boat.BoatNumber);
                 sql.Append("',0);");
                 connection.Query(sql.ToString());
 
@@ -233,10 +231,10 @@ namespace SailingWeb
         /// <summary>
         /// Adds boats to the race db. Runs logic for for whether they have crew or not.
         /// </summary>
-        /// <param name="Boats"></param>
-        public static void SetBoats(Boats Boats)
+        /// <param name="boat"></param>
+        public static void SetBoats(Boats boat)
         {
-            string race = Program.Globals.racename.Replace(" ", "");
+            string race = Program.Globals.Racename.Replace(" ", "");
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
@@ -248,7 +246,7 @@ namespace SailingWeb
                     try
                     {
 
-                        InsertInto(Boats, race);
+                        InsertInto(boat, race);
 
                     }
 
@@ -264,7 +262,7 @@ namespace SailingWeb
                         "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
                         " = utf8mb4;");
                         connection.Execute(sql.ToString());
-                        InsertInto(Boats, race);
+                        InsertInto(boat, race);
                     }
                 }
 
@@ -276,7 +274,7 @@ namespace SailingWeb
                     try
                     {
 
-                        InsertInto(Boats, race);
+                        InsertInto(boat, race);
 
                     }
 
@@ -293,7 +291,7 @@ namespace SailingWeb
                         "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
                         " = utf8mb4;");
                         connection.Execute(sql.ToString());
-                        InsertInto(Boats, race);
+                        InsertInto(boat, race);
 
                     }
 
@@ -301,8 +299,8 @@ namespace SailingWeb
                     finally
                     {
 
-                        Boats Boats1 = new Boats(Program.Globals.Crew, Boats.boatName, Boats.boatNumber);
-                        InsertInto(Boats1, race);
+                        var boats1 = new Boats(Program.Globals.Crew, boat.BoatName, boat.BoatNumber);
+                        InsertInto(boats1, race);
                         
                     }
 
@@ -333,7 +331,7 @@ namespace SailingWeb
         /// Inserts into the db calendar a single event.
         /// </summary>
         /// <param name="cal">A single event.</param>
-        public static void newcalendar(Calendar cal)
+        public static void Newcalendar(Calendar cal)
         {
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
@@ -355,7 +353,7 @@ namespace SailingWeb
         /// Finds what events are on today with stored procedure.
         /// </summary>
         /// <returns>List of events on a particular day.</returns>
-        public static List<string> todaysevent()
+        public static List<string> Todaysevent()
         {
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))

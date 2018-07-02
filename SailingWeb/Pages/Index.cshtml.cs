@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using SailingWeb.Data;
 using static SailingWeb.Program;
 
@@ -16,10 +11,10 @@ namespace SailingWeb.Pages
         {
             //Reset globals. Untidy.
             Globals.Boat = new Boats();
-            Globals.askedCrew = 0;
+            Globals.AskedCrew = 0;
             Globals.Crew = "";
-            Globals.racename = "";
-            Globals.removeboat = new Boats();
+            Globals.Racename = "";
+            Globals.Removeboat = new Boats();
         }
     }
 }

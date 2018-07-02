@@ -2,138 +2,140 @@
 @model IndexModel
 
 @{ ViewBag.Title = "alert message";}
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    </head>
+    @if (Program.Globals.Alerttext != "")
+    {
+        <script language="javascript">
+        alert('@Program.Globals.Alerttext');
+        </script>
+        Program.Globals.Alerttext = "";
+    }
+    @if (Program.Globals.Removeboat.Name != null)
+    {
+        <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
+    }
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="~/images/banner1.jpg" alt="ASP.NET" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        <b>Pontoon, Jetties for any wind direction</b>
 
-@if (Program.Globals.alerttext != "")
-{
-    <script language="javascript">
-        alert('@Program.Globals.alerttext');
-    </script>
-    Program.Globals.alerttext = "";
-}
-@if (Program.Globals.removeboat.name != null)
-{
-    <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
-}
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        <li data-target="#myCarousel" data-slide-to="3"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="~/images/banner1.jpg" alt="ASP.NET" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Pontoon, Jetties for any wind direction
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/DSCN2338.png" alt="Visual Studio" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        <b>Secure compound for boats</b>
 
-                </p>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/DSCN0054.png" alt="Package Management" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+
+                        <b>Dinghies for hire to Club members</b>
+
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/DSCN2331.png" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        <b>Lake, Club house and surrounding land owned by the Club</b>
+
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="item">
-            <img src="~/images/DSCN2338.png" alt="Visual Studio" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Secure compound for boats
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
 
-                </p>
-            </div>
+    <div class="row">
+        <div class="col-md-3">
+            <h2>The Club</h2>
+            <ul>
+
+                <li><a href="http://www.whitefriarssc.org/content/about.php">About Us</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/news.php">News</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/calendar.php">Calendar</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/join_us.php">Join Us</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/contacts.php">Contacts</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/committee.php">Committee</a></li>
+                <li><a href="https://www.whitefriarssc.org/gallery/index.php">Gallery</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/webcam.php">Webcam</a></li>
+
+            </ul>
         </div>
-        <div class="item">
-            <img src="~/images/DSCN0054.png" alt="Package Management" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
+        <div class="col-md-3">
+            <h2>Groups</h2>
+            <ul>
+                <li><a href="http://www.whitefriarssc.org/content/juniors.php">Juniors</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/ladies.php">Ladies</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/sailability.php">Sailability</a></li>
 
-                    Dinghies for hire to Club members
-
-                </p>
-            </div>
+            </ul>
         </div>
-        <div class="item">
-            <img src="~/images/DSCN2331.png" alt="Microsoft Azure" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Lake, Club house and surrounding land owned by the Club
-
-                </p>
-            </div>
+        <div class="col-md-3">
+            <h2>Training</h2>
+            <ul>
+                <li><a href="http://www.whitefriarssc.org/content/training.php">Courses in 2018</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/training_L1_L2.php">Learn To Sail</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/costs.php">How Much?</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Sailing</h2>
+            <ul>
+                <li><a href="http://www.whitefriarssc.org/content/programme.php">Programme</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/results.php">Results</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/race_day_info.php">Race Info</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/day_visitors.php">Day Sailing</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="http://www.whitefriarssc.org/content/for_sale.php">For Sale</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/catering.php">Catering</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/hireboats.php">Hire Boats</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/weather.php">Weather</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/development.php">Development Plan</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/newsletters.php">Newsletters</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/documents.php">Club Documents</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/links.php">Links</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Members</h2>
+            <ul>
+                <li><a href="http://www.whitefriarssc.org/content/duty_info.php">Dutyman Intro</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/duty_rota.php">Dutyman</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/WebCol-intro.php">Update Membership</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/WebCol1stapplic.php">New Members</a></li>
+                <li><a href="https://www.whitefriarssc.org/content/constitution.php">Constitution</a></li>
+                <li><a href="http://www.whitefriarssc.org/content/rules.php">Rules</a></li>
+            </ul>
         </div>
     </div>
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
-
-<div class="row">
-    <div class="col-md-3">
-        <h2>The Club</h2>
-        <ul>
-
-            <li><a href="http://www.whitefriarssc.org/content/about.php">About Us</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/news.php">News</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/calendar.php">Calendar</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/join_us.php">Join Us</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/contacts.php">Contacts</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/committee.php">Committee</a></li>
-            <li><a href="https://www.whitefriarssc.org/gallery/index.php">Gallery</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/webcam.php">Webcam</a></li>
-
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Groups</h2>
-        <ul>
-            <li><a href="http://www.whitefriarssc.org/content/juniors.php">Juniors</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/ladies.php">Ladies</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/sailability.php">Sailability</a></li>
-
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Training</h2>
-        <ul>
-            <li><a href="http://www.whitefriarssc.org/content/training.php">Courses in 2018</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/training_L1_L2.php">Learn To Sail</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/costs.php">How Much?</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Sailing</h2>
-        <ul>
-            <li><a href="http://www.whitefriarssc.org/content/programme.php">Programme</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/results.php">Results</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/race_day_info.php">Race Info</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/day_visitors.php">Day Sailing</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Resources</h2>
-        <ul>
-            <li><a href="http://www.whitefriarssc.org/content/for_sale.php">For Sale</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/catering.php">Catering</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/hireboats.php">Hire Boats</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/weather.php">Weather</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/development.php">Development Plan</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/newsletters.php">Newsletters</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/documents.php">Club Documents</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/links.php">Links</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Members</h2>
-        <ul>
-            <li><a href="http://www.whitefriarssc.org/content/duty_info.php">Dutyman Intro</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/duty_rota.php">Dutyman</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/WebCol-intro.php">Update Membership</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/WebCol1stapplic.php">New Members</a></li>
-            <li><a href="https://www.whitefriarssc.org/content/constitution.php">Constitution</a></li>
-            <li><a href="http://www.whitefriarssc.org/content/rules.php">Rules</a></li>
-        </ul>
-    </div>
-</div>

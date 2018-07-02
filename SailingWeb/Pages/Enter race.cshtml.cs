@@ -14,7 +14,7 @@ namespace RazorPagesContacts.Pages
     {
 
 
-        protected void autocomplete(object sender, EventArgs e)
+        protected void Autocomplete(object sender, EventArgs e)
         {
 
             //string name = Request.Form["Name"];
@@ -33,35 +33,24 @@ namespace RazorPagesContacts.Pages
         [BindProperty]
         public string Crew { get; set; }
         [BindProperty]
-        public string race { get; set; }
+        public string Race { get; set; }
         [BindProperty]
-        public string response { get; set; }
+        public string Response { get; set; }
 
         /// <summary>
         /// Takes the index of the boat from list of boats someone has sailed before and returns the boat name.
         /// </summary>
         /// <param name="i">Index of boat in the array.</param>
         /// <returns>Returns the boat from that specific array.</returns>
-        public static string selectbox(int i)
+        public static string Selectbox(int i)
         {
-
-            if (Program.Globals.Boat.name != null)
-            {
-                return SQL.GetBoats(Program.Globals.Boat.name)[i].boatName;
-            }
-            else
-                return "";
+            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name)[i].BoatName : "";
         }
 
         //TODO remove this, put inside selectbox.
-        public static int countofboats()
+        public static int Countofboats()
         {
-            if (Program.Globals.Boat.name != null)
-            {
-                return SQL.GetBoats(Program.Globals.Boat.name).Count;
-
-            }
-            else return 0;
+            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name).Count : 0;
         }
 
 
@@ -70,93 +59,93 @@ namespace RazorPagesContacts.Pages
             // Everytime we run this page, try to enter the person into the race. On success remove Globals.
             try
             {
-                SQL.SetBoats(Boats);
-                Program.Globals.alerttext = null;
-                Program.Globals.removeboat = null;
+                Sql.SetBoats(Boats);
+                Globals.Alerttext = null;
+                Globals.Removeboat = null;
             }
             // TODO Fix this catch.
             catch
             {
-                Program.Globals.alerttext = "You have already been entered into the race, " +
+                Globals.Alerttext = "You have already been entered into the race, " +
                     "would you like to remove yourself?";
-                Program.Globals.removeboat = Boats;
+                Globals.Removeboat = Boats;
 
             }
         }
-        public static bool SetBoats(Boats Boats)
+        public static bool SetBoats(Boats boat)
         {
             try
             {
-                SQL.SetBoats(Boats);
+                Sql.SetBoats(boat);
                 return false;
             }
 
             catch
             {
 
-                Program.Globals.alerttext = "You have already been entered into the race, " +
+                Globals.Alerttext = "You have already been entered into the race, " +
                     "would you like to remove yourself?";
-                Program.Globals.removeboat = Boats;
+                Globals.Removeboat = boat;
                 return true;
 
             }
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPost()
         {
             // Set crew
-            Program.Globals.Crew = Crew;
+            Globals.Crew = Crew;
 
             //On second run, when we have the race name, this will run. First time will set to nothing. 
             //When set will not run again, may an issue?
-            if (race != null)
+            if (Race != null)
             {
 
-                Program.Globals.racename = race;
+                Globals.Racename = Race;
 
             }
 
 
             // Ensure these are empty before we start entering things. Should already be empty due to OnGetAsync.
-            Program.Globals.removeboat = new Boats();
-            Program.Globals.alerttext = "";
+            Globals.Removeboat = new Boats();
+            Globals.Alerttext = "";
 
 
             // If we don't boat own name global hasn't been entered, we have an entry for local, we haven't got a boatName or
             // boatNumber yet then set boat global.
-            if (Program.Globals.Boat.name == null && Boats.name != null && Boats.boatName == null &&
-                Boats.boatNumber == 0)
+            if (Globals.Boat.Name == null && Boats.Name != null && Boats.BoatName == null &&
+                Boats.BoatNumber == 0)
             {
 
-                Program.Globals.Boat.name = Boats.name;
+                Globals.Boat.Name = Boats.Name;
 
             }
 
 
             // Else if we have boat own name global and boatname local entered but we haven't got boatNumber local 
             // entered, set global boatname.
-            else if (Program.Globals.Boat.name != null && Boats.boatName != null && Boats.boatNumber == 0)
+            else if (Globals.Boat.Name != null && Boats.BoatName != null && Boats.BoatNumber == 0)
             {
 
-                Program.Globals.Boat.boatName = Boats.boatName;
+                Globals.Boat.BoatName = Boats.BoatName;
 
             }
 
 
             // Else if we have boatName global and boatNumber local entered, set boatNumber global.
-            else if (Program.Globals.Boat.boatName != null && Boats.boatNumber != 0)
+            else if (Globals.Boat.BoatName != null && Boats.BoatNumber != 0)
             {
 
-                Program.Globals.Boat.boatNumber = Boats.boatNumber;
+                Globals.Boat.BoatNumber = Boats.BoatNumber;
 
             }
 
 
             //If they only have one boat, skip asking for which boat they are sailing.
-            if (CreateModel.countofboats() == 1)
+            if (Countofboats() == 1)
             {
 
-                Boats.boatName = CreateModel.selectbox(0);
-                Program.Globals.Boat.boatName = CreateModel.selectbox(0);
+                Boats.BoatName = Selectbox(0);
+                Globals.Boat.BoatName = Selectbox(0);
 
             }
 
@@ -167,42 +156,37 @@ namespace RazorPagesContacts.Pages
                 // Try to set boats.
                 if (false == SetBoats(Boats))
                     return RedirectToPage("/Index");
-                else
-                    return Page();
+                return Page();
 
 
             }
 
 
             // Else if we have entered the boat data but have asked for their crew name, assume no crew and set boat.
-            else if (Boats.name != null && Boats.boatName != null && Crew == null && Program.Globals.askedCrew == 1)
+
+            if (Boats.Name != null && Boats.BoatName != null && Crew == null && Globals.AskedCrew == 1)
             {
 
-                exit(Globals.Boat);
-                SQL.SetBoats(Boats);
+                Exit(Globals.Boat);
+                Sql.SetBoats(Boats);
                 return RedirectToPage("/Index");
 
             }
 
 
             // Else if we have name and boat name,  calculate their boat number.
-            else if (Boats.name != null && Boats.boatName != null)
-            {
 
-                //Calculate boat number
-                Boats.boatNumber = SQL.GetBoats(Globals.Boat.name).Find(x => 
-                x.boatName.Equals(Boats.boatName)).boatNumber;
-                Globals.Boat.boatNumber = Boats.boatNumber;
+            if (Boats.Name == null || Boats.BoatName == null) return Page();
+            //Calculate boat number
+            Boats.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x => 
+                x.BoatName.Equals(Boats.BoatName)).BoatNumber;
+            Globals.Boat.BoatNumber = Boats.BoatNumber;
 
-                // Try to set boats.
-                if (false == SetBoats(Boats))
-                    return RedirectToPage("/Index");
-                else
-                    return Page();
-
-            }
-            // If all fails, refresh.
+            // Try to set boats.
+            if (false == SetBoats(Boats))
+                return RedirectToPage("/Index");
             return Page();
+            // If all fails, refresh.
         }
     }
 }

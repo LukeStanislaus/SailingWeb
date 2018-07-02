@@ -16,19 +16,19 @@
     </style>
 </head>
 <body>
-    @if (Program.Globals.alerttext != "")
+    @if (Program.Globals.Alerttext != "")
     {
         <script language="javascript">
-        alert('@Program.Globals.alerttext');
+        alert('@Program.Globals.Alerttext');
         </script>
-        Program.Globals.alerttext = "";
+        Program.Globals.Alerttext = "";
     }
     <!--If we have a race name, print the race data.-->
-    @if (Program.Globals.racename != "")
+    @if (Program.Globals.Racename != "")
     {
 
         <!--Try to display-->
-        @try
+        try
         {
             <label for="table1">List of racers: </label>
             <table id="table1">
@@ -38,13 +38,13 @@
                     <th>Boat Number</th>
                     <th>Crew?</th>
                 </tr>
-                @foreach (SailingWeb.Data.BoatsRacing boat in SQL.GetRacers(Program.Globals.racename))
+                @foreach (Data.BoatsRacing boat in Sql.GetRacers(Program.Globals.Racename))
                 {
                     <tr>
-                        <td>@boat.name</td>
-                        <td>@boat.boat</td>
-                        <td>@boat.boatNumber</td>
-                        <td>@boat.crew</td>
+                        <td>@boat.Name</td>
+                        <td>@boat.Boat</td>
+                        <td>@boat.BoatNumber</td>
+                        <td>@boat.Crew</td>
                     </tr>
                 }
             </table>
@@ -58,24 +58,25 @@
 
 
     }
-    <label for="table2">List of events: </label>
+
     <form method="post">
-        @if (SQL.todaysevent().Count == 0)
+        @if (Sql.Todaysevent().Count == 0)
         {
             <p1>I'm afraid there is no race on today.</p1>
 
         }
-        else if (Program.Globals.racename == "")
+        else if (Program.Globals.Racename == "")
         {
 
-            <select asp-for="race">
-                @foreach (var race in SQL.todaysevent())
-                {
-                    <option value="@race">@race</option>
-                }
-            </select>
 
         }
+        <label for="table2">List of events: </label>
+        <select asp-for="race">
+            @foreach (var race in Sql.Todaysevent())
+            {
+                <option value="@race">@race</option>
+            }
+        </select>
         <input type="submit" value="Submit" />
         <div><label for="cal">Manage Calendar Data: </label></div>
         <div id="cal"><input type="submit" value="Enter calendar into database?" /></div>
@@ -83,113 +84,7 @@
     </form>
     <iframe src="https://calendar.google.com/calendar/embed?showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=wfscweb%40gmail.com&amp;color=%236B3304&amp;ctz=Europe%2FLondon" style="border:solid 1px #777" width="400" height="600" frameborder="0" scrolling="no"></iframe>
     <!--TODO Create a new page for this.-->
-    @if (1 == 0)
-    {
-        <table id="table2">
-            <tr>
-                <th>Event Name</th>
-                <th>Event notes</th>
-                <th>Event date/time</th>
-            </tr>
 
-            @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
-            {
-                try
-                {
-
-                    @if (Program.Globals.Event1.Items[i].Summary != null)
-                    {
-                        if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
-                        {
-                            <tr>
-
-
-
-                                <td> @Program.Globals.Event1.Items[i].Summary </td>
-                                <td>@Program.Globals.Event1.Items[i].Description</td>
-                                @if (Program.Globals.Event1.Items[i].Start.Date != null)
-                                {
-                                    <td> @Program.Globals.Event1.Items[i].Start.Date</td>
-                                }
-
-                                else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
-                                {
-                                    <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
-                                }
-                                else
-                                {
-
-                                    <td> null entry </td>
-                                    <td> null entry </td>
-                                    <td> null entry </td>
-                                }
-
-                            </tr>
-                        }
-                        else
-                        {
-                            throw new InsufficientExecutionStackException();
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-
-                            <td> null entry </td>
-                            <td> null entry </td>
-                            <td> null entry </td>
-                        </tr>
-
-                    }
-
-
-
-                }
-                catch
-                {
-
-                    @if (Program.Globals.Event1.Items[i].Summary != null)
-                    {
-                        if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
-                        {
-                            <tr>
-
-
-
-                                <td> @Program.Globals.Event1.Items[i].Summary </td>
-                                <td>@Program.Globals.Event1.Items[i].Description</td>
-                                @if (Program.Globals.Event1.Items[i].Start.Date != null)
-                                {
-                                    <td> @Program.Globals.Event1.Items[i].Start.Date</td>
-                                }
-
-                                else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
-                                {
-                                    <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
-                                }
-
-
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-
-                            <td> null entry </td>
-                            <td> null entry </td>
-                            <td> null entry </td>
-                        </tr>
-                    }
-
-
-
-                }
-            }
-
-
-        </table>
-    }
 
 </body>
 

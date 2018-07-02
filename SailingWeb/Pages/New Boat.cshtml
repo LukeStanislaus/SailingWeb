@@ -1,7 +1,7 @@
 ﻿@page
 @model SailingWeb.Pages.TestModel
 @{
-    ViewData["Title"] = "Test";
+    ViewData["Title"] = "Enter your data here.";
 }
 <head>
     <meta charset="utf-8">
@@ -10,32 +10,32 @@
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
-<h2>Test</h2>
+<h2>Enter your data here.</h2>
 <form method="POST">
     <!--Enter their name.-->
     <label for="autocomplete">Enter your name: </label>
-    <input asp-for="boat.name" id="autocomplete" />
+    <input asp-for="Boat.Name" id="autocomplete" />
     <script type="text/javascript">
 
         $("#autocomplete").autocomplete({
-                    source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+                    source: [ '@Html.Raw(string.Join("', '", Sql.GetNames()))' ]
         }
             );
 
     </script>
     <!--Enter their boat name.-->
     <label for="boatName">Enter your Boat Name: </label>
-    <input asp-for="boat.boatName" id="boatName" />
+    <input asp-for="Boat.BoatName" id="boatName" />
     <script type="text/javascript">
 
         $("#boatName").autocomplete({
-                    source: [ '@Html.Raw(string.Join("', '", SQL.ReturnClass()))' ]
+                    source: [ '@Html.Raw(string.Join("', '", Sql.ReturnClass()))' ]
         }
             );
 
     </script>
     <!--Enter their boat number.-->
     <label for="boatNumber">Enter your Boat Number: </label>
-    <input asp-for="boat.boatNumber" id="boatNumber" />
+    <input asp-for="Boat.BoatNumber" id="boatNumber" />
     <button type="submit">Enter boat to database.</button>
 </form>

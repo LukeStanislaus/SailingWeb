@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SailingWeb.Data;
@@ -11,7 +8,7 @@ namespace SailingWeb.Pages
     public class TestModel : PageModel
     {
         [BindProperty]
-        public Boats boat { get; set; }
+        public Boats Boat { get; set; }
         
         public void OnGet()
         {
@@ -20,9 +17,10 @@ namespace SailingWeb.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             // Remove boat from db
-            SQL.SetNewFullBoat(boat);
+            Sql.SetNewFullBoat(Boat);
             // Create boat alerttext
-            Program.Globals.alerttext = "You have added your boat, a " + boat.boatName + " with boat number " + boat.boatNumber + ".";
+            Program.Globals.Alerttext = "You have added your boat, a " + Boat.BoatName + 
+                                        " with boat number " + Boat.BoatNumber + ".";
             //Return home.
             return RedirectToPage("/Index");
         }

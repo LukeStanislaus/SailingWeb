@@ -1,0 +1,114 @@
+﻿@page
+@model SailingWeb.Pages.DisplaycalendardataModel
+@{
+    ViewData["Title"] = "Displaycalendardata";
+}
+
+<h2>Displaycalendardata</h2>
+
+{
+    <table id="table2">
+        <tr>
+            <th>Event Name</th>
+            <th>Event notes</th>
+            <th>Event date/time</th>
+        </tr>
+
+        @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
+        {
+            try
+            {
+
+                @if (Program.Globals.Event1.Items[i].Summary != null)
+                {
+                    if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
+                    {
+                        <tr>
+
+
+
+                            <td> @Program.Globals.Event1.Items[i].Summary </td>
+                            <td>@Program.Globals.Event1.Items[i].Description</td>
+                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                            }
+
+                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                            }
+                            else
+                            {
+
+                                <td> null entry </td>
+                                <td> null entry </td>
+                                <td> null entry </td>
+                            }
+
+                        </tr>
+                    }
+                    else
+                    {
+                        throw new InsufficientExecutionStackException();
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td> null entry </td>
+                        <td> null entry </td>
+                        <td> null entry </td>
+                    </tr>
+
+                }
+
+
+
+            }
+            catch
+            {
+
+                @if (Program.Globals.Event1.Items[i].Summary != null)
+                {
+                    if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
+                    {
+                        <tr>
+
+
+
+                            <td> @Program.Globals.Event1.Items[i].Summary </td>
+                            <td>@Program.Globals.Event1.Items[i].Description</td>
+                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                            }
+
+                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            {
+                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                            }
+
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td> null entry </td>
+                        <td> null entry </td>
+                        <td> null entry </td>
+                    </tr>
+                }
+
+
+
+            }
+        }
+
+
+    </table>
+

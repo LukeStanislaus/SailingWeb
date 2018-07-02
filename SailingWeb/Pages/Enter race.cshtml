@@ -13,23 +13,23 @@
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
-    @if (Program.Globals.alerttext != "")
+    @if (Program.Globals.Alerttext != "")
     {
         <script language="javascript">
             // Create popup
-            var r = confirm('@Program.Globals.alerttext');
+            var r = confirm('@Program.Globals.Alerttext');
 
             // If they respond yes, remove their stuff and reset. TODO Why doesn't this return to index?
             if (r == true) {
-                alert(@Program.Globals.alerttext)
+                alert(@Program.Globals.Alerttext)
                 @if (1 == 1)
                 {
-                    SQL.RemoveBoats(Program.Globals.removeboat);
+                    Sql.RemoveBoats(Program.Globals.Removeboat);
                     Program.Globals.Boat = new Data.Boats();
-                    Program.Globals.askedCrew = 0;
+                    Program.Globals.AskedCrew = 0;
                     Program.Globals.Crew = "";
-                    Program.Globals.racename = "";
-                    Program.Globals.removeboat = new Data.Boats();
+                    Program.Globals.Racename = "";
+                    Program.Globals.Removeboat = new Data.Boats();
                 }
 
             }
@@ -37,15 +37,15 @@
             else {
                                 @if (1 == 1)
                                 {
-                                    Program.Globals.response = false;
+                                    Program.Globals.Response = false;
                                 }
             }
         </script>
-        Program.Globals.alerttext = "";
+        Program.Globals.Alerttext = "";
     }
 
     <!--Create text. Should be depreciated soon due to popup. TODO Remove this.-->
-    @if (Program.Globals.removeboat.name != null)
+    @if (Program.Globals.Removeboat.Name != null)
     {
         <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
     }
@@ -53,15 +53,16 @@
             <div asp-validation-summary="All"></div>
             <!--If there is only one race today and they haven't entered their name or they
         haven't entered their name but have entered the race from dropdown, ask their name.-->
-            @if (Program.Globals.Boat.name == null && SQL.todaysevent().Count == 1 || Program.Globals.Boat.name == null && Program.Globals.racename != "")
+            @if (Program.Globals.Boat.Name == null && Sql.Todaysevent().Count == 1 || Program.Globals.Boat.Name == null
+                 && Program.Globals.Racename != "")
             {
 
                 <label for="autocomplete">Enter your name: </label>
-                <input asp-for="Boats.name" id="autocomplete" value="" />
+                <input asp-for="Boats.Name" id="autocomplete" value="" />
                 <script type="text/javascript">
 
         $("#autocomplete").autocomplete({
-                    source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+                    source: [ '@Html.Raw(string.Join("', '", Sql.GetNames()))' ]
         }
             );
 
@@ -69,17 +70,17 @@
             }
 
 
-            else if (SQL.todaysevent().Count == 0)
+            else if (Sql.Todaysevent().Count == 0)
             {//If there are no races today
             <p1>I'm afraid there is no race on today.</p1>
 
             }
 
-            else if (Program.Globals.racename == "")
+            else if (Program.Globals.Racename == "")
             {// If they have not entered their name, create select to enter. 
 
-            <select asp-for="race">
-                @foreach (var race in SQL.todaysevent())
+            <select asp-for="Race">
+                @foreach (var race in Sql.Todaysevent())
                 {
                     <option value="@race">@race</option>
                 }
@@ -88,17 +89,19 @@
             <input type="submit" />
 
             }
-            @if (Program.Globals.Boat.name != null && Program.Globals.Boat.boatName == null)
+            @if (Program.Globals.Boat.Name != null && Program.Globals.Boat.BoatName == null)
             {// If they have not entered their boat name yet but we do have their own name then ask their boat name. 
 
                 <div>
-                    <select id="select" asp-for="Boats.boatName">
+                    <select id="select" asp-for="Boats.BoatName">
 
-                        @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.countofboats(); i++)
+                        @for (int i = 0; i < RazorPagesContacts.Pages.CreateModel.Countofboats(); i++)
                         {//Dropdown for boats they have sailed before.
 
 
-                            <option value="@RazorPagesContacts.Pages.CreateModel.selectbox(i)">@RazorPagesContacts.Pages.CreateModel.selectbox(i)</option>
+                            <option value="@RazorPagesContacts.Pages.CreateModel.Selectbox(i)">
+                                @RazorPagesContacts.Pages.CreateModel.Selectbox(i)
+                            </option>
                         }
                     </select>
                     <!--TODO Ajaxify.-->
@@ -107,18 +110,18 @@
             }
 
 
-            @if (Program.Globals.Boat.boatName != null)
+            @if (Program.Globals.Boat.BoatName != null)
             {// If they have entered their boat name then check if they have crew and ask for crew if we need to.
-                if (SQL.GetCrew(Program.Globals.Boat.boatName.ToUpper()) == 2)
+                if (Sql.GetCrew(Program.Globals.Boat.BoatName.ToUpper()) == 2)
                 {
-                    Program.Globals.askedCrew = 1;
+                    Program.Globals.AskedCrew = 1;
 
                     <label for="autocomplete1">If you have a crew, enter their name here: </label>
                     <input asp-for="Crew" id="autocomplete1" />
                     <script type="text/javascript">
 
         $("#autocomplete1").autocomplete({
-                        source: [ '@Html.Raw(string.Join("', '", SQL.GetNames()))' ]
+                        source: [ '@Html.Raw(string.Join("', '", Sql.GetNames()))' ]
         }
             );
 
@@ -126,7 +129,7 @@
                     </script>
 
                 }
-                else if (SQL.GetCrew(Program.Globals.Boat.boatName.ToUpper()) == 0)
+                else if (Sql.GetCrew(Program.Globals.Boat.BoatName.ToUpper()) == 0)
                 {//In case their name is not in the db. Remember due to db column being type int
                     //it should return 0 instead of null.
                     <p1>I am afraid your boat is not in my records. Ensure that the name is correct. You have been entered nonetheless</p1>
