@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SailingWeb
 {
-    public class Sql
+    public static class Sql
     {
         /// <summary>
         /// Returns a stored procedure that returns all classes from boat data db.
@@ -42,7 +42,6 @@ namespace SailingWeb
         }
 
 
-
         /// <summary>
         /// Returns the list of racers
         /// </summary>
@@ -67,6 +66,7 @@ namespace SailingWeb
             }
 
         }
+
 
         /// <summary>
         /// Get boats of a specific person.
@@ -206,7 +206,7 @@ namespace SailingWeb
         /// </summary>
         /// <param name="boat">Boat data of person to add.</param>
         /// <param name="race">Name of race.</param>
-        public static void InsertInto(Boats boat, string race)
+        private static void InsertInto(Boats boat, string race)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
@@ -234,7 +234,7 @@ namespace SailingWeb
         /// <param name="boat"></param>
         public static void SetBoats(Boats boat)
         {
-            string race = Program.Globals.Racename.Replace(" ", "");
+            var race = Program.Globals.Racename.Replace(" ", "");
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
@@ -326,6 +326,7 @@ namespace SailingWeb
             }
 
         }
+
 
         /// <summary>
         /// Inserts into the db calendar a single event.

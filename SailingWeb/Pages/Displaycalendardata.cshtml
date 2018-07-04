@@ -1,4 +1,5 @@
 ﻿@page
+@using Google.Apis.Calendar.v3.Data
 @model SailingWeb.Pages.DisplaycalendardataModel
 @{
     ViewData["Title"] = "Displaycalendardata";
@@ -14,29 +15,29 @@
             <th>Event date/time</th>
         </tr>
 
-        @for (int i = 0; i < Program.Globals.Event1.Items.Count; i++)
+        @foreach (var t in Program.Globals.Event1.Items)
         {
             try
             {
 
-                @if (Program.Globals.Event1.Items[i].Summary != null)
+                /*@*/if (t.Summary != null)
                 {
-                    if (Convert.ToDateTime(Program.Globals.Event1.Items[i].Start.Date).Year >= 2018)
+                    if (Convert.ToDateTime(t.Start.Date).Year >= 2018)
                     {
                         <tr>
 
 
 
-                            <td> @Program.Globals.Event1.Items[i].Summary </td>
-                            <td>@Program.Globals.Event1.Items[i].Description</td>
-                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            <td> @t.Summary </td>
+                            <td>@t.Description</td>
+                            @if (t.Start.Date != null)
                             {
-                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                                <td> @t.Start.Date</td>
                             }
 
-                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            else {if (t.Start.DateTime.HasValue)
                             {
-                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                                <td> @t.Start.DateTime.Value.Date</td>
                             }
                             else
                             {
@@ -44,6 +45,7 @@
                                 <td> null entry </td>
                                 <td> null entry </td>
                                 <td> null entry </td>
+                            }
                             }
 
                         </tr>
@@ -70,24 +72,25 @@
             catch
             {
 
-                @if (Program.Globals.Event1.Items[i].Summary != null)
+                /*@*/if (t.Summary != null)
                 {
-                    if (Program.Globals.Event1.Items[i].Start.DateTime.Value.Year >= 2018)
+                    if (t.Start.DateTime.Value.Year >= 2018)
                     {
                         <tr>
 
 
 
-                            <td> @Program.Globals.Event1.Items[i].Summary </td>
-                            <td>@Program.Globals.Event1.Items[i].Description</td>
-                            @if (Program.Globals.Event1.Items[i].Start.Date != null)
+                            <td> @t.Summary </td>
+                            <td>@t.Description</td>
+                            @if (t.Start.Date != null)
                             {
-                                <td> @Program.Globals.Event1.Items[i].Start.Date</td>
+                                <td> @t.Start.Date</td>
                             }
 
-                            else if (Program.Globals.Event1.Items[i].Start.DateTime.HasValue)
+                            else {if (t.Start.DateTime.HasValue)
                             {
-                                <td> @Program.Globals.Event1.Items[i].Start.DateTime.Value.Date</td>
+                                <td> @t.Start.DateTime.Value.Date</td>
+                            }
                             }
 
 

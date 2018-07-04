@@ -8,11 +8,13 @@ namespace SailingWeb.Pages
     {
         public void OnGet()
         {
+
             //Reset and return to page.
             Sql.RemoveBoats(Globals.Removeboat);
             Globals.Removeboat = new Boats();
             Globals.Boat = new Boats();
             Globals.AskedCrew = 0;
+
         }
     }
 }
