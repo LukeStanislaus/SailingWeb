@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 
 namespace SailingWeb
 {
@@ -10,15 +12,16 @@ namespace SailingWeb
     /// </summary>
     public class Calendar
     {
-        public string summary { get; set; }
-        public string description { get; set; }
-        public DateTime dateTime { get; set; }
+        public Timestamp Timestamp{ get; set; }      
+        public string Summary { get; set; }
+        public string Description { get; set; }
 
-        public Calendar(string Summary, string Description, DateTime Date)
+
+        public Calendar(string summary, string description, DateTime date)
         {
-            summary = Summary;
-            description = Description;
-            dateTime = Date;
+            Summary = summary;
+            Description = description;
+            Timestamp = date.ToUniversalTime().ToTimestamp();
 
         }
         public Calendar()

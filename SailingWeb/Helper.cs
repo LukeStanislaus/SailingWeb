@@ -17,7 +17,7 @@ namespace SailingWeb
         public static string CnnVal()
         {
 
-            return @"Server=ClearSD3;Database=sailing;Uid=root;Pwd=abc123;Encrypt=false;";
+            return @"Server=pi3;Database=sailing;Uid=luke;Pwd=abc123;Encrypt=false;";
 
         }
 

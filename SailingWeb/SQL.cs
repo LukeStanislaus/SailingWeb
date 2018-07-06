@@ -340,9 +340,9 @@ namespace SailingWeb
 
                 connection.Query("call newcalendar(@summary, @description, @date)", new
                 {
-                    summary = cal.summary,
-                    description = cal.description,
-                    date = cal.dateTime
+                    summary = cal.Summary,
+                    description = cal.Description,
+                    date = cal.Timestamp.ToDateTime()
 
                 });
             }
