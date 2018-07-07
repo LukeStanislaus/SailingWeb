@@ -30,9 +30,13 @@
     "SailingWebLuke": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DEVELOPMENT"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://SSGDYHFG-PC:53137/"
+      "applicationUrl": "http://pi3:5000/"
+    },
+    "SailingWebPi": {
+      "commandName": "Project",
+      "applicationUrl": "http://pi3:5000/"
     }
   }
 }
