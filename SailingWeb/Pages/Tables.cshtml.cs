@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SailingWeb.Data;
 
 namespace SailingWeb.Pages
 {
@@ -12,6 +13,9 @@ namespace SailingWeb.Pages
         public string Message { get; set; }
         [BindProperty]
         public string race { get; set; }
+        //[BindProperty]
+        //public List<BoatsTidy> List { get; set; }
+
         public void OnGet()
         {
             Program.Globals.Event1 = Program.GetCalendar().Result;
@@ -19,7 +23,11 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Program.Globals.Racename = race;
+            if (race != null)
+            {
+                Program.Globals.Racename = race;
+                //list = BoatsTidy.Tidyup(Sql.GetRacers(race));
+            }
 
             return Page();
         }
