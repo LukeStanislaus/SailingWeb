@@ -71,10 +71,10 @@ namespace RazorPagesContacts.Pages
             // TODO Fix this catch.
             catch
             {
-                //if (Boats.Name != "" && Boats.BoatName != "" && Boats.BoatNumber !=0)
-                //Globals.Alerttext = "You have already been entered into the race, " +
-                   // "would you like to remove yourself?";
-                //Globals.Removeboat = Boats;
+                if (Boats.Name != "" && Boats.BoatName != "" && Boats.BoatNumber !=0)
+                Globals.Alerttext = "You have already been entered into the race, " +
+                    "would you like to remove yourself?";
+                Globals.Removeboat = Boats;
 
             }
             */
@@ -105,6 +105,8 @@ namespace RazorPagesContacts.Pages
         public async Task<IActionResult> OnPost()
         {
             // Set crew
+            // Initially no crew would be set to Crew would be Null
+
             Globals.Crew = Crew;
 
             //On second run, when we have the race name, this will run. First time will set to nothing. 
@@ -166,7 +168,7 @@ namespace RazorPagesContacts.Pages
             if (Crew != null)
             {
                 // Try to set boats.
-                if (false == SetBoats(Boats))
+                if (false == SetBoats(Program.Globals.Boat))
                 {
                     Exit(Globals.Boat);
                     return RedirectToPage("/Index");

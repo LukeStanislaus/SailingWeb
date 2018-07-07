@@ -210,7 +210,7 @@ namespace SailingWeb
         /// </summary>
         /// <param name="boat">Boat data of person to add.</param>
         /// <param name="race">Name of race.</param>
-        private static void InsertInto(Boats boat, string race)
+        private static void InsertInto(Boats boat, string race, int crew)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
@@ -222,9 +222,11 @@ namespace SailingWeb
                 sql.Append(boat.Name);
                 sql.Append("','");
                 sql.Append(boat.BoatName);
-                sql.Append("','");
+                sql.Append("',");
                 sql.Append(boat.BoatNumber);
-                sql.Append("',0);");
+                sql.Append(",");
+                sql.Append(crew);
+                sql.Append(");");
                 connection.Query(sql.ToString());
 
             }
@@ -250,7 +252,7 @@ namespace SailingWeb
                     try
                     {
 
-                        InsertInto(boat, race);
+                        InsertInto(boat, race,0);
 
                     }
 
@@ -266,7 +268,7 @@ namespace SailingWeb
                             "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
                             " = utf8mb4;");
                         connection.Execute(sql.ToString());
-                        InsertInto(boat, race);
+                        InsertInto(boat, race,0);
                     }
                 }
 
@@ -278,7 +280,7 @@ namespace SailingWeb
                     try
                     {
 
-                        InsertInto(boat, race);
+                        InsertInto(boat, race,0);
 
                     }
 
@@ -295,18 +297,18 @@ namespace SailingWeb
                         "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
                         " = utf8mb4;");
                         connection.Execute(sql.ToString());
-                        InsertInto(boat, race);
+                        InsertInto(boat, race,0);
 
                     }
 
                     // In every case we will add the second without fail.
-                    finally
-                    {
+//                    finally
+//                    {
 
                         var boats1 = new Boats(Program.Globals.Crew, boat.BoatName, boat.BoatNumber);
-                        InsertInto(boats1, race);
+                        InsertInto(boats1, race,1);
                         
-                    }
+//                    }
 
                 }
 
