@@ -56,6 +56,11 @@ namespace RazorPagesContacts.Pages
 
         public async void OnGetAsyc()
         {
+            //if (Program.Globals.Response == true)
+            //{
+             //   return RedirectToPage("/Index");
+            //}
+            /*
             // Everytime we run this page, try to enter the person into the race. On success remove Globals.
             try
             {
@@ -66,14 +71,19 @@ namespace RazorPagesContacts.Pages
             // TODO Fix this catch.
             catch
             {
-                Globals.Alerttext = "You have already been entered into the race, " +
-                    "would you like to remove yourself?";
-                Globals.Removeboat = Boats;
+                //if (Boats.Name != "" && Boats.BoatName != "" && Boats.BoatNumber !=0)
+                //Globals.Alerttext = "You have already been entered into the race, " +
+                   // "would you like to remove yourself?";
+                //Globals.Removeboat = Boats;
 
             }
+            */
+
+            //return RedirectToAction("OnPost");
         }
         public static bool SetBoats(Boats boat)
         {
+            
             try
             {
                 Sql.SetBoats(boat);
@@ -89,7 +99,9 @@ namespace RazorPagesContacts.Pages
                 return true;
 
             }
+            
         }
+
         public async Task<IActionResult> OnPost()
         {
             // Set crew
@@ -155,36 +167,49 @@ namespace RazorPagesContacts.Pages
             {
                 // Try to set boats.
                 if (false == SetBoats(Boats))
+                {
+                    Exit(Globals.Boat);
                     return RedirectToPage("/Index");
+                }
+
                 return Page();
 
 
             }
 
+            // Else if we have name and boat name,  calculate their boat number.
+
+            if (Program.Globals.Boat.Name != null && Program.Globals.Boat.BoatName != null)
+            {
+                //Calculate boat number
+                Boats.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x =>
+                    x.BoatName.Equals(Program.Globals.Boat.BoatName)).BoatNumber;
+                Globals.Boat.BoatNumber = Boats.BoatNumber;
+            }
 
             // Else if we have entered the boat data but have asked for their crew name, assume no crew and set boat.
 
-            if (Boats.Name != null && Boats.BoatName != null && Crew == null && Globals.AskedCrew == 1)
+            if (Globals.Boat.Name != null && Globals.Boat.BoatName != null && 
+                Globals.Crew == null && Globals.AskedCrew == 1)
             {
 
                 Exit(Globals.Boat);
-                Sql.SetBoats(Boats);
+                Sql.SetBoats(Globals.Boat);
                 return RedirectToPage("/Index");
 
             }
 
 
-            // Else if we have name and boat name,  calculate their boat number.
 
-            if (Boats.Name == null || Boats.BoatName == null) return Page();
-            //Calculate boat number
-            Boats.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x => 
-                x.BoatName.Equals(Boats.BoatName)).BoatNumber;
-            Globals.Boat.BoatNumber = Boats.BoatNumber;
 
-            // Try to set boats.
-            if (false == SetBoats(Boats))
+        // Try to set boats.
+            /*
+        if (false == SetBoats(Boats))
+            {
+                Exit(Globals.Boat);
                 return RedirectToPage("/Index");
+            }*/
+
             return Page();
             // If all fails, refresh.
         }

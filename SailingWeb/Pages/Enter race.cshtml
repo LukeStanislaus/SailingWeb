@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Security.Policy
 @model RazorPagesContacts.Pages.CreateModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -17,11 +18,11 @@
     {
         <script language="javascript">
             // Create popup
-            var r = confirm('@Program.Globals.Alerttext');
+
 
             // If they respond yes, remove their stuff and reset. TODO Why doesn't this return to index?
-            if (r == true) {
-                alert(@Program.Globals.Alerttext)
+            if (confirm('@Program.Globals.Alerttext')) {
+
                 @if (1 == 1)
                 {
                     Sql.RemoveBoats(Program.Globals.Removeboat);
@@ -30,6 +31,7 @@
                     Program.Globals.Crew = "";
                     Program.Globals.Racename = "";
                     Program.Globals.Removeboat = new Data.Boats();
+                    Program.Globals.Response = true;
                 }
 
             }
@@ -56,6 +58,7 @@
             @if (Program.Globals.Boat.Name == null && Sql.Todaysevent().Count == 1 || Program.Globals.Boat.Name == null
                  && Program.Globals.Racename != "")
             {
+                Program.Globals.Racename = Sql.Todaysevent().First();
 
                 <label for="autocomplete">Enter your name: </label>
                 <input asp-for="Boats.Name" id="autocomplete" value="" />

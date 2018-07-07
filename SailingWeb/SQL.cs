@@ -157,34 +157,38 @@ namespace SailingWeb
                 sql1.Append("' and boatNumber=");
                 sql1.Append(boat.BoatNumber);
                 sql1.Append(" and crew=1;");
-                var name = connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().Name;
 
-
-                // If they have a crew, remove both.
-                if (name != null)
+                try
                 {
-                    var sql = new StringBuilder();
-                    sql.Append("delete from ");
-                    sql.Append(race);
-                    sql.Append(" where name ='");
-                    sql.Append(boat.Name);
-                    sql.Append("';");
-
-                    connection.Query(sql.ToString());
-                    sql = new StringBuilder();
-                    sql.Append("delete from ");
-                    sql.Append(race);
-                    sql.Append(" where name ='");
-                    sql.Append(name);
-                    sql.Append("';");
-
-                    connection.Query(sql.ToString());
 
 
+                    var name = connection.Query<BoatsRacing>(sql1.ToString()).FirstOrDefault().Name;
+
+
+
+                        var sql = new StringBuilder();
+                        sql.Append("delete from ");
+                        sql.Append(race);
+                        sql.Append(" where name ='");
+                        sql.Append(boat.Name);
+                        sql.Append("';");
+
+                        connection.Query(sql.ToString());
+                        sql = new StringBuilder();
+                        sql.Append("delete from ");
+                        sql.Append(race);
+                        sql.Append(" where name ='");
+                        sql.Append(name);
+                        sql.Append("';");
+
+                        connection.Query(sql.ToString());
+
+
+                    
                 }
 
+                catch
                 // Else just remove them.
-                else
                 {
                     var sql = new StringBuilder();
                     sql.Append("delete from ");
@@ -239,7 +243,7 @@ namespace SailingWeb
             {
 
                 // If they don't have crew remove single.
-                if (Program.Globals.Crew == "")
+                if (Program.Globals.Crew == null)
                 {
 
                     // Try to add them.
@@ -257,10 +261,10 @@ namespace SailingWeb
                         sql.Append("CREATE TABLE if not exists  ");
                         sql.Append(race);
                         sql.Append(
-                        " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
-                        "`boatNumber` int(11) DEFAULT NULL," +
-                        "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
-                        " = utf8mb4;");
+                            " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
+                            "`boatNumber` int(11) DEFAULT NULL," +
+                            "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
+                            " = utf8mb4;");
                         connection.Execute(sql.ToString());
                         InsertInto(boat, race);
                     }
