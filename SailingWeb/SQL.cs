@@ -342,7 +342,7 @@ namespace SailingWeb
                 {
                     summary = cal.Summary,
                     description = cal.Description,
-                    date = cal.Timestamp.ToDateTime()
+                    date = cal.DateTime
 
                 });
             }

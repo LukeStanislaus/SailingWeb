@@ -12,7 +12,8 @@ namespace SailingWeb
     /// </summary>
     public class Calendar
     {
-        public Timestamp Timestamp{ get; set; }      
+        //TODO Change from timestamp to datetime :(
+        public DateTime DateTime{ get; set; }      
         public string Summary { get; set; }
         public string Description { get; set; }
 
@@ -21,7 +22,7 @@ namespace SailingWeb
         {
             Summary = summary;
             Description = description;
-            Timestamp = date.ToUniversalTime().ToTimestamp();
+            DateTime = date;
 
         }
         public Calendar()

@@ -32,12 +32,12 @@ namespace SailingWeb.Pages
 
                             if (t.Start.Date != null)
                             {
-                                cal.Timestamp = Convert.ToDateTime(t.Start.Date).ToUniversalTime().ToTimestamp();
+                                cal.DateTime = Convert.ToDateTime(t.Start.Date);
                             }
 
                             else if (t.Start.DateTime.HasValue)
                             {
-                                cal.Timestamp = t.Start.DateTime.Value.ToUniversalTime().ToTimestamp();
+                                cal.DateTime = t.Start.DateTime.Value;
                             }
 
                         }
@@ -65,9 +65,9 @@ namespace SailingWeb.Pages
 
                                 cal.Summary = t.Summary;
                                 cal.Description = t.Description;
-                                cal.Timestamp = t.Start.Date != null ? 
-                                    Convert.ToDateTime(t.Start.Date).ToUniversalTime().ToTimestamp() : 
-                                    t.Start.DateTime.Value.ToUniversalTime().ToTimestamp(); 
+                                cal.DateTime = t.Start.Date != null ? 
+                                    Convert.ToDateTime(t.Start.Date) : 
+                                    t.Start.DateTime.Value; 
 
                             }
                         }
