@@ -95,7 +95,7 @@ namespace RazorPagesContacts.Pages
 
                 Globals.Alerttext = "You have already been entered into the race, " +
                     "would you like to remove yourself?";
-                Globals.Removeboat = boat;
+                Globals.Removeboat = Program.Globals.Boat;
                 return true;
 
             }
@@ -153,6 +153,16 @@ namespace RazorPagesContacts.Pages
 
             }
 
+            // Else if we have name and boat name,  calculate their boat number.
+
+            if (Program.Globals.Boat.Name != null && Program.Globals.Boat.BoatName != null)
+            {
+                //Calculate boat number
+                Boats.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x =>
+                    x.BoatName.Equals(Program.Globals.Boat.BoatName)).BoatNumber;
+                Globals.Boat.BoatNumber = Boats.BoatNumber;
+            }
+
 
             //If they only have one boat, skip asking for which boat they are sailing.
             if (Countofboats() == 1)
@@ -160,6 +170,15 @@ namespace RazorPagesContacts.Pages
 
                 Boats.BoatName = Selectbox(0);
                 Globals.Boat.BoatName = Selectbox(0);
+                Globals.Boat.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x =>
+                    x.BoatName.Equals(Globals.Boat.BoatName)).BoatNumber;
+                if (Sql.GetCrew(Globals.Boat.BoatName)==1)
+                {
+                    SetBoats(Program.Globals.Boat);
+                    Exit(Program.Globals.Boat);
+                    return RedirectToPage("/Index");
+                    
+                }
 
             }
 
@@ -179,15 +198,7 @@ namespace RazorPagesContacts.Pages
 
             }
 
-            // Else if we have name and boat name,  calculate their boat number.
 
-            if (Program.Globals.Boat.Name != null && Program.Globals.Boat.BoatName != null)
-            {
-                //Calculate boat number
-                Boats.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x =>
-                    x.BoatName.Equals(Program.Globals.Boat.BoatName)).BoatNumber;
-                Globals.Boat.BoatNumber = Boats.BoatNumber;
-            }
 
             // Else if we have entered the boat data but have asked for their crew name, assume no crew and set boat.
 

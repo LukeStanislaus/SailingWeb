@@ -15,12 +15,14 @@ namespace SailingWeb.Data
         public static List<BoatsTidy> Tidyup(List<BoatsRacing> list)
         {
             List<BoatsTidy> listnew = new List<BoatsTidy>();
-            var i=0;
-            foreach (var boat in list.Distinct())
+            var i=1;
+            foreach (var boat in list.FindAll(x => x.Crew.Equals(0)))
             {
-                listnew[i].Name = boat.Name;
-                listnew[i].Boat = boat.Boat;
-                listnew[i].BoatNumber = boat.BoatNumber;
+                BoatsTidy boat1 = new BoatsTidy();
+                boat1.Name = boat.Name;
+                boat1.Boat = boat.Boat;
+                boat1.BoatNumber = boat.BoatNumber;
+                listnew.Add(boat1);
                 i++;
             }
 
@@ -39,6 +41,10 @@ namespace SailingWeb.Data
         public string Boat { get; set; }
         public int BoatNumber { get; set; }
         public string Crew { get; set; }
+
+        public BoatsTidy()
+        {
+        }
 
         public BoatsTidy(string name, string boat, int boatNumber, string crew)
         {

@@ -26,7 +26,7 @@ namespace SailingWeb.Pages
             if (race != null)
             {
                 Program.Globals.Racename = race;
-                //list = BoatsTidy.Tidyup(Sql.GetRacers(race));
+                var list = BoatsTidy.Tidyup(Sql.GetRacers(race));
             }
 
             return Page();
