@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  sailingweb:
+    image: ${DOCKER_REGISTRY}sailingweb 
+    build:
+      context: .
+      dockerfile: SailingWeb/Dockerfile

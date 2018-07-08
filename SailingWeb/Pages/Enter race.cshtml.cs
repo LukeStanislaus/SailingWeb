@@ -111,7 +111,7 @@ namespace RazorPagesContacts.Pages
 
             //On second run, when we have the race name, this will run. First time will set to nothing. 
             //When set will not run again, may an issue?
-            if (Race != null)
+            if (Race != null && Globals.Racename =="")
             {
 
                 Globals.Racename = Race;

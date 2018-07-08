@@ -366,8 +366,8 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
-                return connection.Query<string>("call todaysevent").ToList();
-
+                var value = connection.Query<string>("call todaysevent").ToList();
+                return value;
             }
 
         }
