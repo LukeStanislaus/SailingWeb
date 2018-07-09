@@ -81,13 +81,13 @@ namespace RazorPagesContacts.Pages
 
             //return RedirectToAction("OnPost");
         }
-        public static bool SetBoats(Boats boat)
+        public static string SetBoats(Boats boat)
         {
             
             try
             {
                 Sql.SetBoats(boat);
-                return false;
+                return "/Index";
             }
 
             catch
@@ -96,7 +96,7 @@ namespace RazorPagesContacts.Pages
                 Globals.Alerttext = "You have already been entered into the race, " +
                     "would you like to remove yourself?";
                 Globals.Removeboat = Program.Globals.Boat;
-                return true;
+                return "/Enter race";
 
             }
             
@@ -111,10 +111,10 @@ namespace RazorPagesContacts.Pages
 
             //On second run, when we have the race name, this will run. First time will set to nothing. 
             //When set will not run again, may an issue?
-            if (Race != null && Globals.Racename =="")
+            if (Race != null && Globals.Racename.Summary =="")
             {
 
-                Globals.Racename = Race;
+                Globals.Racename.Summary = Race;
 
             }
 
@@ -172,12 +172,13 @@ namespace RazorPagesContacts.Pages
                 Globals.Boat.BoatName = Selectbox(0);
                 Globals.Boat.BoatNumber = Sql.GetBoats(Globals.Boat.Name).Find(x =>
                     x.BoatName.Equals(Globals.Boat.BoatName)).BoatNumber;
+                //If they have one boat with one crew, finish
                 if (Sql.GetCrew(Globals.Boat.BoatName)==1)
                 {
-                    SetBoats(Program.Globals.Boat);
-                    Exit(Program.Globals.Boat);
-                    return RedirectToPage("/Index");
-                    
+                    // Try to set boats.
+                    Exit(Globals.Boat);
+                    return RedirectToPage(SetBoats(Program.Globals.Boat));
+
                 }
 
             }
@@ -187,13 +188,9 @@ namespace RazorPagesContacts.Pages
             if (Crew != null)
             {
                 // Try to set boats.
-                if (false == SetBoats(Program.Globals.Boat))
-                {
-                    Exit(Globals.Boat);
-                    return RedirectToPage("/Index");
-                }
+                 Exit(Globals.Boat);
+                 return RedirectToPage(SetBoats(Program.Globals.Boat));
 
-                return Page();
 
 
             }
@@ -206,9 +203,9 @@ namespace RazorPagesContacts.Pages
                 Globals.Crew == null && Globals.AskedCrew == 1)
             {
 
+                // Try to set boats.
                 Exit(Globals.Boat);
-                Sql.SetBoats(Globals.Boat);
-                return RedirectToPage("/Index");
+                return RedirectToPage(SetBoats(Program.Globals.Boat));
 
             }
 
@@ -223,8 +220,8 @@ namespace RazorPagesContacts.Pages
                 return RedirectToPage("/Index");
             }*/
 
-            return Page();
-            // If all fails, refresh.
+            return RedirectToPage("/Index");
+            // If all fails, go home.
         }
     }
 }

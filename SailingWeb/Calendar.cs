@@ -12,10 +12,10 @@ namespace SailingWeb
     /// </summary>
     public class Calendar
     {
-        //TODO Change from timestamp to datetime :(
-        public DateTime DateTime{ get; set; }      
+     
         public string Summary { get; set; }
         public string Description { get; set; }
+        public DateTime DateTime { get; set; }
 
 
         public Calendar(string summary, string description, DateTime date)

@@ -27,7 +27,7 @@
                     Program.Globals.Boat = new Data.Boats();
                     Program.Globals.AskedCrew = 0;
                     Program.Globals.Crew = "";
-                    Program.Globals.Racename = "";
+                    Program.Globals.Racename = new Calendar();
                     Program.Globals.Removeboat = new Data.Boats();
                     Program.Globals.Response = true;
                 }
@@ -54,7 +54,7 @@
             <!--If there is only one race today and they haven't entered their name or they
         haven't entered their name but have entered the race from dropdown, ask their name.-->
             @if (Program.Globals.Boat.Name == null && Sql.Todaysevent().Count == 1 || Program.Globals.Boat.Name == null
-                 && Program.Globals.Racename != "")
+                 && Program.Globals.Racename.Summary != "")
             {
                 Program.Globals.Racename = Sql.Todaysevent().First();
 
@@ -77,7 +77,7 @@
 
             }
 
-            else if (Program.Globals.Racename == "")
+            else if (Program.Globals.Racename.Summary == "")
             {// If they have not entered their name, create select to enter. 
 
             <select asp-for="Race">

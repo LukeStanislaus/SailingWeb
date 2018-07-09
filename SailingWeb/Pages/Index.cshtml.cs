@@ -13,7 +13,7 @@ namespace SailingWeb.Pages
             Globals.Boat = new Boats();
             Globals.AskedCrew = 0;
             Globals.Crew = "";
-            Globals.Racename = "";
+            Globals.Racename = new Calendar();
             Globals.Removeboat = new Boats();
         }
     }

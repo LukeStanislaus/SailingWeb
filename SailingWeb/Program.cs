@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore;
@@ -40,7 +41,20 @@ namespace SailingWeb
             /// This is where the race name is stored for use in the SQL queries.
             ///<para></para>
             /// </summary>
-            public static string Racename = ""; //Modifiable
+            public static Calendar Racename = new Calendar(); //Modifiable
+
+            public static string RacenameTable
+            {
+                get
+                {
+                    var racenametemp = new StringBuilder();
+                    racenametemp.Append(Racename.Summary.Replace(" ", ""));
+                    racenametemp.Append(Racename.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":",""));
+                    return racenametemp.ToString();
+                }
+                private set => RacenameTable = value;
+            }
+
             /// <summary>
             ///This is the location of the alert text. This is also used by the confirmation popup. 
             /// Within the html, immediately after the javascript has been run it is turned back to quotes. 
@@ -121,7 +135,7 @@ namespace SailingWeb
                 {
 
                     // Sets the alert text.
-                    Globals.Alerttext = "You have been entered into the race " + Globals.Racename +
+                    Globals.Alerttext = "You have been entered into the race " + Globals.Racename.Summary +
                         " sailing a " + boat.BoatName + " with boat number "
                         + boat.BoatNumber + ". Good Luck!";
 
@@ -132,7 +146,7 @@ namespace SailingWeb
 
                     // Sets the alert text, plus crew.
                     Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
-                        + Globals.Racename + " sailing a " + boat.BoatName + " with boat number "
+                        + Globals.Racename.Summary + " sailing a " + boat.BoatName + " with boat number "
                         + boat.BoatNumber + ". Your crew is + " + Globals.Crew + " Good Luck!";
                 }
 
@@ -142,7 +156,7 @@ namespace SailingWeb
             Globals.Boat = new Boats();
             Globals.AskedCrew = 0;
             Globals.Crew = "";
-            Globals.Racename = "";
+            //Globals.Racename = new Calendar();
             Globals.Removeboat = new Boats();
 
         }

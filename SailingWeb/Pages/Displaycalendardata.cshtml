@@ -25,7 +25,7 @@
 
                 /*@*/if (t.Summary != null)
                 {
-                    if (Convert.ToDateTime(t.Start.Date).Year >= 2018)
+                    if (t.Start.DateTime.Value.Year >= 2018)
                     {
                         <tr>
 
@@ -33,14 +33,14 @@
 
                             <td> @t.Summary </td>
                             <td>@t.Description</td>
-                            @if (t.Start.Date != null)
+                            @if (t.Start.DateTime != null)
                             {
-                                <td> @t.Start.Date</td>
+                                <td> @t.Start.DateTime</td>
                             }
 
                             else {if (t.Start.DateTime.HasValue)
                             {
-                                <td> @t.Start.DateTime.Value.Date</td>
+                                <td> @t.Start.DateTime.Value</td>
                             }
                             else
                             {

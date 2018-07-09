@@ -32,7 +32,7 @@
             <p1>I'm afraid there is no race on today.</p1>
 
         }
-        else if (Program.Globals.Racename == "")
+        else if (Program.Globals.Racename.Summary == "")
         {
 
 
@@ -55,7 +55,7 @@
     </form>
 
     <!--If we have a race name, print the race data.-->
-    @if (Program.Globals.Racename != "")
+    @if (Program.Globals.Racename.Summary != "")
     {
 
         <!--Try to display-->
@@ -70,7 +70,7 @@
                     <th>Boat Number</th>
 
                 </tr>
-                @foreach (Data.BoatsTidy boat in BoatsTidy.Tidyup(Sql.GetRacers(Program.Globals.Racename)))
+                @foreach (Data.BoatsTidy boat in BoatsTidy.Tidyup(Sql.GetRacers()))
                 {
                     <tr>
                         <td>@boat.Name</td>
