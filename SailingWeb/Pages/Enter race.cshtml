@@ -53,10 +53,10 @@
             <div asp-validation-summary="All"></div>
             <!--If there is only one race today and they haven't entered their name or they
         haven't entered their name but have entered the race from dropdown, ask their name.-->
-            @if (Program.Globals.Boat.Name == null && Sql.Todaysevent().Count == 1 || Program.Globals.Boat.Name == null
+            @if (Program.Globals.Boat.Name == null && Program.Globals.Todaysevents.Count == 1 || Program.Globals.Boat.Name == null
                  && Program.Globals.Racename.Summary != "")
             {
-                Program.Globals.Racename = Sql.Todaysevent().First();
+                Program.Globals.Racename = Program.Globals.Todaysevents.First();
 
                 <label for="autocomplete">Enter your name: </label>
                 <input asp-for="Boats.Name" id="autocomplete" value="" />
@@ -81,7 +81,7 @@
             {// If they have not entered their name, create select to enter. 
 
             <select asp-for="Race">
-                @foreach (var race in Sql.Todaysevent())
+                @foreach (var race in Program.Globals.Todaysevents)
                 {
                     <option value="@race">@race</option>
                 }

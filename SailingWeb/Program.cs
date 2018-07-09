@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -23,6 +24,10 @@ namespace SailingWeb
 
         public static class Globals
         {
+            /// <summary>
+            /// Stores todays events to increase efficiency TODO fix this so that it works on a second day without rerunning the program.
+            /// </summary>
+            public static List<Calendar> Todaysevents = Sql.Todaysevent();
             /// <summary>
             /// Checking whether or not the user has said yes or no to the popup for removing from themselves from the database.
             ///<para>True if they said yes, false if they said no.</para>
