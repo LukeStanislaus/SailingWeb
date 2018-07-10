@@ -162,7 +162,7 @@ namespace SailingWeb
             Globals.AskedCrew = 0;
             Globals.Crew = "";
             //Globals.Racename = new Calendar();
-            Globals.Removeboat = new Boats();
+            //Globals.Removeboat = new Boats();
 
         }
 

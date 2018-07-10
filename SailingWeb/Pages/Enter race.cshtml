@@ -54,7 +54,7 @@
             <!--If there is only one race today and they haven't entered their name or they
         haven't entered their name but have entered the race from dropdown, ask their name.-->
             @if (Program.Globals.Boat.Name == null && Program.Globals.Todaysevents.Count == 1 || Program.Globals.Boat.Name == null
-                 && Program.Globals.Racename.Summary != "")
+                 && Program.Globals.Racename.Summary != null)
             {
                 Program.Globals.Racename = Program.Globals.Todaysevents.First();
 

@@ -244,7 +244,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
-                // If they don't have crew remove single.
+                // If they don't have crew add single.
                 if (Program.Globals.Crew == null)
                 {
 
