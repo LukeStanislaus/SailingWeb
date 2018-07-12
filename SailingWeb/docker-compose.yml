@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   sailingweb:
-    image: sailingweb
+    image: sailingweb:image
     build:
       context: .
       dockerfile: SailingWeb/Dockerfile

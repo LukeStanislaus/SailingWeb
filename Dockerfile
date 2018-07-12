@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime as base
+FROM microsoft/dotnet:2.1-runtime-deps-stretch-slim-arm32v7 as base
 WORKDIR /app
 EXPOSE 80
 
