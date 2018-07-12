@@ -176,8 +176,9 @@ namespace RazorPagesContacts.Pages
                 if (Sql.GetCrew(Globals.Boat.BoatName)==1)
                 {
                     // Try to set boats.
+                    var response = SetBoats(Program.Globals.Boat);
                     Exit(Globals.Boat);
-                    return RedirectToPage(SetBoats(Program.Globals.Boat));
+                    return RedirectToPage(response);
 
                 }
 
@@ -188,8 +189,9 @@ namespace RazorPagesContacts.Pages
             if (Crew != null)
             {
                 // Try to set boats.
-                 Exit(Globals.Boat);
-                 return RedirectToPage(SetBoats(Program.Globals.Boat));
+                var response = SetBoats(Program.Globals.Boat);
+                Exit(Globals.Boat);
+                return RedirectToPage(response);
 
 
 
@@ -204,8 +206,9 @@ namespace RazorPagesContacts.Pages
             {
 
                 // Try to set boats.
+                var response = SetBoats(Program.Globals.Boat);
                 Exit(Globals.Boat);
-                return RedirectToPage(SetBoats(Program.Globals.Boat));
+                return RedirectToPage(response);
 
             }
 
