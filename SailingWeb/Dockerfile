@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.1-sdk-stretch-arm32v7 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ WORKDIR /app/SailingWeb
 RUN dotnet publish -r linux-arm SailingWeb.csproj -c Release -o out
 
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM microsoft/dotnet:2.1-aspnetcore-runtime-stretch-slim-arm32v7 AS runtime
 WORKDIR /app
 COPY --from=publish /app/SailingWeb/out ./
 ENTRYPOINT ["dotnet", "SailingWeb.dll"]
