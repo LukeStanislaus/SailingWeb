@@ -9,12 +9,12 @@ RUN dotnet restore SailingWeb/SailingWeb.csproj
 # copy everything else and build app
 COPY . .
 WORKDIR /app/SailingWeb
-RUN dotnet build SailingWeb.csproj
+RUN dotnet build -r linux-arm SailingWeb.csproj
 
 
 FROM build AS publish
 WORKDIR /app/SailingWeb
-RUN dotnet publish SailingWeb.csproj -c Release -o out
+RUN dotnet publish -r linux-arm SailingWeb.csproj -c Release -o out
 
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
