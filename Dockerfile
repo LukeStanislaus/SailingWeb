@@ -1,21 +1,23 @@
-FROM microsoft/dotnet:2.1-runtime-deps-stretch-slim-arm32v7 as base
-WORKDIR /app
-EXPOSE 80
-
-
-FROM microsoft/dotnet:2.1-sdk AS build-env
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
-COPY SailingWeb.csproj ./
-RUN dotnet restore
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY SailingWeb/*.csproj ./SailingWeb/
+RUN dotnet restore SailingWeb/SailingWeb.csproj
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish SailingWeb.csproj -c Release -r linux-arm -o out
+# copy everything else and build app
+COPY . .
+WORKDIR /app/SailingWeb
+RUN dotnet build SailingWeb.csproj
 
-# Build runtime image
-FROM microsoft/dotnet:2.1-runtime-deps-stretch-slim-arm32v7
+
+FROM build AS publish
+WORKDIR /app/SailingWeb
+RUN dotnet publish SailingWeb.csproj -c Release -o out
+
+
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=publish /app/SailingWeb/out ./
 ENTRYPOINT ["dotnet", "SailingWeb.dll"]
