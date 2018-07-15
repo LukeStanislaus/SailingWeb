@@ -140,7 +140,7 @@ namespace SailingWeb
                 {
 
                     // Sets the alert text.
-                    Globals.Alerttext = "You have been entered into the race " + Globals.Racename.Summary +
+                    Globals.Alerttext = "You have been entered into the race " + Globals.Racename.Summary.Normalize() +
                         " sailing a " + boat.BoatName + " with boat number "
                         + boat.BoatNumber + ". Good Luck!";
 
@@ -151,8 +151,8 @@ namespace SailingWeb
 
                     // Sets the alert text, plus crew.
                     Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
-                        + Globals.Racename.Summary + " sailing a " + boat.BoatName + " with boat number "
-                        + boat.BoatNumber + ". Your crew is + " + Globals.Crew + " Good Luck!";
+                        + Globals.Racename.Summary.Normalize() + " sailing a " + boat.BoatName + " with boat number "
+                        + boat.BoatNumber + ". Your crew is " + Globals.Crew + " Good Luck!";
                 }
 
             }

@@ -12,16 +12,31 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#dialog").dialog();
+        });
+    </script>
 </head>
 <body>
+    <div id="dialog" title="Basic dialog">
+        <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+    </div>
+
     @if (Program.Globals.Alerttext != "")
     {
-        <script language="javascript">
-            // Create popup
-            // If they respond yes, remove their stuff and reset. TODO Why doesn't this return to index?
-            if (confirm('@Program.Globals.Alerttext')) {
-
-                @if (1 == 1)
+        <!-- JS dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- bootbox code -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script>
+            bootbox.confirm({
+                size: "small",
+                message: "@Program.Globals.Alerttext",
+                callback: function (result) {
+                    if (result) {
+                                        @if (1 == 1)
                 {
                     Sql.RemoveBoats(Program.Globals.Removeboat);
                     Program.Globals.Boat = new Data.Boats();
@@ -32,15 +47,17 @@
                     Program.Globals.Response = true;
                 }
 
-            }
-            // Else set response back.
+                    }
             else {
                                 @if (1 == 1)
                                 {
                                     Program.Globals.Response = false;
                                 }
             }
+                 }
+            })
         </script>
+
         Program.Globals.Alerttext = "";
     }
 
@@ -54,7 +71,7 @@
         <!--If there is only one race today and they haven't entered their name or they
         haven't entered their name but have entered the race from dropdown, ask their name.-->
         @if (Program.Globals.Boat.Name == null && Program.Globals.Todaysevents.Count == 1 || Program.Globals.Boat.Name == null
-            && Program.Globals.Racename.Summary != null)
+          && Program.Globals.Racename.Summary != null)
         {
             Program.Globals.Racename = Program.Globals.Todaysevents.First();
 

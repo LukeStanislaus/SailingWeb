@@ -1,0 +1,29 @@
+﻿@page
+@model SailingWeb.Pages.test1Model
+@{
+    ViewData["Title"] = "test1";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <!-- CSS dependencies -->
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+</head>
+<body>
+    <!-- JS dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- bootbox code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script>
+    bootbox.confirm({
+    size: "small",
+    message: "Are you sure?",
+        callback: function (result) { }})
+    </script>
+</body>
+</html>
+
