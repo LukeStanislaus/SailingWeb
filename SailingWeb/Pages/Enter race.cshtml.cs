@@ -33,7 +33,7 @@ namespace RazorPagesContacts.Pages
         [BindProperty]
         public string Crew { get; set; }
         [BindProperty]
-        public string Race { get; set; }
+        public Calendar Race { get; set; }
         [BindProperty]
         public string Response { get; set; }
 
@@ -111,10 +111,10 @@ namespace RazorPagesContacts.Pages
 
             //On second run, when we have the race name, this will run. First time will set to nothing. 
             //When set will not run again, may an issue?
-            if (Race != null && Globals.Racename.Summary =="")
+            if (Race.Summary != null && Globals.Racename.Summary ==null)
             {
 
-                Globals.Racename.Summary = Race;
+                Globals.Racename = Race;
 
             }
 
@@ -223,8 +223,8 @@ namespace RazorPagesContacts.Pages
                 return RedirectToPage("/Index");
             }*/
 
-            return RedirectToPage("/Index");
-            // If all fails, go home.
+            return Page();
+            // If all fails, refresh.
         }
     }
 }

@@ -53,7 +53,7 @@ namespace SailingWeb
                 get
                 {
                     var racenametemp = new StringBuilder();
-                    racenametemp.Append(Racename.Summary.Replace(" ", ""));
+                    racenametemp.Append(Racename.Summary.Replace(" ", "").Replace("&", ""));
                     racenametemp.Append(Racename.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":",""));
                     return racenametemp.ToString();
                 }
@@ -136,7 +136,7 @@ namespace SailingWeb
             if (Globals.Alerttext == "")
             {
 
-                if (Globals.Crew=="")
+                if (Globals.Crew==null)
                 {
 
                     // Sets the alert text.
