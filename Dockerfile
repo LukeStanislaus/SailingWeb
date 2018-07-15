@@ -1,23 +1,36 @@
-FROM microsoft/dotnet:2.1-sdk-stretch-arm32v7 AS build
-WORKDIR /app
+FROM microsoft/dotnet:2.1-sdk as builder  
 
-# copy csproj and restore as distinct layers
+WORKDIR /app
+ 
+#copy just the project file over
+# this prevents additional extraneous restores
+# and allows us to re-use the intermediate layer
+# This only happens again if we change the csproj.
+# This means WAY faster builds!
 COPY *.sln .
 COPY SailingWeb/*.csproj ./SailingWeb/
 RUN dotnet restore SailingWeb/SailingWeb.csproj
 
-# copy everything else and build app
 COPY . .
 WORKDIR /app/SailingWeb
-RUN dotnet build -r linux-arm SailingWeb.csproj
+RUN dotnet publish SailingWeb.csproj -c release -o published -r linux-arm 
 
+#Smaller - Best for apps with self-contained .NETs, as it doesn't include the runtime
+#          It has the *dependencies* to run .NET Apps. The .NET runtime image sits on this
+FROM microsoft/dotnet:2.1.2-runtime-deps-stretch-slim-arm32v7 
 
-FROM build AS publish
-WORKDIR /app/SailingWeb
-RUN dotnet publish -r linux-arm SailingWeb.csproj -c Release -o out
+#Bigger - Best for apps .NETs that aren't self-contained.
+#FROM microsoft/dotnet:2.0.0-runtime-stretch-arm32v7
 
+# These are the non-ARM images. 
+#FROM microsoft/dotnet:2.0.0-runtime-deps
+#FROM microsoft/dotnet:2.0.0-runtime
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime-stretch-slim-arm32v7 AS runtime
-WORKDIR /app
-COPY --from=publish /app/SailingWeb/out ./
-ENTRYPOINT ["dotnet", "SailingWeb.dll"]
+WORKDIR /root/  
+COPY --from=builder /app/SailingWeb/published .
+ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5000/tcp
+# This runs your app with the dotnet exe included with the runtime or SDK
+#CMD ["dotnet", "./SailingWeb.dll"]  
+# This runs your self-contained .NET Core app. You built with -r to get this
+CMD ["./SailingWeb"] 
