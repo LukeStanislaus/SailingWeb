@@ -39,9 +39,12 @@
         }
         <!-- <label for="table2">Race Lists: </label>-->
         <select asp-for="race">
+
             @foreach (var race1 in Program.Globals.Todaysevents)
             {
+
                 <option value="@Program.Globals.Todaysevents.IndexOf(race1)">@race1.Summary</option>
+                
             }
         </select>
 

@@ -56,13 +56,19 @@ namespace SailingWeb
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-
-                // Appends together the query. Stops SQL injection.
-                var sql1 = new StringBuilder();
-                sql1.Append("select * from ");
-                sql1.Append(_race);
-                sql1.Append(";");
-                return connection.Query<BoatsRacing>(sql1.ToString()).ToList();
+                try
+                {
+                    // Appends together the query. Stops SQL injection.
+                    var sql1 = new StringBuilder();
+                    sql1.Append("select * from ");
+                    sql1.Append(Program.Globals.RacenameTable);
+                    sql1.Append(";");
+                    return connection.Query<BoatsRacing>(sql1.ToString()).ToList();
+                }
+                catch
+                {
+                    return new List<BoatsRacing>();
+                }
 
             }
 

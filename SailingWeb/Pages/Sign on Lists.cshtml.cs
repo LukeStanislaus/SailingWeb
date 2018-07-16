@@ -12,7 +12,7 @@ namespace SailingWeb.Pages
     {
         public string Message { get; set; }
         [BindProperty]
-        public int race { get; set; }
+        public string race { get; set; }
         //[BindProperty]
         //public List<BoatsTidy> List { get; set; }
 
@@ -23,7 +23,7 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Program.Globals.Racename = Program.Globals.Todaysevents[race];
+            Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(race)];
             var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();
         }
