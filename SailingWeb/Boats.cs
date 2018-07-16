@@ -22,6 +22,8 @@ namespace SailingWeb.Data
                 boat1.Name = boat.Name;
                 boat1.Boat = boat.Boat;
                 boat1.BoatNumber = boat.BoatNumber;
+                boat1.Notes = boat.Notes;
+
                 listnew.Add(boat1);
                 i++;
             }
@@ -41,17 +43,21 @@ namespace SailingWeb.Data
         public string Boat { get; set; }
         public int BoatNumber { get; set; }
         public string Crew { get; set; }
+        public string Notes { get; set; }
+        public int Py { get; set; }
 
         public BoatsTidy()
         {
         }
 
-        public BoatsTidy(string name, string boat, int boatNumber, string crew)
+        public BoatsTidy(string name, string boat, int boatNumber, string crew, string notes, int py)
         {
             Name = name;
             BoatNumber = boatNumber;
             Boat = boat;
             Crew = crew;
+            Notes = crew;
+            Py = py;
         }
     }
 
@@ -67,6 +73,8 @@ namespace SailingWeb.Data
         public string Boat { get; set; }
         public int BoatNumber { get; set; }
         public int Crew { get; set; }
+        public string Notes { get; set; }
+        public int Py { get; set; }
 
         public BoatsRacing(string name, string boat, int boatNumber, int crew)
         {

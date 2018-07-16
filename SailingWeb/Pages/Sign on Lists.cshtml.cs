@@ -18,6 +18,7 @@ namespace SailingWeb.Pages
 
         public void OnGet()
         {
+            
             Program.Globals.Event1 = Program.GetCalendar().Result;
             Message = "Your contact page.";
         }

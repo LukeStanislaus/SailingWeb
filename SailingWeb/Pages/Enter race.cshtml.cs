@@ -44,7 +44,7 @@ namespace RazorPagesContacts.Pages
         /// <returns>Returns the boat from that specific array.</returns>
         public static string Selectbox(int i)
         {
-            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name)[i].BoatName : "";
+            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name)[i].BoatName : null;
         }
 
         //TODO remove this, put inside selectbox.

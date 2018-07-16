@@ -235,6 +235,18 @@ namespace SailingWeb
         }
 
 
+        private static string CreateTable()
+        {
+            var sql = new StringBuilder();
+            sql.Append("CREATE TABLE if not exists  ");
+            sql.Append(_race);
+            sql.Append(
+            " (`name` VARCHAR(45) NOT NULL,`boat` VARCHAR(45) NOT NULL ,`boatNumber` INT(7) NOT NULL, `crew` INT(1) NOT NULL, `notes` VARCHAR(150) NULL, " +
+            "`py` INT(4) NOT NULL, PRIMARY KEY(`name`, `boat`, `boatNumber`, `crew`, `py`)); ");
+            return sql.ToString();
+        }
+
+
         /// <summary>
         /// Adds boats to the race db. Runs logic for for whether they have crew or not.
         /// </summary>
@@ -259,15 +271,8 @@ namespace SailingWeb
                     // Else add new DB for new race then add them
                     catch
                     {
-                        var sql = new StringBuilder();
-                        sql.Append("CREATE TABLE if not exists  ");
-                        sql.Append(_race);
-                        sql.Append(
-                            " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
-                            "`boatNumber` int(11) DEFAULT NULL," +
-                            "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
-                            " = utf8mb4;");
-                        connection.Execute(sql.ToString());
+
+                        connection.Execute(CreateTable());
                         InsertInto(boat,0);
                     }
                 }
@@ -288,15 +293,8 @@ namespace SailingWeb
                     catch
                     {
 
-                        var sql = new StringBuilder();
-                        sql.Append("CREATE TABLE if not exists  ");
-                        sql.Append(_race);
-                        sql.Append(
-                        " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
-                        "`boatNumber` int(11) DEFAULT NULL," +
-                        "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
-                        " = utf8mb4;");
-                        connection.Execute(sql.ToString());
+
+                        connection.Execute(CreateTable());
                         InsertInto(boat,0);
 
                     }

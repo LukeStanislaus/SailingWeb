@@ -11,7 +11,7 @@ namespace SailingWeb.Pages
     {
         public void OnGet()
         {
-
+            Response.ContentType = "Test";
         }
     }
 }
