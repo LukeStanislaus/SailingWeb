@@ -11,11 +11,6 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using static Google.Apis.Calendar.v3.EventsResource.ListRequest;
 
-/// <summary>
-/// 
-///<para></para>
-/// </summary>
-
 
 namespace SailingWeb
 {
