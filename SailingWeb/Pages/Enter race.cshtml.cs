@@ -27,7 +27,7 @@ namespace RazorPagesContacts.Pages
         {
             _db = db;
         }
-
+        public static int newboat { get; set; }
         [BindProperty]
         public Boats Boats { get; set; }
         [BindProperty]
@@ -35,23 +35,11 @@ namespace RazorPagesContacts.Pages
         [BindProperty]
         public Calendar Race { get; set; }
         [BindProperty]
+        public string Notes { get; set; }
+        [BindProperty]
         public string Response { get; set; }
 
-        /// <summary>
-        /// Takes the index of the boat from list of boats someone has sailed before and returns the boat name.
-        /// </summary>
-        /// <param name="i">Index of boat in the array.</param>
-        /// <returns>Returns the boat from that specific array.</returns>
-        public static string Selectbox(int i)
-        {
-            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name)[i].BoatName : "";
-        }
 
-        //TODO remove this, put inside selectbox.
-        public static int Countofboats()
-        {
-            return Globals.Boat.Name != null ? Sql.GetBoats(Globals.Boat.Name).Count : 0;
-        }
 
 
         public async void OnGetAsyc()
@@ -104,6 +92,22 @@ namespace RazorPagesContacts.Pages
 
         public async Task<IActionResult> OnPost()
         {
+            if (Boats.Name != null && Boats.BoatName != "test")
+            {
+                Boats.Py = 0;
+                if (Crew != null)
+                {
+                    BoatsRacing boatcrew = new BoatsRacing(Crew, Boats.BoatName, Boats.BoatNumber, 1, Boats.Py, "");
+                }
+
+                Sql.SetBoats(Boats);
+            }
+            else if (Boats.BoatName == "test")
+            {
+                return Page();
+            }
+            return Page();
+            /*(
             // Set crew
             // Initially no crew would be set to Crew would be Null
 
@@ -127,7 +131,7 @@ namespace RazorPagesContacts.Pages
             // If we don't boat own name global hasn't been entered, we have an entry for local, we haven't got a boatName or
             // boatNumber yet then set boat global.
             if (Globals.Boat.Name == null && Boats.Name != null && Boats.BoatName == null &&
-                Boats.BoatNumber == 0)
+                Boats.BoatNumber == "0")
             {
 
                 Globals.Boat.Name = Boats.Name;
@@ -137,7 +141,7 @@ namespace RazorPagesContacts.Pages
 
             // Else if we have boat own name global and boatname local entered but we haven't got boatNumber local 
             // entered, set global boatname.
-            else if (Globals.Boat.Name != null && Boats.BoatName != null && Boats.BoatNumber == 0)
+            else if (Globals.Boat.Name != null && Boats.BoatName != null && Boats.BoatNumber == "0")
             {
 
                 Globals.Boat.BoatName = Boats.BoatName;
@@ -146,7 +150,7 @@ namespace RazorPagesContacts.Pages
 
 
             // Else if we have boatName global and boatNumber local entered, set boatNumber global.
-            else if (Globals.Boat.BoatName != null && Boats.BoatNumber != 0)
+            else if (Globals.Boat.BoatName != null && Boats.BoatNumber != "0")
             {
 
                 Globals.Boat.BoatNumber = Boats.BoatNumber;
@@ -223,8 +227,9 @@ namespace RazorPagesContacts.Pages
                 return RedirectToPage("/Index");
             }*/
 
-            return Page();
+            //return Page();
             // If all fails, refresh.
+            
         }
     }
 }

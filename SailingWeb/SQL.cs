@@ -17,12 +17,13 @@ namespace SailingWeb
         /// Returns a stored procedure that returns all classes from boat data db.
         /// </summary>
         /// <returns>List of all classes.</returns>
-        public static List<string> ReturnClass()
+        public static List<BoatClass> ReturnClass()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Runs query.
-                return connection.Query<string>("call returnclass").ToList();
+                var list = connection.Query<BoatClass>("call returnclass").ToList();
+                return list;
             }
         }
 
@@ -241,6 +242,21 @@ namespace SailingWeb
         }
 
 
+        private static string CreateTable(string tablename)
+        {
+            var sql = new StringBuilder();
+            sql.Append("CREATE TABLE if not exists  ");
+            sql.Append(tablename);
+            sql.Append(
+                "(`name` VARCHAR(45) NOT NULL, " +
+                "`boat` VARCHAR(45) NOT NULL, " +
+                "`boatNumber` VARCHAR(45) NOT NULL, " +
+                "`crew` VARCHAR(45) NULL,`py` INT(10) NOT NULL, " +
+                "`notes` VARCHAR(150) NULL,PRIMARY KEY(`name`, `boat`, `boatNumber`, `py`)); ");
+            return sql.ToString();
+        }
+
+
         /// <summary>
         /// Adds boats to the race db. Runs logic for for whether they have crew or not.
         /// </summary>
@@ -265,16 +281,9 @@ namespace SailingWeb
                     // Else add new DB for new race then add them
                     catch
                     {
-                        var sql = new StringBuilder();
-                        sql.Append("CREATE TABLE if not exists  ");
-                        sql.Append(_race);
-                        sql.Append(
-                            " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
-                            "`boatNumber` int(11) DEFAULT NULL," +
-                            "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
-                            " = utf8mb4;");
-                        connection.Execute(sql.ToString());
-                        InsertInto(boat,0);
+
+                        connection.Execute(CreateTable(_race));
+                        InsertInto(boat, 0);
                     }
                 }
 
@@ -294,24 +303,16 @@ namespace SailingWeb
                     catch
                     {
 
-                        var sql = new StringBuilder();
-                        sql.Append("CREATE TABLE if not exists  ");
-                        sql.Append(_race);
-                        sql.Append(
-                        " (`name` varchar(50) NOT NULL,`boat` varchar(50) DEFAULT NULL," +
-                        "`boatNumber` int(11) DEFAULT NULL," +
-                        "`crew` int(1) DEFAULT NULL,PRIMARY KEY(`name`)) ENGINE = InnoDB DEFAULT CHARSET" +
-                        " = utf8mb4;");
-                        connection.Execute(sql.ToString());
+                        connection.Execute(CreateTable(_race));
                         InsertInto(boat,0);
 
                     }
 
                     // In every case we will add the second without fail.
-//                    finally
-//                    {
+                    //                    finally
+                    //                    {
 
-                        var boats1 = new Boats(Program.Globals.Crew, boat.BoatName, boat.BoatNumber);
+                    var boats1 = new Boats(Program.Globals.Crew, boat.BoatName, boat.BoatNumber, ReturnClass().FindAll(x => x.boatName == boat.BoatName).First().py);
                         InsertInto(boats1,1);
                         
 //                    }
