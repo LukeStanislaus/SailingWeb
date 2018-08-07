@@ -67,7 +67,7 @@ namespace SailingWeb
             /// 0 if not asked, 1 if asked.
             /// Extremely clunky. Must fix.</para>
             /// </summary>
-            public static int AskedCrew = 0; // Modifiable
+            public static string LastName = ""; // Modifiable
             /// <summary>
             /// This is where the information of the boat is store. I have a bunch of very inefficient 
             /// if statements in the enter race page that seem unstable and probably will not hold up 

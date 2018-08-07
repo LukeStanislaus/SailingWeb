@@ -105,10 +105,16 @@ namespace RazorPagesContacts.Pages
         */
         public async Task<IActionResult> OnPost()
         {
-
-            var str = Boatandnumber.Split(", ");
-            Boats.Boat = Boatandnumber.Split(", ")[0];
-            Boats.BoatNumber = Boatandnumber.Split(", ")[1];
+            try
+            {
+                var str = Boatandnumber.Split(", ");
+                Boats.Boat = str[0];
+                Boats.BoatNumber = str[1];
+            }
+            catch
+            {
+                RedirectToPage("/index");
+            }
             if (Boats.Name != null && Boats.Boat != "test")
             {
 

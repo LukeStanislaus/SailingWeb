@@ -138,10 +138,61 @@
 
                                         $("#newboatautocomplete").autocomplete({
     source: ['@Html.Raw(string.Join("', '", Returnclass()))']
-});
+                });
+
+                function ajax3() {
+                    var str;
+
+                    $.ajax({
+                        url: "/Folder/GetNames",
+                        data: { name: document.getElementById("autocomplete").value },
+                        headers: {
+                            RequestVerificationToken:
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+
+                    }).done(function (resulting) {
+                        str = resulting;
+                        });
+
+                    return str;
+
+                }
+
+
+
+                   // $("#autocomplete1").autocomplete({
+                  //      source: function (request, response) {
+                 //           response(ajax3());
+                        
+                  //  });
+                
                     $("#autocomplete1").autocomplete({
-    source: ['@Html.Raw(string.Join("', '", Sql.GetNames()))']
-});
+                        source: ['@Html.Raw(string.Join("', '", Sql.GetNames()))']
+                    });
+                
+                /*
+                $("#autocomplete1").autocomplete({
+                    source:
+                        function (request, response) {
+                            $.ajax({
+                                url: "/Folder/GetNames",
+                                data: { name: document.getElementById("autocomplete").value },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    response(data);
+
+                                }
+                            })
+                        }
+                        
+
+                    }); 
+                        */
+
                     $("#autocomplete").autocomplete({
                         source: ['@Html.Raw(string.Join("', '", Sql.GetNames()))'],
                         close: function () { ajax1(); }

@@ -11,7 +11,7 @@ namespace SailingWeb.Pages.Folder
     {
         public JsonResult OnGet(string name)
         {
-            var list = new List<string>();
+          var list = new List<string>();
             foreach (var x in Sql.GetBoats(name))
             {
                 list.Add(x.BoatName);

@@ -31,13 +31,13 @@ namespace SailingWeb
         /// compatibility with javascript.
         /// </summary>
         /// <returns>List of names.</returns>
-        public static String[] GetNames()
+        public static IEnumerable<string> GetNames()
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Returns a list of all the distinct names in the fulllist db.
-                string[] listOfNames = connection.Query<string>("call returnnames").Distinct().ToArray();
-
+                var listOfNames = connection.Query<string>("call returnnames").Distinct();
+                listOfNames = listOfNames.Where(x => x != Program.Globals.LastName).ToArray();
 
                 return listOfNames;
             }
