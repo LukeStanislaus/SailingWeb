@@ -9,12 +9,8 @@ namespace SailingWeb.Pages
 
         public void OnGet()
         {
-            //Reset globals. Untidy.
-            Globals.Boat = new Boats();
-            Globals.AskedCrew = 0;
-            Globals.Crew = "";
-            Globals.Racename = new Calendar();
-            Globals.Removeboat = new Boats();
+
+
         }
     }
 }

@@ -73,7 +73,7 @@
                     <th>Boat Number</th>
 
                 </tr>
-                @foreach (Data.BoatsTidy boat in BoatsTidy.Tidyup(Sql.GetRacers()))
+                @foreach (Data.BoatsTidy boat in Sql.GetRacers())
                 {
                     <tr>
                         <td>@boat.Name</td>

@@ -24,7 +24,7 @@ namespace SailingWeb.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(race)];
-            var list = BoatsTidy.Tidyup(Sql.GetRacers());
+            //var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();
         }
 

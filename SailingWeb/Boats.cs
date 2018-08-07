@@ -18,7 +18,7 @@ namespace SailingWeb.Data
     /// </summary>
     /// TODO Migrate to this instead of Boats type.
     public class BoatsTidy
-    {
+    {/*
         public static List<BoatsTidy> Tidyup(List<BoatsRacing> list)
         {
             List<BoatsTidy> listnew = new List<BoatsTidy>();
@@ -44,7 +44,8 @@ namespace SailingWeb.Data
             }
 
             return listnew;
-        }
+        }*/
+
         [Key]
         [StringLength(100)]
         public string Name { get; set; }
@@ -68,7 +69,7 @@ namespace SailingWeb.Data
             Notes = notes;
         }
     }
-
+    /*
     /// <summary>
     /// Boat data, contains data for an individual sailor including if they are a crew or not.
     /// </summary>
@@ -94,7 +95,7 @@ namespace SailingWeb.Data
             Notes = notes;
         }
     }
-
+    */
     /// <summary>
     /// Boat data, contains data for an individual sailor.
     /// </summary>

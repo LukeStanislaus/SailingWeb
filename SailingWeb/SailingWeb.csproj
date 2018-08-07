@@ -8,6 +8,7 @@
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.34.0.1244" />
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.34.0" />
+    <PackageReference Include="Humanizer" Version="2.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />

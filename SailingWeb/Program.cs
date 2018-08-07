@@ -10,7 +10,7 @@ using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using static Google.Apis.Calendar.v3.EventsResource.ListRequest;
-
+using Humanizer;
 
 namespace SailingWeb
 {
@@ -36,7 +36,7 @@ namespace SailingWeb
             /// This is where the information about the boat being removed is stored. 
             /// It is set by calculating the last boat added when response is true.
             /// </summary>
-            public static Boats Removeboat = new Boats();
+            public static BoatsTidy Removeboat = new BoatsTidy();
             /// <summary>
             /// This is where the race name is stored for use in the SQL queries.
             ///<para></para>
@@ -49,7 +49,7 @@ namespace SailingWeb
                 {
                     var racenametemp = new StringBuilder();
                     racenametemp.Append(Racename.Summary.Replace(" ", "").Replace("&", ""));
-                    racenametemp.Append(Racename.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":",""));
+                    racenametemp.Append(Racename.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":", ""));
                     return racenametemp.ToString();
                 }
                 private set => RacenameTable = value;
@@ -77,7 +77,7 @@ namespace SailingWeb
             /// <summary>
             ///  This is where the calendar data is stored so we don't have to load each time.
             /// </summary>
-            public static Events Event1 = new Events(); 
+            public static Events Event1 = new Events();
         }
 
 
@@ -98,13 +98,13 @@ namespace SailingWeb
             CalendarService service = new CalendarService(new BaseClientService.Initializer()
             {
                 ApiKey = "AIzaSyDSFKJPXA5vQfDAM6iBpo9ShYCnQNEhMZQ",
-                
+
             });
             // Setting the calendar ID.
             EventsResource.ListRequest req = service.Events.List("wfscweb@gmail.com");
 
             // Setting the time limits. This calls all the events from today onwards.
-            req.TimeMin = new DateTime(DateTime.Now.Year, 
+            req.TimeMin = new DateTime(DateTime.Now.Year,
                 DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
 
             // Setting the order, when the calendar is displayed this helps a lot.
@@ -126,39 +126,42 @@ namespace SailingWeb
         /// TODO Use if statements for an/a
         /// TODO Why aren't the crew names coming in properly?
         /// TODO Why aren't quotes working?
-        public static void Exit(Boats boat)
+        public static void Exit(BoatsTidy boat, Calendar cal)
         {
             if (Globals.Alerttext == "")
             {
-
-                if (Globals.Crew==null)
+                if (boat.Crew == null)
                 {
-
-                    // Sets the alert text.
-                    Globals.Alerttext = "You have been entered into the race " + Globals.Racename.Summary.Normalize() +
-                        " sailing a " + boat.BoatName + " with boat number "
-                        + boat.BoatNumber + ". Good Luck!";
-
+                    Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
+    + cal.Summary + " sailing a " + boat.Boat + " with boat number "
+    + boat.BoatNumber + ". The race starts in " + cal.DateTime.TimeOfDay.Humanize(5) + ". Good Luck!";
                 }
-
                 else
                 {
-
                     // Sets the alert text, plus crew.
                     Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
-                        + Globals.Racename.Summary.Normalize() + " sailing a " + boat.BoatName + " with boat number "
-                        + boat.BoatNumber + ". Your crew is " + Globals.Crew + " Good Luck!";
+                        + cal.Summary + " sailing a " + boat.Boat + " with boat number "
+                        + boat.BoatNumber + ". Your crew is " + boat.Crew + ". The race starts in "+cal.DateTime.TimeOfDay.Humanize(5)+". Good Luck!";
                 }
 
             }
 
-            //Resets globals. Untidy.
-            Globals.Boat = new Boats();
-            Globals.AskedCrew = 0;
-            Globals.Crew = "";
-            //Globals.Racename = new Calendar();
-            //Globals.Removeboat = new Boats();
 
+
+        }
+
+        public static Calendar ReturnRaceDateTime(string calname)
+        {
+            return Sql.Todaysevent().Find(x => x.Summary.Equals(calname));
+        }
+
+        public static string ReturnRaceString(string cal)
+        {
+            var calendar = Sql.Todaysevent().Find(x => x.Summary.Equals(cal));
+            var racenametemp = new StringBuilder();
+            racenametemp.Append(calendar.Summary.Replace(" ", "").Replace("&", ""));
+            racenametemp.Append(calendar.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":", ""));
+            return racenametemp.ToString();
         }
 
         /// <summary>
@@ -167,6 +170,7 @@ namespace SailingWeb
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
+            GetCalendar();
             //Runs website.
             BuildWebHost(args).Run();
         }

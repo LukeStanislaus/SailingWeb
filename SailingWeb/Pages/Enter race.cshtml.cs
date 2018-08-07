@@ -21,26 +21,38 @@ namespace RazorPagesContacts.Pages
             //string email = autocomplete.Value;
         }
 
-        public readonly AppDbContext _db;
-
-        public CreateModel(AppDbContext db)
-        {
-            _db = db;
-        }
+        [BindProperty]
+        public string Boatandnumber { get; set; }
         public static int newboat { get; set; }
         [BindProperty]
-        public Boats Boats { get; set; }
+        public BoatsTidy Boats { get; set; }
         [BindProperty]
         public string Crew { get; set; }
         [BindProperty]
-        public Calendar Race { get; set; }
+        public String Race { get; set; }
         [BindProperty]
         public string Notes { get; set; }
         [BindProperty]
-        public string Response { get; set; }
+        public Boats Response1 { get; set; }
 
 
 
+        public void SetBoats(BoatsTidy boats)
+        {
+            try
+            {
+                Sql.SetBoats(boats, Program.ReturnRaceString(Race));
+                Program.Exit(boats, Program.ReturnRaceDateTime(Race));
+                Program.Globals.Racename = new Calendar(Race, "", new DateTime());
+
+            }
+            catch
+            {
+                Program.Globals.Removeboat = boats;
+                Program.Globals.Alerttext = "You are already added to the race, would you like to remove yourself?";
+                Program.Globals.Racename = new Calendar(Race, "", new DateTime());
+            }
+        }
 
         public async void OnGetAsyc()
         {
@@ -69,6 +81,7 @@ namespace RazorPagesContacts.Pages
 
             //return RedirectToAction("OnPost");
         }
+        /*
         public static string SetBoats(Boats boat)
         {
             
@@ -89,21 +102,29 @@ namespace RazorPagesContacts.Pages
             }
             
         }
-
+        */
         public async Task<IActionResult> OnPost()
         {
-            if (Boats.Name != null && Boats.BoatName != "test")
+
+            var str = Boatandnumber.Split(", ");
+            Boats.Boat = Boatandnumber.Split(", ")[0];
+            Boats.BoatNumber = Boatandnumber.Split(", ")[1];
+            if (Boats.Name != null && Boats.Boat != "test")
             {
-                Boats.Py = 0;
+
                 if (Crew != null)
                 {
-                    BoatsRacing boatcrew = new BoatsRacing(Crew, Boats.BoatName, Boats.BoatNumber, 1, Boats.Py, "");
+                    SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
+
+                    return Page();
                 }
 
-                Sql.SetBoats(Boats);
+                SetBoats(Boats);
             }
-            else if (Boats.BoatName == "test")
+            else if (Boats.Boat == "test" && Response1.Name != null && Response1.BoatName != null &&
+                Response1.BoatNumber != null && Response1.Py != 0)
             {
+                Sql.SetNewFullBoat(Response1);
                 return Page();
             }
             return Page();
