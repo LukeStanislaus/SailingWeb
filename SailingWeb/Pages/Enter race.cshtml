@@ -7,6 +7,18 @@
 <html lang="en">
 
 <head>
+    <style>
+        #submit {
+            margin-top: 10px;
+        }
+        #autcompletediv {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 20px;
+            margin-left: 20px;
+
+        }
+    </style>
     <meta charset="utf-8">
     <title>Enter race</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -71,69 +83,69 @@
     }
 
 
-    <form method="POST">
-        @if (!Program.Globals.Todaysevents.Any())
-        {
-            <p1>I'm afraid there is no race on today.</p1>
-        }
-        else
-        {
-            <select asp-for="@Model.Race">
-                @foreach (Calendar race in Program.Globals.Todaysevents)
+            <form method="POST">
+                @if (!Program.Globals.Todaysevents.Any())
                 {
-                    <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
+                    <p1>I'm afraid there is no race on today.</p1>
                 }
-            </select>
-            <!--<div asp-validation-summary="All"></div>-->
-            <!--If there is only one race today and they haven't entered their name or they
-            haven't entered their name but have entered the race from dropdown, ask their name.-->
-
-            <div></div>
-            <label for="autocomplete">Helm name: </label>
-            <input asp-for="Boats.Name" id="autocomplete" value="" />
-
-
-            <select id="select" asp-for="Boatandnumber"></select><a asp-page="/New Boat">Not in list? Click here.</a>
-            <!--TODO Ajaxify.-->
-
-
-
-            <div id="autcompletediv" style="display:none">
-                <label for="autocomplete2">New boat class: </label>
-                <input asp-for="Response1.BoatName" id="newboatautocomplete" />
-                <label for="autocomplete2">Boat number: </label>
-                <input asp-for="Response1.BoatNumber" />
-                <label for="autocomplete2">Your Py: </label>
-                <input asp-for="Response1.Py" id="pyautocomplete" />
-                <input type="submit" />
-            </div>
-
-
-            <div>
-                <label for="autocomplete1">Crew name (or leave blank): </label>
-                <input asp-for="Crew" id="autocomplete1" />
-                <label for="autocomplete1">Notes (or leave blank): </label>
-                <input asp-for="Boats.Notes" id="autocompletenotes" />
-            </div>
-            <div>
-                <input type="submit" />
-            </div>
-            @functions{
-                public string[] Returnclass()
+                else
                 {
-                    List<string> returnlist = new List<string>();
-                    var list = Sql.ReturnClass();
-                    foreach (var item in list)
-                    {
-                        returnlist.Add(item.boatName);
+                    <select asp-for="@Model.Race">
+                        @foreach (Calendar race in Program.Globals.Todaysevents)
+                        {
+                            <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
+                        }
+                    </select>
+                    <!--<div asp-validation-summary="All"></div>-->
+                    <!--If there is only one race today and they haven't entered their name or they
+        haven't entered their name but have entered the race from dropdown, ask their name.-->
 
+                    <div></div>
+                    <label class="form-check-label" for="autocomplete">Helm name: </label>
+                    <input asp-for="Boats.Name" class="form-control" id="autocomplete" value="" />
+                    <div><a asp-page="/New Boat"><font size="1">Not in list? Click here.</font></a></div>
+                    <label class="form-check-label" for="select">Boat class: </label>
+                    <select id="select" class="form-control" asp-for="Boatandnumber"></select>
+                    <!--TODO Ajaxify.-->
+
+
+
+                    <div id="autcompletediv" style="display:none">
+                        <label for="autocomplete2">New boat class: </label>
+                        <input asp-for="Response1.BoatName" id="newboatautocomplete" />
+                        <label for="autocomplete2">Boat number: </label>
+                        <input asp-for="Response1.BoatNumber" />
+                        <label for="autocomplete2">Your Py: </label>
+                        <input asp-for="Response1.Py" id="pyautocomplete" />
+                        <input type="submit" />
+                    </div>
+
+
+                    <div>
+                        <label class="form-check-label" for="autocomplete1">Crew name (or leave blank): </label>
+                        <input asp-for="Crew" class="form-control" id="autocomplete1" />
+                        <label class="form-check-label" for="autocomplete1">Notes (or leave blank): </label>
+                        <input asp-for="Boats.Notes" class="form-control" id="autocompletenotes" />
+                    </div>
+                    <div>
+                        <input id="submit" class="btn btn-primary" type="submit" />
+                    </div>
+                    @functions{
+                        public string[] Returnclass()
+                        {
+                            List<string> returnlist = new List<string>();
+                            var list = Sql.ReturnClass();
+                            foreach (var item in list)
+                            {
+                                returnlist.Add(item.boatName);
+
+                            }
+                            return returnlist.ToArray();
+
+
+                        }
                     }
-                    return returnlist.ToArray();
-
-
-                }
-            }
-            <script>
+                    <script>
 
 
                                         $("#newboatautocomplete").autocomplete({
@@ -164,13 +176,13 @@
                    // $("#autocomplete1").autocomplete({
                   //      source: function (request, response) {
                  //           response(ajax3());
-                        
+
                   //  });
-                
+
                     $("#autocomplete1").autocomplete({
                         source: ['@Html.Raw(string.Join("', '", Sql.GetNames()))']
                     });
-                
+
                 /*
                 $("#autocomplete1").autocomplete({
                     source:
@@ -188,9 +200,9 @@
                                 }
                             })
                         }
-                        
 
-                    }); 
+
+                    });
                         */
 
                     $("#autocomplete").autocomplete({
@@ -201,85 +213,85 @@
 
 
 
-            </script>
+                    </script>
 
-            <script>
-                function ajax2() {
-                    $.ajax({
-                        url: "/Folder/GetClasses",
-                        data: { name: document.getElementById("newboatautocomplete").value },
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                    <script>
+                        function ajax2() {
+                            $.ajax({
+                                url: "/Folder/GetClasses",
+                                data: { name: document.getElementById("newboatautocomplete").value },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                }
+                            }).done(function (resulting) {
+                                document.getElementById("pyautocomplete").value = resulting.py;
+
+                            })
+                        };
+
+                        function ajax1() {
+                            $.ajax({
+                                url: "/Folder/GetAll",
+                                data: { name: document.getElementById("autocomplete").value },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                }
+                            }).done(function (resulting) {
+                                document.getElementById("select").options.length = 0
+                                resulting.forEach(function (arrayElem) {
+                                    var option = document.createElement("option");
+                                    var str = arrayElem.boatName;
+                                    var str1 = str.concat(", ")
+                                    option.text = str1.concat(arrayElem.boatNumber);
+                                    option.value = str1.concat(arrayElem.boatNumber);
+                                    document.getElementById("select").add(option);
+                                })
+
+                                if (resulting.length != 0) {
+                                    var option = document.createElement("option");
+                                    option.text = "New boat";
+                                    option.value = "test";
+                                    document.getElementById("select").add(option);
+                                }
+                            });
                         }
-                    }).done(function (resulting) {
-                        document.getElementById("pyautocomplete").value = resulting.py;
 
-                    })
-                };
+                        document.getElementById("select").onchange = function () {
+                            if (document.getElementById("select").value == "test") {
+                                document.getElementById("autcompletediv").style.display = "block";
 
-                function ajax1() {
-                    $.ajax({
-                        url: "/Folder/GetAll",
-                        data: { name: document.getElementById("autocomplete").value },
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()
+
+                            }
+                            else {
+                                document.getElementById("autcompletediv").style.display = "none";
+
+                            }
+
                         }
-                    }).done(function (resulting) {
-                        document.getElementById("select").options.length = 0
-                        resulting.forEach(function (arrayElem) {
-                            var option = document.createElement("option");
-                            var str = arrayElem.boatName;
-                            var str1 = str.concat(", ")
-                            option.text = str1.concat(arrayElem.boatNumber);
-                            option.value = str1.concat(arrayElem.boatNumber);
-                            document.getElementById("select").add(option);
-                        })
-
-                        if (resulting.length != 0) {
-                            var option = document.createElement("option");
-                            option.text = "New boat";
-                            option.value = "test";
-                            document.getElementById("select").add(option);
+                        document.getElementById("autocomplete").onblur = function () {
+                            ajax1();
                         }
-                    });
+
+                        document.getElementById("autocomplete").onkeyup = function () {
+                            ajax1();
+                        }
+                        document.getElementById("newboatautocomplete").onblur = function () {
+                            ajax2();
+                        }
+
+                        document.getElementById("newboatautocomplete").onkeyup = function () {
+                            ajax2();
+                        }
+                    </script>
+
+
+
                 }
 
-                document.getElementById("select").onchange = function () {
-                    if (document.getElementById("select").value == "test") {
-                        document.getElementById("autcompletediv").style.display = "block";
-
-
-                    }
-                    else {
-                        document.getElementById("autcompletediv").style.display = "none";
-
-                    }
-
-                }
-                document.getElementById("autocomplete").onblur = function () {
-                    ajax1();
-                }
-
-                document.getElementById("autocomplete").onkeyup = function () {
-                    ajax1();
-                }
-                document.getElementById("newboatautocomplete").onblur = function () {
-                    ajax2();
-                }
-
-                document.getElementById("newboatautocomplete").onkeyup = function () {
-                    ajax2();
-                }
-            </script>
-
-
-
-        }
-
-    </form>
-    <div><a asp-page="/New Boat">Bought a new boat/New to the club?</a></div>
+            </form>
+    <!--<div><a asp-page="/New Boat">Bought a new boat/New to the club?</a></div>-->
 
 </body>
 

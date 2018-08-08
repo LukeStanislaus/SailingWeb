@@ -11,6 +11,8 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using static Google.Apis.Calendar.v3.EventsResource.ListRequest;
 using Humanizer;
+using Humanizer.DateTimeHumanizeStrategy;
+using Humanizer.Configuration;
 
 namespace SailingWeb
 {
@@ -124,8 +126,6 @@ namespace SailingWeb
         /// </summary>
         /// <param name="Boat">The boat they are sailing.</param>
         /// TODO Use if statements for an/a
-        /// TODO Why aren't the crew names coming in properly?
-        /// TODO Why aren't quotes working?
         public static void Exit(BoatsTidy boat, Calendar cal)
         {
             if (Globals.Alerttext == "")
@@ -134,14 +134,14 @@ namespace SailingWeb
                 {
                     Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
     + cal.Summary + " sailing a " + boat.Boat + " with boat number "
-    + boat.BoatNumber + ". The race starts in " + cal.DateTime.TimeOfDay.Humanize(5) + ". Good Luck!";
+    + boat.BoatNumber + ". The race starts in " + cal.DateTime.Humanize() + ". Good Luck!";
                 }
                 else
                 {
                     // Sets the alert text, plus crew.
                     Globals.Alerttext = "You, " + boat.Name + " have been entered into the race "
                         + cal.Summary + " sailing a " + boat.Boat + " with boat number "
-                        + boat.BoatNumber + ". Your crew is " + boat.Crew + ". The race starts in "+cal.DateTime.TimeOfDay.Humanize(5)+". Good Luck!";
+                        + boat.BoatNumber + ". Your crew is " + boat.Crew + ". The race starts in "+cal.DateTime.Humanize()+". Good Luck!";
                 }
 
             }
