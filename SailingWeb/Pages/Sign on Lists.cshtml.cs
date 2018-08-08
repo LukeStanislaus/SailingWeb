@@ -23,7 +23,15 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(race)];
+            for (int i = 0; i < Sql.GetRacers().Count; i++)
+            {
+                var thing = Sql.GetRacers()[i];
+                int integer = i;
+            }
+            if (race != null)
+            {
+                Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(race)];
+            }
             //var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();
         }

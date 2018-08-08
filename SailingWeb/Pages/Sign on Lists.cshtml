@@ -12,21 +12,39 @@
         table, th, td {
             border: 1px solid black;
             width: 100%;
-            padding: 15px;
+            padding: 5px;
         }
+        /* Style buttons */
+        .btn {
+            background-color: DodgerBlue; /* Blue background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 12px 16px; /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+        }
+
+            /* Darker background on mouse-over */
+            .btn:hover {
+                background-color: RoyalBlue;
+            }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     @if (Program.Globals.Alerttext != "")
     {
-        <script language="javascript">
-        alert('@Program.Globals.Alerttext');
+        <script>
+                                    bootbox.alert({
+                        size: "small",
+                message: "@Program.Globals.Alerttext"
+                    })
         </script>
         Program.Globals.Alerttext = "";
     }
 
 
-    <form method="post">
+    <form id="button" method="post">
         @if (Program.Globals.Todaysevents.Count == 0)
         {
             <p1>I'm afraid there is no race on today.</p1>
@@ -44,7 +62,7 @@
             {
 
                 <option value="@Program.Globals.Todaysevents.IndexOf(race1)">@race1.Summary</option>
-                
+
             }
         </select>
 
@@ -64,6 +82,7 @@
         <!--Try to display-->
         try
         {
+            var list = Sql.GetRacers();
             <!-- <label for="table1">List of racers: </label> -->
             <table id="table1">
                 <tr>
@@ -71,15 +90,20 @@
                     <th>Crew</th>
                     <th>Boat Name</th>
                     <th>Boat Number</th>
-
+                    <th>Options</th>
                 </tr>
-                @foreach (Data.BoatsTidy boat in Sql.GetRacers())
+                @for (int i = 0; i < Sql.GetRacers().Count; i++)
                 {
                     <tr>
-                        <td>@boat.Name</td>
-                        <td>@boat.Crew</td>
-                        <td>@boat.Boat</td>
-                        <td>@boat.BoatNumber</td>
+                        <td>@Sql.GetRacers()[i].Name</td>
+                        <td>@Sql.GetRacers()[i].Crew</td>
+                        <td>@Sql.GetRacers()[i].Boat</td>
+                        <td>@Sql.GetRacers()[i].BoatNumber</td>
+                        <td>
+                                <button class="btn" onclick="ajax4(@i)" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fa fa-close"> Remove</i></span>
+                                </button>
+                        </td>
 
                     </tr>
                 }
@@ -96,7 +120,26 @@
     }
 
 
+    <script>
+        function ajax4(index) {
+            $.ajax({
+                url: "/Folder/RemoveBoat",
+                data: { indexof: index },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success:function (data) {
 
+                    alert("done");
+                    document.getElementById("button").submit();
+                }
+
+            });
+        }
+
+
+    </script>
     <!--
          <iframe src="https://calendar.google.com/calendar/embed?showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;src=wfscweb%40gmail.com&amp;color=%236B3304&amp;ctz=Europe%2FLondon" style="border:solid 1px #777" width="400" height="600" frameborder="0" scrolling="no"></iframe>
      <!--TODO Create a new page for this.-->
