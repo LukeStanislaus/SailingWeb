@@ -107,17 +107,26 @@ namespace RazorPagesContacts.Pages
         {
             try
             {
-                var str = Boatandnumber.Split(", ");
-                Boats.Boat = str[0];
-                Boats.BoatNumber = str[1];
+                if (Boatandnumber != "test")
+                {
+                    var str = Boatandnumber.Split(", ");
+                    Boats.Boat = str[0];
+                    Boats.BoatNumber = str[1];
+                }
+                else
+                {
+                    Boats.Boat = Boatandnumber;
+                }
             }
             catch
             {
                 RedirectToPage("/index");
             }
+
             if (Boats.Name != null && Boats.Boat != "test")
             {
 
+                Boats.Py = Sql.GetBoats(Boats.Name).Find(x => x.BoatName.Equals(Boats.Boat) && x.BoatNumber.Equals(Boats.BoatNumber)).Py;
                 if (Crew != null)
                 {
                     SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
@@ -127,10 +136,12 @@ namespace RazorPagesContacts.Pages
 
                 SetBoats(Boats);
             }
-            else if (Boats.Boat == "test" && Response1.Name != null && Response1.BoatName != null &&
+            else if (Boats.Boat == "test" && Boats.Name != null && Response1.BoatName != null &&
                 Response1.BoatNumber != null && Response1.Py != 0)
             {
+                Response1.Name = Boats.Name;
                 Sql.SetNewFullBoat(Response1);
+                Program.Globals.Alerttext = "Your boat has been added to the race.";
                 return Page();
             }
             return Page();

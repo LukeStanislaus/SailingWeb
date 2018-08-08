@@ -128,7 +128,7 @@ namespace SailingWeb
                 sql.Append(boat.Name);
                 sql.Append("', '");
                 sql.Append(boat.BoatName);
-                sql.Append("', ");
+                sql.Append("', '");
                 sql.Append(boat.BoatNumber);
                 sql.Append("', ");
                 sql.Append(boat.Py);
