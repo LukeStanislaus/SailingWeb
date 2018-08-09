@@ -8,9 +8,9 @@ namespace SailingWeb.Data
     
     public class BoatClass
     {
-        public string boatName { get; set; }
-        public int noOfCrew { get; set; }
-        public int py { get; set; }
+        public string BoatName { get; set; }
+        public int NoOfCrew { get; set; }
+        public int Py { get; set; }
     }
 
     /// <summary>

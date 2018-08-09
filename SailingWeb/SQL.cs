@@ -11,6 +11,27 @@ namespace SailingWeb
 {
     public static class Sql
     {
+
+
+        /// <summary>
+        /// Returns a stored procedure that returns all classes from boat data db.
+        /// </summary>
+        /// <returns>List of all classes.</returns>
+        public static List<String> ReturnClassNames()
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                // Runs query.
+                var list = connection.Query<BoatClass>("call returnclass").ToList();
+                var stringlist = new List<String>();
+                foreach(var boat in list)
+                {
+                    stringlist.Add(boat.BoatName);
+                }
+                return stringlist;
+            }
+        }
+
         /// <summary>
         /// Returns a stored procedure that returns all classes from boat data db.
         /// </summary>
@@ -51,16 +72,17 @@ namespace SailingWeb
         public static List<BoatsTidy> GetRacers()
         {
             // Tables names cannot have spaces.
-
-
+            
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 try
                 {
                     // Appends together the query. Stops SQL injection.
                     var sql1 = new StringBuilder();
-                    sql1.Append("select * from ");
-                    sql1.Append(Program.Globals.RacenameTable);
+                    sql1.Append("select name, boat, boatNumber, crew, py, notes from signonlists where summary = '");
+                    sql1.Append(Program.Globals.Racename.Summary);
+                    sql1.Append("', dateTime = ");
+                    sql1.Append(Program.Globals.Racename.DateTime);
                     sql1.Append(";");
                     return connection.Query<BoatsTidy>(sql1.ToString()).ToList();
                 }
@@ -86,14 +108,14 @@ namespace SailingWeb
             {
 
                 //Runs stored procedure.
-                return connection.Query<Boats>("call returnboatsspecific(@name)", new
+                return connection.Query<Boats>("select * from fulllist where name = @name", new
                 { name = name }).ToList();
 
             }
 
         }
 
-
+        /*
         /// <summary>
         /// Gets the list of distinct boats which have been sailed before.
         /// </summary>
@@ -109,7 +131,7 @@ namespace SailingWeb
 
             }
 
-        }
+        }*/
 
 
         /// <summary>
@@ -123,19 +145,15 @@ namespace SailingWeb
             {
 
                 //Appends together the query, stops SQL injection.
-                var sql = new StringBuilder();
-                sql.Append("insert into fulllist values ('");
-                sql.Append(boat.Name);
-                sql.Append("', '");
-                sql.Append(boat.BoatName);
-                sql.Append("', '");
-                sql.Append(boat.BoatNumber);
-                sql.Append("', ");
-                sql.Append(boat.Py);
-                sql.Append(");");
-
                 // Query.
-                connection.Query(sql.ToString());
+                connection.Query("insert into fulllist value (@name, @boatName, " +
+                    "@boatNumber, @py, @sailingClub)", new {
+                        name = boat.Name,
+                        boatName = boat.BoatName,
+                        boatNumber = boat.BoatNumber,
+                        py = boat.Py,
+                        sailingClub = "Whitefriars Sailing Club"
+                });
 
             }
 
@@ -146,26 +164,21 @@ namespace SailingWeb
         /// Removes boats, knows if they are crew or not.
         /// </summary>
         /// <param name="boat"></param>
-        public static void RemoveBoats(BoatsTidy boat, string race)
+        public static void RemoveBoats(BoatsTidy boat, Calendar race)
         {
-
-
-
-
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-
-                race = Program.ReturnRaceString(race);
                 // Creates query.
 
-                    var sql = new StringBuilder();
-                    sql.Append("delete from ");
-                    sql.Append(race);
-                    sql.Append(" where name ='");
-                    sql.Append(boat.Name);
-                    sql.Append("';");
+                string str = "delete from signonlists where (name = @name and summary = @summary " +
+                        "and dateTime = @dateTime and sailingClub = @sailingClub)";
+                    connection.Query(str, new {
+                            name = boat.Name,
+                            summary = race.Summary,
+                            dateTime = race.DateTime,
+                            sailingClub = "Whitefriars Sailing Club"
 
-                    connection.Query(sql.ToString());
+                        });
                 
 
             }
@@ -178,47 +191,30 @@ namespace SailingWeb
         /// </summary>
         /// <param name="boat">Boat data of person to add.</param>
         /// <param name="crew">Are they crew?</param>
-        public static void SetBoats(BoatsTidy boat, string race)
+        public static void SetBoats(BoatsTidy boat, Calendar race)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                connection.Query(CreateTable(race));
-                var sql = new StringBuilder();
-                sql.Append("insert into ");
-                sql.Append(race);
-                sql.Append(" values('");
-                sql.Append(boat.Name);
-                sql.Append("','");
-                sql.Append(boat.Boat);
-                sql.Append("','");
-                sql.Append(boat.BoatNumber);
-                sql.Append("','");
-                sql.Append(boat.Crew != null ? boat.Crew : "");
-                sql.Append("',");
-                sql.Append(boat.Py != 0 ? boat.Py : 0);
-                sql.Append(",'");
-                sql.Append(boat.Notes != null ? boat.Notes : "");
-                sql.Append("');");
-                connection.Query(sql.ToString());
+                string str = "insert into signonlists values(@name, @boatName, @boatNumber, @crew, " +
+                    "@py, @notes, @summary, @dateTime, @sailingClub)";
+                connection.Query(str, new {
+                        name = boat.Name,
+                        boatName = boat.Boat,
+                        boatNumber = boat.BoatNumber,
+                        crew = boat.Crew == null? "" : boat.Crew,
+                        py = boat.Py,
+                        notes = boat.Notes == null ? "" : boat.Crew,
+                        summary = race.Summary,
+                        dateTime = race.DateTime,
+                        sailingClub = "Whitefriars Sailing Club"
+
+                });
 
             }
 
         }
 
 
-        private static string CreateTable(string tablename)
-        {
-            var sql = new StringBuilder();
-            sql.Append("CREATE TABLE if not exists  ");
-            sql.Append(tablename);
-            sql.Append(
-                "(`name` VARCHAR(45) NOT NULL, " +
-                "`boat` VARCHAR(45) NOT NULL, " +
-                "`boatNumber` VARCHAR(45) NOT NULL, " +
-                "`crew` VARCHAR(45) NULL,`py` INT(10) NOT NULL, " +
-                "`notes` VARCHAR(150) NULL,PRIMARY KEY(`name`, `boat`, `boatNumber`, `py`)); ");
-            return sql.ToString();
-        }
 
         /*
         /// <summary>
@@ -287,7 +283,7 @@ namespace SailingWeb
 
         }
         */
-
+        /*
         /// <summary>
         /// Returns the number of crew a boat has.
         /// </summary>
@@ -303,7 +299,7 @@ namespace SailingWeb
             }
 
         }
-
+        */
 
         /// <summary>
         /// Inserts into the db calendar a single event.

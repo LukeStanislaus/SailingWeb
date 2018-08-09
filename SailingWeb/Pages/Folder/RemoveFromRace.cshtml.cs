@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SailingWeb.Pages.Folder
 {
-    public class GetClassesModel : PageModel
+    public class RemoveFromRaceModel : PageModel
     {
-        public JsonResult OnGet(string name)
+        public void OnGet()
         {
-            var json = new JsonResult(Sql.ReturnClass().Where(x => x.BoatName.Equals(name)).FirstOrDefault());
-            return json;
+            Sql.RemoveBoats(Program.Globals.Removeboat, Program.Globals.Racename);
         }
     }
 }

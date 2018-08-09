@@ -4,25 +4,55 @@
 @{ ViewBag.Title = "alert message";}
 <head>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
 </head>
 @if (Program.Globals.Alerttext != "")
 {
-
     <!-- JS dependencies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- bootbox code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-    <script>
+    if (Program.Globals.Removeboat.Name == null)
+    {
+        <script>
+                                    bootbox.alert({
+                        size: "small",
+                message: "@Program.Globals.Alerttext"
+                    })
+        </script>
 
-            bootbox.alert("@Program.Globals.Alerttext");
-    </script>
+    }
+    else
+    {
+        <script>
+
+
+            bootbox.confirm({
+                size: "small",
+                message: "@Program.Globals.Alerttext",
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/Folder/RemoveFromRace",
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            }
+
+                        })
+
+                    }
+                }
+            })
+
+
+        </script>
+    }
+    Program.Globals.Removeboat = new Data.BoatsTidy();
     Program.Globals.Alerttext = "";
 }
-@if (Program.Globals.Removeboat.Name != null)
-{
-    <div><a style="font-size:50px" asp-page="/Remove Boat">Remove yourself from the race?</a></div>
-}
+
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>

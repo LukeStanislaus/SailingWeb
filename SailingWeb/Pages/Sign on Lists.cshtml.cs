@@ -12,7 +12,7 @@ namespace SailingWeb.Pages
     {
         public string Message { get; set; }
         [BindProperty]
-        public string race { get; set; }
+        public string Race { get; set; }
         //[BindProperty]
         //public List<BoatsTidy> List { get; set; }
 
@@ -28,9 +28,9 @@ namespace SailingWeb.Pages
                 var thing = Sql.GetRacers()[i];
                 int integer = i;
             }
-            if (race != null)
+            if (Race != null)
             {
-                Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(race)];
+                Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(Race)];
             }
             //var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();

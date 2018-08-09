@@ -1,0 +1,48 @@
+﻿@page
+@model SailingWeb.Pages.ManageRaceModel
+@{
+    ViewData["Title"] = "ManageRace";
+}
+
+<h2>ManageRace</h2>
+
+<html>
+<head>
+
+</head>
+<body>
+    @if (Model.RaceName == null)
+    {
+    <form method="POST">
+        <select id="select" class="form-control" asp-for="RaceName">
+            @foreach (Calendar race in Program.Globals.Todaysevents)
+            {
+                <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
+            }
+        </select>
+        <input type="submit" />
+        <p1>Or reload a race:</p1>
+
+        <select id="select" class="form-control" asp-for="RaceName">
+            @foreach (Calendar race in Program.Globals.Todaysevents)
+            {
+                <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
+            }
+        </select>
+        <input type="submit" />
+
+
+
+    </form>
+    }
+    else
+    {
+        
+
+    }
+
+    
+
+</body>
+
+</html>

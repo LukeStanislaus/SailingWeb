@@ -29,7 +29,7 @@
     <script type="text/javascript">
 
         $("#boatName").autocomplete({
-                    source: [ '@Html.Raw(string.Join("', '", Sql.ReturnClass()))' ]
+                    source: [ '@Html.Raw(string.Join("', '", Sql.ReturnClassNames()))' ]
         }
             );
 

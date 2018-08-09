@@ -13,7 +13,7 @@ namespace SailingWeb.Pages.Folder
         {
             try
             {
-                Sql.RemoveBoats(Sql.GetRacers()[indexof], Program.Globals.Racename.Summary);
+                Sql.RemoveBoats(Sql.GetRacers()[indexof], Program.Globals.Racename);
                 Program.Globals.Alerttext = Sql.GetRacers()[indexof].Name + " has been removed from the race.";
             }
             catch

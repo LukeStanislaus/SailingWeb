@@ -23,7 +23,7 @@ namespace RazorPagesContacts.Pages
 
         [BindProperty]
         public string Boatandnumber { get; set; }
-        public static int newboat { get; set; }
+        public static int NewBoat { get; set; }
         [BindProperty]
         public BoatsTidy Boats { get; set; }
         [BindProperty]
@@ -39,10 +39,15 @@ namespace RazorPagesContacts.Pages
 
         public void SetBoats(BoatsTidy boats)
         {
+            string[] str = Race.Split("abc123");
+            Calendar cal = new Calendar(str[0], null,
+    Convert.ToDateTime(str[1]));
             try
             {
-                Sql.SetBoats(boats, Program.ReturnRaceString(Race));
-                Program.Exit(boats, Program.ReturnRaceDateTime(Race));
+
+
+                Sql.SetBoats(boats, cal);
+                Program.Exit(boats, cal);
                 Program.Globals.Racename = new Calendar(Race, "", new DateTime());
 
             }
@@ -50,7 +55,7 @@ namespace RazorPagesContacts.Pages
             {
                 Program.Globals.Removeboat = boats;
                 Program.Globals.Alerttext = "You are already added to the race, would you like to remove yourself?";
-                Program.Globals.Racename = new Calendar(Race, "", new DateTime());
+                Program.Globals.Racename = cal;
             }
         }
 
@@ -131,7 +136,7 @@ namespace RazorPagesContacts.Pages
                 {
                     SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
 
-                    return Page();
+                    return RedirectToPage("/Index");
                 }
 
                 SetBoats(Boats);
@@ -142,9 +147,9 @@ namespace RazorPagesContacts.Pages
                 Response1.Name = Boats.Name;
                 Sql.SetNewFullBoat(Response1);
                 Program.Globals.Alerttext = "Your boat has been added to the race.";
-                return Page();
+                return RedirectToPage("/Index");
             }
-            return Page();
+            return RedirectToPage("/Index");
             /*(
             // Set crew
             // Initially no crew would be set to Crew would be Null
@@ -267,7 +272,7 @@ namespace RazorPagesContacts.Pages
 
             //return Page();
             // If all fails, refresh.
-            
+
         }
     }
 }
