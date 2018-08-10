@@ -77,18 +77,18 @@ namespace SailingWeb
             {
                 try
                 {
-                    // Appends together the query. Stops SQL injection.
-                    var sql1 = new StringBuilder();
-                    sql1.Append("select name, boat, boatNumber, crew, py, notes from signonlists where summary = '");
-                    sql1.Append(Program.Globals.Racename.Summary);
-                    sql1.Append("', dateTime = ");
-                    sql1.Append(Program.Globals.Racename.DateTime);
-                    sql1.Append(";");
-                    return connection.Query<BoatsTidy>(sql1.ToString()).ToList();
+
+                    string str = "select name, boat, boatNumber, crew, py, notes from signonlists where (summary = @summary and dateTime = @dateTime);";
+                    return connection.Query<BoatsTidy>(str, new {
+                        summary = Program.Globals.Racename.Summary,
+                        dateTime = Program.Globals.Racename.DateTime
+                    }).ToList();
                 }
                 catch
                 {
-                    return new List<BoatsTidy>();
+                    var list = new List<BoatsTidy>();
+                    list.Add(new BoatsTidy("Nothing to show.", "", "", "", 0, ""));
+                    return list;
                 }
 
             }
