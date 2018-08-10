@@ -4,8 +4,6 @@ about: Create a report to help us improve
 
 ---
 
-Many thanks for helping us improve, it would be great if you could follow this basic template to give me an idea of your bug. 
-
 **Describe the bug**
 A clear and concise description of what the bug is.
 
