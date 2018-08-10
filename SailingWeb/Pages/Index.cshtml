@@ -3,8 +3,23 @@
 
 @{ ViewBag.Title = "alert message";}
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        .btn {
+            background-color: DodgerBlue; /* Blue background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 12px 16px; /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+        }
 
+            /* Darker background on mouse-over */
+            .btn:hover {
+                background-color: RoyalBlue;
+            }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 @if (Program.Globals.Alerttext != "")
 {
@@ -52,8 +67,7 @@
     Program.Globals.Removeboat = new Data.BoatsTidy();
     Program.Globals.Alerttext = "";
 }
-<a href="/Enter race"><font size="3"><b><u>Press here to join a race</u></b></font></a>
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -65,7 +79,9 @@
             <img src="~/images/banner1.jpg" alt="ASP.NET" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    <b>Pontoon, Jetties for any wind direction</b>
+                    <button class="btn" >
+                        <span aria-hidden="true"><i class="fa fa-caret-square-o-right"> Sign on to the next race</i></span>
+                    </button>
 
                 </p>
             </div>
