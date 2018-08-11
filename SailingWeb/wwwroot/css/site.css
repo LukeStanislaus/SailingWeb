@@ -12,7 +12,7 @@ body {
 
 /* Carousel */
 .carousel-caption p {
-    font-size: 20px;
+    font-size: 10px;
     line-height: 1.4;
 }
 
@@ -27,9 +27,18 @@ body {
 }
 
 /* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+@media screen and (min-width: 767px) {
+    #captions, #captions1, #captions2 {
+        font-family: 'Roboto', sans-serif;
+        font-size: 20px;
     }
+
+
+}
+@media screen and (max-width: 767px) {
+    #captions {
+        font-size: 12px;
+    }
+
+
 }

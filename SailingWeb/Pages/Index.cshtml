@@ -4,19 +4,22 @@
 @{ ViewBag.Title = "Whitefriars SC";}
 <head>
     <style>
-        .btn {
-            background-color: DodgerBlue; /* Blue background */
-            border: none; /* Remove borders */
-            color: white; /* White text */
-            padding: 12px 16px; /* Some padding */
-            font-size: 16px; /* Set a font size */
-            cursor: pointer; /* Mouse pointer on hover */
-        }
 
-            /* Darker background on mouse-over */
-            .btn:hover {
-                background-color: RoyalBlue;
+            .btn {
+                background-color: DodgerBlue; /* Blue background */
+                border: none; /* Remove borders */
+                color: white; /* White text */
+                padding: 12px 16px; /* Some padding */
+                font-size: 16px; /* Set a font size */
+                cursor: pointer; /* Mouse pointer on hover */
             }
+
+                /* Darker background on mouse-over */
+                .btn:hover {
+                    background-color: RoyalBlue;
+                }
+        
+
     </style>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -93,7 +96,7 @@
             <img src="~/images/DSCN2338.png" alt="Visual Studio" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    <b>Secure compound for boats</b>
+                    <b id="captions">Secure compound for boats</b>
 
                 </p>
             </div>
@@ -103,7 +106,7 @@
             <div class="carousel-caption" role="option">
                 <p>
 
-                    <b>Dinghies for hire to Club members</b>
+                    <b id="captions1">Dinghies for hire to Club members</b>
 
                 </p>
             </div>
@@ -112,7 +115,7 @@
             <img src="~/images/DSCN2331.png" alt="Microsoft Azure" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    <b>Lake, Club house and surrounding land owned by the Club</b>
+                    <b id="captions2">Lake, Club house and surrounding land owned by the Club</b>
 
                 </p>
             </div>
