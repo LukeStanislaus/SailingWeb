@@ -44,7 +44,7 @@
                 @foreach (Calendar race in Program.Globals.Todaysevents)
                 {
                     <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">
-                        @race.Summary, @race.DateTime.TimeOfDay
+                        @race.Summary, @string.Format("{0}:{1}", race.DateTime.TimeOfDay.Hours, race.DateTime.TimeOfDay.Minutes == 00 ? 00 : race.DateTime.TimeOfDay.Minutes)
                     </option>
                 }
             </select>
