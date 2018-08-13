@@ -21,10 +21,16 @@ namespace SailingWeb
 
         public static class Globals
         {
+            public static List<Calendar> Todaysevents { get {
+                    var y = DateTime.Now.AddDays(1);
+                    return Events.FindAll(x => DateTime.Compare(x.DateTime, y) <= 0 &&
+                        DateTime.Compare(x.DateTime, DateTime.Now) >= 0);
+                }
+                set { } }
             /// <summary>
             /// Stores todays events to increase efficiency TODO fix this so that it works on a second day without rerunning the program.
             /// </summary>
-            public static List<Calendar> Todaysevents = Sql.Todaysevent();
+            public static List<Calendar> Events = Sql.Todaysevent();
             /// <summary>
             /// Checking whether or not the user has said yes or no to the popup for removing from themselves from the database.
             ///<para>True if they said yes, false if they said no.</para>
@@ -170,7 +176,7 @@ namespace SailingWeb
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            GetCalendar();
+            //GetCalendar();
             //Runs website.
             BuildWebHost(args).Run();
         }
