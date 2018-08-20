@@ -8,8 +8,11 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
-        
+
         table, th, td {
             border: 1px solid black;
             padding: 5px;
@@ -17,7 +20,6 @@
             overflow: auto;
             overflow-y: visible;
         }
-
     </style>
 </head>
 <body onload="onload()">
@@ -35,63 +37,150 @@
     }
     else
     {<div id="table-wrapper">
-        <table id="table1">
-            <tr>
-                <th>Helm</th>
-                <th>Crew</th>
-                <th>Boat Name</th>
-                <th>Boat Number</th>
-                <th>Lap</th>
-                <th>Py</th>
-                <th>Notes</th>
-                <th>Place</th>
-                @for (int i = 1; i < (ManageRaceModel.NoOfLaps + 1); i++)
-                {
-                    <th>@String.Concat("Lap ", i)</th>
-                }
-            </tr>
-            @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
-            {
+            <table id="table1">
                 <tr>
-                    <td>@key.Key.Name</td>
-                    <td>@key.Key.Crew</td>
-                    <td>@key.Key.Boat</td>
-                    <td>@key.Key.BoatNumber</td>
-                    <td>
-                        <button class="btn" onclick="
-                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @key.Value.Count);">
-                             Lap
-                        </button>
-                    
-                    </td>
-                    <td>@key.Key.Py</td>
-                    <td>@key.Key.Notes</td>
-                    <td>@try
+                    <th>Helm</th>
+                    <th>Crew</th>
+                    <th>Boat Name</th>
+                    <th>Boat Number</th>
+                    <th>Lap</th>
+                    <th>Py</th>
+                    <th>Notes</th>
+                    <th>Place</th>
+                    @for (int i = 1; i < (ManageRaceModel.NoOfLaps + 1); i++)
                     {
-                        ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);
+                        <th>@String.Concat("Lap ", i)</th>
                     }
-                    catch {
-
-                    }</td>
-                    @for (int i = 1; i < (key.Value.Count + 1); i++)
-                    {
-                        <td>@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
-                    }
-
                 </tr>
-            }
-        </table>
-    </div>
+                @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
+                {
+                    <tr>
+                        <td>@key.Key.Name</td>
+                        <td>@key.Key.Crew</td>
+                        <td>@key.Key.Boat</td>
+                        <td>@key.Key.BoatNumber</td>
+                        <td>
+                            <button class="btn" onclick="
+                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @key.Value.Count);">
+                                Lap
+                            </button>
+
+                        </td>
+                        <td>@key.Key.Py</td>
+                        <td>@key.Key.Notes</td>
+                        <td>
+                            @try
+                            {
+                                ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);
+                            }
+                            catch
+                            {
+
+                            }
+                        </td>
+                        @for (int i = 1; i < (key.Value.Count + 1); i++)
+                        {
+                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
+                        }
+
+                    </tr>
+                }
+            </table>
+        </div>
 
     }
-    <form id="submit" method="get">
-        </form>
+    <form id="submit" method="get"></form>
     <form id="submit1" method="post">
-        <button style="visibility:collapse" id="startracebutton"onclick="startrace()">Click to start race.</button>
+        <button style="visibility:collapse" id="startracebutton" onclick="startrace()">Click to start race.</button>
     </form>
+
     <p id="demo"></p>
+    <div id="dialog-form" title="Edit data.">
+        <p class="validateTips">All form fields are required.</p>
+
+        <form>
+            <fieldset>
+                <label for="password">Change time</label>
+                <input name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+    <button id="opener">open the dialog</button>
+    <div id="dialog" title="Dialog Title" style="visibility:collapse">I'm a dialog</div>
+
+    <script>
+        $("#dialog").dialog({ autoOpen: false });
+        $("#opener").click(function () {
+            $("#dialog").dialog("open");
+        });
+    </script>
     <script src="~/js/countup_timer.min.js"></script>
     <script>
+        function editLap(username, lapNo, time) {
+            document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
+            document.getElementById("password").value = time;
+            document.getElementById("dialog-form").style.visibility ="visible";
+            $("#dialog-form").dialog({
+                autoOpen: false,
+                buttons: {
+                    "Enter": function () {
+                        $.ajax({
+                            url: "/Folder/UpdateTime",
+                            data: {
+                                name: JSON.stringify(username), lapNumber: lapNo, lapTime: document.getElementById("password").value
+                            },
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                document.getElementById("submit").submit();
+                            }
+
+                        });
+                    },
+                    Cancel: function () {
+                        $("#dialog-form").dialog("close");
+                    }
+                },
+                close: function () {
+                }});
+            $("#dialog-form").dialog("open");
+            /*
+                .dialog({
+                autoOpen: true,
+                height: 400,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "Create an account": function () {
+                        $.ajax({
+                            url: "/Folder/UpdateTime",
+                            data: {
+                                name: JSON.stringify(username), lapNumber: lapNo, lapTime: time
+                            },
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                document.getElementById("submit").submit();
+                            }
+
+                        });
+                    },
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function () {
+                }
+            });
+            */
+        }
         function newlap(boatin, lapno) {
             var lap = lapno + 1;
             $.ajax({
@@ -156,7 +245,7 @@
                         document.getElementById("startracebutton").style.visibility = "visible";
 
                     }
-                    
+
 
                 }
             });
