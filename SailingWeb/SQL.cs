@@ -95,6 +95,36 @@ namespace SailingWeb
 
         }
 
+        /// <summary>
+        /// Returns the list of racers
+        /// </summary>
+        /// <returns>Returns boat data, including if the person is a crew or not.</returns>
+        public static List<BoatsTidy> GetRacers(Calendar cal)
+        {
+            // Tables names cannot have spaces.
+
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                try
+                {
+
+                    string str = "select name, boat, boatNumber, crew, py, notes from signonlists where (summary = @summary and dateTime = @dateTime);";
+                    return connection.Query<BoatsTidy>(str, new
+                    {
+                        summary = cal.Summary,
+                        dateTime = cal.DateTime
+                    }).ToList();
+                }
+                catch
+                {
+                    var list = new List<BoatsTidy>();
+                    list.Add(new BoatsTidy("Nothing to show.", "", "", "", 0, ""));
+                    return list;
+                }
+
+            }
+
+        }
 
         /// <summary>
         /// Get boats of a specific person.

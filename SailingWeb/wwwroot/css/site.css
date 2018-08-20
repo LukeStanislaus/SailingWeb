@@ -27,6 +27,7 @@ body {
 }
 
 /* Hide/rearrange for smaller screens */
+/*
 @media screen and (min-width: 767px) {
     #captions, #captions1, #captions2 {
         font-family: 'Roboto', sans-serif;
@@ -41,4 +42,4 @@ body {
     }
 
 
-}
+}*/

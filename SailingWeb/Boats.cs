@@ -1,11 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO.Compression;
 using System.Linq;
 
 namespace SailingWeb.Data
 {
-    
+    public class BoatLap
+    {
+        public int LapNumber { get; set; }
+        public TimeSpan LapTime { get; set; }
+
+        public BoatLap(int lapNumber, TimeSpan lapTime)
+        {
+            this.LapNumber = lapNumber;
+            this.LapTime = lapTime;
+        }
+    }
     public class BoatClass
     {
         public string BoatName { get; set; }

@@ -8,40 +8,177 @@
 
 <html>
 <head>
+    <style>
+        
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+            width: 200px;
+            overflow: auto;
+            overflow-y: visible;
+        }
 
+    </style>
 </head>
-<body>
-    @if (Model.RaceName == null)
+<body onload="onload()">
+    @if (ManageRaceModel.RaceNameStatic == null)
     {
-    <form method="POST">
-        <select id="select" class="form-control" asp-for="RaceName">
-            @foreach (Calendar race in Program.Globals.Todaysevents)
-            {
-                <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
-            }
-        </select>
-        <input type="submit" />
-        <p1>Or reload a race:</p1>
-
-        <select id="select" class="form-control" asp-for="RaceName">
-            @foreach (Calendar race in Program.Globals.Todaysevents)
-            {
-                <option value="@race.Summary">@race.Summary, @race.DateTime.TimeOfDay</option>
-            }
-        </select>
-        <input type="submit" />
-
-
-
-    </form>
+        <form method="POST">
+            <select id="select" class="form-control" asp-for="RaceName">
+                @foreach (Calendar race in Program.Globals.Todaysevents)
+                {
+                    <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.TimeOfDay</option>
+                }
+            </select>
+            <input type="submit" />
+        </form>
     }
     else
-    {
-        
+    {<div id="table-wrapper">
+        <table id="table1">
+            <tr>
+                <th>Helm</th>
+                <th>Crew</th>
+                <th>Boat Name</th>
+                <th>Boat Number</th>
+                <th>Lap</th>
+                <th>Py</th>
+                <th>Notes</th>
+                <th>Place</th>
+                @for (int i = 1; i < (ManageRaceModel.NoOfLaps + 1); i++)
+                {
+                    <th>@String.Concat("Lap ", i)</th>
+                }
+            </tr>
+            @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
+            {
+                <tr>
+                    <td>@key.Key.Name</td>
+                    <td>@key.Key.Crew</td>
+                    <td>@key.Key.Boat</td>
+                    <td>@key.Key.BoatNumber</td>
+                    <td>
+                        <button class="btn" onclick="
+                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @key.Value.Count);">
+                             Lap
+                        </button>
+                    
+                    </td>
+                    <td>@key.Key.Py</td>
+                    <td>@key.Key.Notes</td>
+                    <td>@try
+                    {
+                        ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);
+                    }
+                    catch {
+
+                    }</td>
+                    @for (int i = 1; i < (key.Value.Count + 1); i++)
+                    {
+                        <td>@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
+                    }
+
+                </tr>
+            }
+        </table>
+    </div>
 
     }
+    <form id="submit" method="get">
+        </form>
+    <form id="submit1" method="post">
+        <button style="visibility:collapse" id="startracebutton"onclick="startrace()">Click to start race.</button>
+    </form>
+    <p id="demo"></p>
+    <script src="~/js/countup_timer.min.js"></script>
+    <script>
+        function newlap(boatin, lapno) {
+            var lap = lapno + 1;
+            $.ajax({
+                url: "/Folder/NewLap",
+                data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    document.getElementById("submit").submit();
+                }
 
-    
+            });
+        }
+
+        function myTimer(resulting) {
+
+            console.log("Repeating function invoked.");
+
+            var e = resulting;
+            var d = new Date();
+            x = d.getTime();
+            f = x - e;
+
+            // Create a new JavaScript Date object based on the timestamp
+            // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+            var date = new Date(f);
+            // Hours part from the timestamp
+            var hours = date.getHours();
+            // Minutes part from the timestamp
+            var minutes = "0" + date.getMinutes();
+            // Seconds part from the timestamp
+            var seconds = "0" + date.getSeconds();
+
+
+            var milliseconds = "0" + date.getMilliseconds();
+            // Will display time in 10:30:23 format
+
+            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            new CountUpTimer(formattedTime, function (times, parameters) {
+                document.getElementById("demo").innerHTML = times;
+
+            });
+
+
+        }
+        //var time;
+        function onload() {
+            $.ajax({
+                url: "/Folder/GetStartTime",
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (resulting) {
+                    if (resulting > 0) {
+                        console.log("Set repeating function");
+                        myTimer(resulting);
+                    }
+                    else {
+                        document.getElementById("startracebutton").style.visibility = "visible";
+
+                    }
+                    
+
+                }
+            });
+
+        }
+        function startrace() {
+
+
+            $.ajax({
+                url: "/Folder/StartRace",
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    document.getElementById("submit1").submit();
+                }
+
+            });
+
+        }
+    </script>
 
 </body>
 
