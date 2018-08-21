@@ -12,6 +12,18 @@ namespace SailingWeb.Pages
     public class ManageRaceModel : PageModel
     {
 
+        public static BoatsTidy ReturnBoatFromPos(int pos)
+        {
+            foreach(var boat in Race.Item2)
+            {
+                if(PlaceOf(boat.Key) == pos)
+                {
+                    return boat.Key;
+                }
+            }
+            return null;
+        }
+
         public static TimeSpan CorrectedTime(BoatsTidy boat)
         {
             try

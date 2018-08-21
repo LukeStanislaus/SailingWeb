@@ -48,7 +48,10 @@
             <form id="submit" method="get">
                 <button type="submit">Refresh</button>
             </form>
-            <button onclick="removerace()">End race</button>
+            <button onclick="removerace()">Remove race</button>
+            <form method="get" action="/FinishRace">
+            <button type="submit">Finish race</button>
+                </form>
         </div>
         <p id="demo"></p>
         <div id="table-wrapper">
@@ -149,6 +152,10 @@
     </script>
     <script src="~/js/countup_timer.min.js"></script>
     <script>
+        function finishrace() {
+            window.location = ""
+
+        }
         function removerace() {
             bootbox.confirm({
                 size: "small",
@@ -314,8 +321,8 @@
                                     }
                                     else {
 
-                                        x = tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                        x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                         $.ajax({
                                             url: "/Folder/GetLapTime",
                                             data: { boat: JSON.stringify(boatin), lapNumber: lap },

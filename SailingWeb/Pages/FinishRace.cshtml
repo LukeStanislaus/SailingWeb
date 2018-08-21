@@ -1,0 +1,105 @@
+﻿@page
+@model SailingWeb.Pages.Folder.FinishRaceModel
+@{
+    ViewData["Title"] = "FinishRace";
+}
+<html>
+<head>
+    <style>
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+            width: 200px;
+            overflow: auto;
+            overflow-y: visible;
+        }
+    </style>
+</head>
+<body>
+<h2>FinishRace</h2>
+<div id="table-wrapper">
+    <table id="table1">
+        <tr>
+            <th>Helm</th>
+            <th>Crew</th>
+            <th>Boat Name</th>
+            <th>Boat Number</th>
+            <th>Py</th>
+            <th>Notes</th>
+            <th>Corrected Time</th>
+            <th>Place</th>
+            @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
+            {
+                <th>@String.Concat("Lap ", i)</th>
+            }
+        </tr>
+        @if (1 == 1)
+        {
+            var u = 0;
+            for (int a = 1; a < ManageRaceModel.Race.Item2.Count + 1; a++)
+            {
+                try
+                {
+        <tr>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).Name</td>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).Crew</td>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).Boat</td>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).BoatNumber</td>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).Py</td>
+            <td>@ManageRaceModel.ReturnBoatFromPos(a).Notes</td>
+            <td>@ManageRaceModel.CorrectedTime(ManageRaceModel.ReturnBoatFromPos(a)).ToString(@"hh\:mm\:ss")</td>
+
+
+            <td>
+                @a
+            </td>
+
+
+
+            @for (int i = ManageRaceModel.NoOfLaps-1; i > (-1); i--)
+            {
+                try
+                {
+                    foreach (KeyValuePair<SailingWeb.Data.BoatsTidy, List<SailingWeb.Data.BoatLap>> x in ManageRaceModel.Race.Item2)
+                    {
+                        if (x.Key.Boat.Equals(ManageRaceModel.ReturnBoatFromPos(a).Boat) && x.Key.BoatNumber.Equals(ManageRaceModel.ReturnBoatFromPos(a).BoatNumber)
+                                && x.Key.Crew.Equals(ManageRaceModel.ReturnBoatFromPos(a).Crew) &&
+                                x.Key.Name.Equals(ManageRaceModel.ReturnBoatFromPos(a).Name) && x.Key.Notes.Equals(ManageRaceModel.ReturnBoatFromPos(a).Notes) &&
+                                x.Key.Py.Equals(ManageRaceModel.ReturnBoatFromPos(a).Py))
+                        {
+                            if (x.Value[i].LapNumber == i+1)
+                            {
+                                <td>
+                                    @ManageRaceModel.Race.Item2[ManageRaceModel.ReturnBoatFromPos(a)][i].LapTime.ToString(@"hh\:mm\:ss")
+
+                                </td>}
+                        }
+                    }
+
+                }
+                catch
+                {
+                    <td></td>
+
+                }
+            }
+
+
+        </tr>
+                }
+                catch
+                {
+
+
+                }
+                u++;
+            }
+
+        }
+    </table>
+</div>
+
+    
+    </body>
+</html>
