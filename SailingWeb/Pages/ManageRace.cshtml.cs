@@ -11,6 +11,28 @@ namespace SailingWeb.Pages
 {
     public class ManageRaceModel : PageModel
     {
+
+        public static TimeSpan CorrectedTime(BoatsTidy boat)
+        {
+            try
+            {
+                var x = Race.Item2[boat];
+
+                TimeSpan totaltime = new TimeSpan();
+                foreach (var y in x)
+                {
+                    totaltime += y.LapTime;
+                }
+                TimeSpan averageperlap = totaltime / x.Count;
+                TimeSpan correctedttime = (averageperlap / boat.Py) * 1000;
+                return correctedttime;
+            }
+            catch
+            {
+                return new TimeSpan();
+            }
+
+        }
         public static int PlaceOf(BoatsTidy boat)
         {
             try

@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- bootbox code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <style>
 
         table, th, td {
@@ -37,7 +40,18 @@
         </form>
     }
     else
-    {<div id="table-wrapper">
+    {
+        <div>
+            <form id="submit1" method="post">
+                <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()">Click to start race.</button>
+            </form>
+            <form id="submit" method="get">
+                <button type="submit">Refresh</button>
+            </form>
+            <button onclick="removerace()">End race</button>
+        </div>
+        <p id="demo"></p>
+        <div id="table-wrapper">
             <table id="table1">
                 <tr>
                     <th>Helm</th>
@@ -47,6 +61,7 @@
                     <th>Lap</th>
                     <th>Py</th>
                     <th>Notes</th>
+                    <th>Corrected Time</th>
                     <th>Place</th>
                     @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
                     {
@@ -54,67 +69,65 @@
                     }
                 </tr>
                 @if (1 == 1)
-                { var u = 0;
-                    @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
                 {
-                <tr>
-                    <td>@key.Key.Name</td>
-                    <td>@key.Key.Crew</td>
-                    <td>@key.Key.Boat</td>
-                    <td>@key.Key.BoatNumber</td>
-                    <td>
-                        <button class="btn" onclick="
-                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @u);">
-                            Lap
-                        </button>
-
-                    </td>
-                    <td>@key.Key.Py</td>
-                    <td>@key.Key.Notes</td>
-
-
-                        <td>
-@(ManageRaceModel.PlaceOf(key.Key))
-                        </td>
-
-
-
-                    @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
+                    var u = 0;
+                    @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
                     {
-                        try
-                        {
-                            if (key.Value.Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                        <tr>
+                            <td>@key.Key.Name</td>
+                            <td>@key.Key.Crew</td>
+                            <td>@key.Key.Boat</td>
+                            <td>@key.Key.BoatNumber</td>
+                            <td>
+                                <button class="btn" onclick="
+                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @u);">
+                                    Lap
+                                </button>
+
+                            </td>
+                            <td>@key.Key.Py</td>
+                            <td>@key.Key.Notes</td>
+                            <td>@ManageRaceModel.CorrectedTime(key.Key).ToString(@"hh\:mm\:ss")</td>
+
+
+                            <td>
+                                @(ManageRaceModel.PlaceOf(key.Key))
+                            </td>
+
+
+
+                            @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
                             {
-                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss\:ff")
-                    
-                    </td>
+                                try
+                                {
+                                    if (key.Value.Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                                    {
+                                        <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
+                                            @key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
+
+                                        </td>
+                                    }
+                                }
+                                catch
+                                {
+                                    <td></td>
+
+                                }
                             }
-                        }
-                        catch
-                        {
-                            <td></td>
-
-                        }
-                    }
 
 
-                </tr>
+                        </tr>
                         u++;
                     }
-                    
+
                 }
             </table>
         </div>
 
     }
-    <form id="submit" method="get">
-        <button type="submit">Refresh</button>
-    </form>
-    <form id="submit1" method="post">
-        <button style="visibility:collapse" id="startracebutton" onclick="startrace()">Click to start race.</button>
-    </form>
 
-    <p id="demo"></p>
+
+
     <div style="display:none" id="dialog-form" title="Edit data.">
         <form>
             <fieldset>
@@ -136,10 +149,34 @@
     </script>
     <script src="~/js/countup_timer.min.js"></script>
     <script>
+        function removerace() {
+            bootbox.confirm({
+                size: "small",
+                message: "Are you sure you want to delete this race? You will not be able to get it back!",
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/Folder/RemoveRace",
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                document.getElementById("submit").submit();
+                            }
+
+                        });
+
+                    }
+                }
+            })
+
+
+        }
         function editLap(username, lapNo, time) {
             document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
             document.getElementById("password").value = time;
-            document.getElementById("dialog-form").style.display ="inline";
+            document.getElementById("dialog-form").style.display = "inline";
             $("#dialog-form").dialog({
                 autoOpen: false,
                 buttons: {
@@ -180,7 +217,8 @@
                     }
                 },
                 close: function () {
-                }});
+                }
+            });
             $("#dialog-form").dialog("open");
             /*
                 .dialog({
@@ -218,7 +256,7 @@
             var lapno;
             $.ajax({
                 url: "/Folder/GetNextLap",
-                data: { boat: JSON.stringify(boatin)},
+                data: { boat: JSON.stringify(boatin) },
                 headers: {
                     RequestVerificationToken:
                         $('input:hidden[name="__RequestVerificationToken"]').val()
@@ -250,34 +288,17 @@
                                     if (muchFurther == (-1)) {
                                         for (i = 0; i < tbl.rows.length; i++) {
                                             if (i == 0) {
-                                                x = tbl.rows[i].insertCell(9 + muchFurther);
-                                                x.innerHTML = "Lap ".concat(ajax+1);
+                                                x = tbl.rows[i].insertCell(10 + muchFurther);
+                                                x.innerHTML = "Lap ".concat(ajax + 1);
 
                                             }
                                             else {
-                                                x = tbl.rows[i].insertCell(9 + muchFurther);
+                                                x = tbl.rows[i].insertCell(10 + muchFurther);
 
                                             }
                                         }
-                                        x = tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
-                                        x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
-                                        $.ajax({
-                                            url: "/Folder/GetLapTime",
-                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
-                                            headers: {
-                                                RequestVerificationToken:
-                                                    $('input:hidden[name="__RequestVerificationToken"]').val()
-                                            },
-                                            success: function (resulting) {
-                                                x.onclick = function () { editLap(boatin, lap, resulting) };
-                                                x.innerHTML = resulting.toString();  
-                                            }
-                                        });
-                                    }
-                                    else {
-
-                                        x = tbl.rows[rowNum + 1].deleteCell(8 + muchFurther);
-                                        x = tbl.rows[rowNum + 1].insertCell(8 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                         $.ajax({
                                             url: "/Folder/GetLapTime",
                                             data: { boat: JSON.stringify(boatin), lapNumber: lap },
@@ -291,9 +312,26 @@
                                             }
                                         });
                                     }
-                        }
+                                    else {
 
-                    });
+                                        x = tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                        $.ajax({
+                                            url: "/Folder/GetLapTime",
+                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                            headers: {
+                                                RequestVerificationToken:
+                                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            },
+                                            success: function (resulting) {
+                                                x.onclick = function () { editLap(boatin, lap, resulting) };
+                                                x.innerHTML = resulting.toString();
+                                            }
+                                        });
+                                    }
+                                }
+
+                            });
 
 
 
@@ -336,7 +374,7 @@
 
             var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             new CountUpTimer(formattedTime, function (times, parameters) {
-                document.getElementById("demo").innerHTML = times;
+                document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
 
             });
 
@@ -357,7 +395,7 @@
                     }
                     else {
                         document.getElementById("startracebutton").style.visibility = "visible";
-
+                        document.getElementById("startracebutton").style.display = "block";
                     }
 
 
@@ -383,9 +421,9 @@
         }
     </script>
 
-        <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
+    <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
 
-    
+
 </body>
 
 </html>

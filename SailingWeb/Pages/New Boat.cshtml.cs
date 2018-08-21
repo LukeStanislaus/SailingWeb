@@ -16,6 +16,7 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            Boat.Py = Sql.ReturnClass().Find(x => x.BoatName == Boat.BoatName).Py;
             // Remove boat from db
             Sql.SetNewFullBoat(Boat);
             // Create boat alerttext

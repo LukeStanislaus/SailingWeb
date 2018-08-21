@@ -19,7 +19,7 @@ namespace SailingWeb.Pages.Folder
                     x.Key.Name.Equals(boat1.Name) && x.Key.Notes.Equals(boat1.Notes) &&
                     x.Key.Py.Equals(boat1.Py))
                 {
-                    return new JsonResult(x.Value.Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"hh\:mm\:ss\:ff"));
+                    return new JsonResult(x.Value.Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"hh\:mm\:ss"));
                 }
 
             return new JsonResult("Failed to search");
