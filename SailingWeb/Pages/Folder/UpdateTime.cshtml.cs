@@ -19,7 +19,7 @@ namespace SailingWeb.Pages.Folder
                     x.Key.Name.Equals(boat1.Name) && x.Key.Notes.Equals(boat1.Notes) &&
                     x.Key.Py.Equals(boat1.Py))
                 {
-                    ManageRaceModel.Race.Item2[x.Key].Where(y => y.LapNumber.Equals(lapNumber)).First().LapTime = lapTime;
+                    ManageRaceModel.Race.Item2[x.Key].Where(y => y.LapNumber.Equals(lapNumber)).FirstOrDefault().LapTime = lapTime;
                 }
             //ManageRaceModel.Race.Item2[boat1].Where(x => x.LapNumber.Equals(lapNumber)).First().LapTime = lapTime;
         }

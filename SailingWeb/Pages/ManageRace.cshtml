@@ -23,6 +23,7 @@
     </style>
 </head>
 <body onload="onload()">
+
     @if (ManageRaceModel.RaceNameStatic == null)
     {
         <form method="POST">
@@ -54,36 +55,50 @@
                 </tr>
                 @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
                 {
-                    <tr>
-                        <td>@key.Key.Name</td>
-                        <td>@key.Key.Crew</td>
-                        <td>@key.Key.Boat</td>
-                        <td>@key.Key.BoatNumber</td>
-                        <td>
-                            <button class="btn" onclick="
+                <tr>
+                    <td>@key.Key.Name</td>
+                    <td>@key.Key.Crew</td>
+                    <td>@key.Key.Boat</td>
+                    <td>@key.Key.BoatNumber</td>
+                    <td>
+                        <button class="btn" onclick="
                                 newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @key.Value.Count);">
-                                Lap
-                            </button>
+                            Lap
+                        </button>
 
-                        </td>
-                        <td>@key.Key.Py</td>
-                        <td>@key.Key.Notes</td>
+                    </td>
+                    <td>@key.Key.Py</td>
+                    <td>@key.Key.Notes</td>
+
+                    @try
+                    {
                         <td>
-                            @try
-                            {
-                                ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);
-                            }
-                            catch
-                            {
-
-                            }
+                            0
+                            <!--ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);-->
                         </td>
-                        @for (int i = 1; i < (key.Value.Count + 1); i++)
-                        {
-                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
-                        }
+                    }
+                    catch
+                    {
+                        <td><p>Error!</p></td>
+                    }
 
-                    </tr>
+
+                    @for (int i = 1; i < (key.Value.Count + 1); i++)
+                    {
+                        try
+                        {
+                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss\:ff")
+                    </td>
+                        }
+                        catch
+                        {
+                            <td><p>Error!</p></td>
+
+                        }
+                    }
+
+
+                </tr>
                 }
             </table>
         </div>
@@ -96,8 +111,6 @@
 
     <p id="demo"></p>
     <div style="display:none" id="dialog-form" title="Edit data.">
-        <p class="validateTips">All form fields are required.</p>
-
         <form>
             <fieldset>
                 <label for="password">Change time</label>
@@ -284,6 +297,9 @@
         }
     </script>
 
+        <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
+
+    
 </body>
 
 </html>
