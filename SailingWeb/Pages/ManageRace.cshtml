@@ -113,7 +113,9 @@
         </div>
 
     }
-    <form id="submit" method="get"></form>
+    <form id="submit" method="get">
+        <button type="submit">Refresh</button>
+    </form>
     <form id="submit1" method="post">
         <button style="visibility:collapse" id="startracebutton" onclick="startrace()">Click to start race.</button>
     </form>
@@ -273,7 +275,8 @@
                                                     $('input:hidden[name="__RequestVerificationToken"]').val()
                                             },
                                             success: function (resulting) {
-                                                x.innerHTML = resulting.toString();
+                                                x.onclick = function () { editLap(boatin, lap, resulting) };
+                                                x.innerHTML = resulting.toString();  
                                             }
                                         });
                                     }
@@ -289,6 +292,7 @@
                                                     $('input:hidden[name="__RequestVerificationToken"]').val()
                                             },
                                             success: function (resulting) {
+                                                x.onclick = function () { editLap(boatin, lap, resulting) };
                                                 x.innerHTML = resulting.toString();
                                             }
                                         });
