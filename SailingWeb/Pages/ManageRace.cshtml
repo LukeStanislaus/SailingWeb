@@ -80,7 +80,7 @@
                         </td>
                         @for (int i = 1; i < (key.Value.Count + 1); i++)
                         {
-                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).First().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
+                            <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss\:ff")</td>
                         }
 
                     </tr>
@@ -95,7 +95,7 @@
     </form>
 
     <p id="demo"></p>
-    <div id="dialog-form" title="Edit data.">
+    <div style="display:none" id="dialog-form" title="Edit data.">
         <p class="validateTips">All form fields are required.</p>
 
         <form>
@@ -108,8 +108,7 @@
             </fieldset>
         </form>
     </div>
-    <button id="opener">open the dialog</button>
-    <div id="dialog" title="Dialog Title" style="visibility:collapse">I'm a dialog</div>
+    <div id="dialog" title="Dialog Title" style="display:none">I'm a dialog</div>
 
     <script>
         $("#dialog").dialog({ autoOpen: false });
@@ -122,10 +121,26 @@
         function editLap(username, lapNo, time) {
             document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
             document.getElementById("password").value = time;
-            document.getElementById("dialog-form").style.visibility ="visible";
+            document.getElementById("dialog-form").style.display ="inline";
             $("#dialog-form").dialog({
                 autoOpen: false,
                 buttons: {
+                    "Remove Lap": function () {
+                        $.ajax({
+                            url: "/Folder/RemoveTime",
+                            data: {
+                                name: JSON.stringify(username), lapNumber: lapNo
+                            },
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                document.getElementById("submit").submit();
+                            }
+
+                        });
+                    },
                     "Enter": function () {
                         $.ajax({
                             url: "/Folder/UpdateTime",
