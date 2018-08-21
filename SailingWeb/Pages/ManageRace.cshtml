@@ -72,17 +72,11 @@
                     <td>@key.Key.Py</td>
                     <td>@key.Key.Notes</td>
 
-                    @try
-                    {
+
                         <td>
-                            0
-                            <!--ManageRaceModel.Race.Item2.OrderBy(x => x.Value.OrderBy(y => y.LapNumber).LastOrDefault().LapTime).ToList().IndexOf(key);-->
+@(ManageRaceModel.PlaceOf(key.Key))
                         </td>
-                    }
-                    catch
-                    {
-                        <td><p>Error!</p></td>
-                    }
+
 
 
                     @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)

@@ -11,6 +11,37 @@ namespace SailingWeb.Pages
 {
     public class ManageRaceModel : PageModel
     {
+        public static int PlaceOf(BoatsTidy boat)
+        {
+            try
+            {
+                Dictionary<BoatsTidy, TimeSpan> places = new Dictionary<BoatsTidy, TimeSpan>();
+                foreach (var x in Race.Item2)
+                {
+                    if (x.Value.Count != 0)
+                    {
+                        TimeSpan totaltime = new TimeSpan();
+                        foreach (var y in x.Value)
+                        {
+                            totaltime += y.LapTime;
+                        }
+                        TimeSpan averageperlap = totaltime / x.Value.Count;
+                        TimeSpan correctedttime = (averageperlap / x.Key.Py) * 1000;
+                        places.Add(x.Key, correctedttime);
+                    }
+                    else
+                    {
+                       
+                    }
+                }
+                var results = places.OrderBy(x => x.Value);
+                return results.ToList().IndexOf(results.Where(x => x.Key == boat).First())+1;
+            }
+            catch
+            {
+                return 0;
+            }
+}  
         public static int NoOfLaps { get
             {
                 List<int> list = new List<int>();
