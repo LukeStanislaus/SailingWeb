@@ -48,12 +48,14 @@
                     <th>Py</th>
                     <th>Notes</th>
                     <th>Place</th>
-                    @for (int i = 1; i < (ManageRaceModel.NoOfLaps + 1); i++)
+                    @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
                     {
                         <th>@String.Concat("Lap ", i)</th>
                     }
                 </tr>
-                @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
+                @if (1 == 1)
+                { var u = 0;
+                    @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
                 {
                 <tr>
                     <td>@key.Key.Name</td>
@@ -62,7 +64,7 @@
                     <td>@key.Key.BoatNumber</td>
                     <td>
                         <button class="btn" onclick="
-                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @key.Value.Count);">
+                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @u);">
                             Lap
                         </button>
 
@@ -83,22 +85,29 @@
                     }
 
 
-                    @for (int i = 1; i < (key.Value.Count + 1); i++)
+                    @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
                     {
                         try
                         {
+                            if (key.Value.Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                            {
                             <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss\:ff")
+                    
                     </td>
+                            }
                         }
                         catch
                         {
-                            <td><p>Error!</p></td>
+                            <td></td>
 
                         }
                     }
 
 
                 </tr>
+                        u++;
+                    }
+                    
                 }
             </table>
         </div>
@@ -209,20 +218,99 @@
             });
             */
         }
-        function newlap(boatin, lapno) {
-            var lap = lapno + 1;
+        function newlap(boatin, rowNum) {
+            var lapno;
             $.ajax({
-                url: "/Folder/NewLap",
-                data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
+                url: "/Folder/GetNextLap",
+                data: { boat: JSON.stringify(boatin)},
                 headers: {
                     RequestVerificationToken:
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function (data) {
-                    document.getElementById("submit").submit();
-                }
+                success: function (resulting) {
+                    lapno = JSON.parse(resulting);
+                    var lap = lapno + 1;
+                    $.ajax({
+                        url: "/Folder/NoOfLaps",
+                        headers: {
+                            RequestVerificationToken:
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (data) {
+                            ajax = 0;
+                            ajax = JSON.parse(data);
+                            $.ajax({
+                                url: "/Folder/NewLap",
+                                data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    var tbl = document.getElementById('table1'), // table reference
+                                        i;
+                                    console.log(data);
+                                    muchFurther = ajax - lap;
+                                    if (muchFurther == (-1)) {
+                                        for (i = 0; i < tbl.rows.length; i++) {
+                                            if (i == 0) {
+                                                x = tbl.rows[i].insertCell(9 + muchFurther);
+                                                x.innerHTML = "Lap ".concat(ajax+1);
 
+                                            }
+                                            else {
+                                                x = tbl.rows[i].insertCell(9 + muchFurther);
+
+                                            }
+                                        }
+                                        x = tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
+                                        $.ajax({
+                                            url: "/Folder/GetLapTime",
+                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                            headers: {
+                                                RequestVerificationToken:
+                                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            },
+                                            success: function (resulting) {
+                                                x.innerHTML = resulting.toString();
+                                            }
+                                        });
+                                    }
+                                    else {
+
+                                        x = tbl.rows[rowNum + 1].deleteCell(8 + muchFurther);
+                                        x = tbl.rows[rowNum + 1].insertCell(8 + muchFurther);
+                                        $.ajax({
+                                            url: "/Folder/GetLapTime",
+                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                            headers: {
+                                                RequestVerificationToken:
+                                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            },
+                                            success: function (resulting) {
+                                                x.innerHTML = resulting.toString();
+                                            }
+                                        });
+                                    }
+                        }
+
+                    });
+
+
+
+
+
+
+
+                            //document.getElementById("submit").submit();
+                        }
+
+                    });
+
+                }
             });
+
         }
 
         function myTimer(resulting) {
