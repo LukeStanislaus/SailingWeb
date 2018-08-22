@@ -4,7 +4,7 @@
     ViewData["Title"] = "ManageRace";
 }
 
-<h2>ManageRace</h2>
+<h2>Manage Race</h2>
 
 <html>
 <head>
@@ -25,7 +25,7 @@
         }
     </style>
 </head>
-<body onload="onload()">
+<body onload="onloader();">
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
@@ -42,22 +42,24 @@
     else
     {
         <div>
-            <form id="submit1" method="post">
-                <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()">Click to start race.</button>
+            <form id="submit1" style="display:inline" method="post">
+                <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()" class="btn btn-primary">Click to start race.</button>
             </form>
-            <form id="submit" method="get">
-                <button type="submit">Refresh</button>
+            <form id="submit" style="display:inline" method="get">
+                <button style="display:inline"type="submit" class="btn btn-success">Refresh</button>
             </form>
-            <button onclick="removerace()">Remove race</button>
-            <form method="get" action="/FinishRace">
-            <button type="submit">Finish race</button>
+            <button style="display:inline" onclick="removerace()" class="btn btn-danger" >Remove race</button>
+            <form  method="get" style="display:inline" action="/FinishRace">
+                @if(ManageRaceModel.NoOfLaps != 0){
+            <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
+                }
                 </form>
         </div>
         <p id="demo"></p>
         <div id="table-wrapper">
             <table id="table1">
                 <tr>
-                    <th>Helm</th>
+                    <th >Helm</th>
                     <th>Crew</th>
                     <th>Boat Name</th>
                     <th>Boat Number</th>
@@ -77,13 +79,13 @@
                     @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
                     {
                         <tr>
-                            <td>@key.Key.Name</td>
+                            <td id="@u" data-internalid="@u" data-string="@Html.Raw(Json.Serialize(key.Key)).ToString()">@key.Key.Name</td>
                             <td>@key.Key.Crew</td>
                             <td>@key.Key.Boat</td>
                             <td>@key.Key.BoatNumber</td>
                             <td>
-                                <button class="btn" onclick="
-                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @u);">
+                                <button class="btn" data-int="@u" onclick="
+                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), this.getAttribute('data-int'));">
                                     Lap
                                 </button>
 
@@ -152,6 +154,44 @@
     </script>
     <script src="~/js/countup_timer.min.js"></script>
     <script>
+        function loaddatad(string, i) {
+
+            $(i).data(JSON.parse(string));
+                    //tbl.rows[i].cells[0].data();
+                
+        }
+
+        async function returnPlace(username) {
+            const result = await $.ajax({
+                url: "/Folder/ReturnPlace",
+                data: {
+                    boat: username
+                },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+
+
+            });
+            return result;
+
+        }
+        async function updatePlaces() {
+
+            var tbl = document.getElementById('table1'); // table reference
+            for (i = 1; i < tbl.rows.length; i++) {
+                username = document.getElementById(i - 1).getAttribute("data-string");
+                var h = await returnPlace(username);
+                document.getElementById('table1').rows[i].deleteCell(8);
+                let x = document.getElementById('table1').rows[i].insertCell(8);
+                x.innerHTML = h.toString();
+            }
+
+
+
+
+        }
         function finishrace() {
             window.location = ""
 
@@ -199,6 +239,7 @@
                             },
                             success: function (data) {
                                 document.getElementById("submit").submit();
+                                updatePlaces();
                             }
 
                         });
@@ -215,6 +256,7 @@
                             },
                             success: function (data) {
                                 document.getElementById("submit").submit();
+                                updatePlaces()
                             }
 
                         });
@@ -259,8 +301,9 @@
             });
             */
         }
-        function newlap(boatin, rowNum) {
+        function newlap(boatin, rowNumber) {
             var lapno;
+            rowNum = parseInt(rowNumber);
             $.ajax({
                 url: "/Folder/GetNextLap",
                 data: { boat: JSON.stringify(boatin) },
@@ -336,6 +379,7 @@
                                             }
                                         });
                                     }
+                                    //
                                 }
 
                             });
@@ -353,6 +397,7 @@
 
                 }
             });
+            updatePlaces();
 
         }
 
@@ -388,7 +433,7 @@
 
         }
         //var time;
-        function onload() {
+        function onloader() {
             $.ajax({
                 url: "/Folder/GetStartTime",
                 headers: {

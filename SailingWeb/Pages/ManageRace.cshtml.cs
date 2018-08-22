@@ -36,8 +36,9 @@ namespace SailingWeb.Pages
                     totaltime += y.LapTime;
                 }
                 TimeSpan averageperlap = totaltime / x.Count;
-                TimeSpan correctedttime = (averageperlap / boat.Py) * 1000;
-                return correctedttime;
+                TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * ManageRaceModel.NoOfLaps * 1000) / (boat.Py * x.Count));
+                //TimeSpan correctedttime = (averageperlap / boat.Py) * 1000;
+                return correctedTime;
             }
             catch
             {
@@ -60,16 +61,21 @@ namespace SailingWeb.Pages
                             totaltime += y.LapTime;
                         }
                         TimeSpan averageperlap = totaltime / x.Value.Count;
-                        TimeSpan correctedttime = (averageperlap / x.Key.Py) * 1000;
-                        places.Add(x.Key, correctedttime);
+                        TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * ManageRaceModel.NoOfLaps * 1000) / (x.Key.Py * x.Value.Count));
+                        //TimeSpan correctedttime = (averageperlap / x.Key.Py) * 1000;
+                        places.Add(x.Key, correctedTime);
                     }
                     else
                     {
                        
                     }
                 }
-                var results = places.OrderBy(x => x.Value);
-                return results.ToList().IndexOf(results.Where(x => x.Key == boat).First())+1;
+                var results = places.OrderBy(y => y.Value);
+                var z = results.Where(x => x.Key.Boat == boat.Boat
+                && x.Key.BoatNumber == boat.BoatNumber && x.Key.Crew == boat.Crew && x.Key.Name == boat.Name
+                && x.Key.Notes == boat.Notes && x.Key.Py == boat.Py);
+
+                return results.ToList().IndexOf(z.First())+1;
             }
             catch
             {
