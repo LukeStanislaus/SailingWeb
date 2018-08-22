@@ -11,7 +11,7 @@ namespace SailingWeb.Pages.Folder
     {
         public void OnGet()
         {
-            ManageRaceModel.StartTime = DateTime.Now;
+            ManageRaceModel.StartTime = DateTime.Now.AddMinutes(5);
         }
     }
 }
