@@ -14,6 +14,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- bootbox code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/js/moment-timezone-with-data-2012-2022.js"></script>
+
     <style>
 
         table, th, td {
@@ -49,11 +52,17 @@
                 <button style="display:inline"type="submit" class="btn btn-success">Refresh</button>
             </form>
             <button style="display:inline" onclick="removerace()" class="btn btn-danger" >Remove race</button>
-            <form  method="get" style="display:inline" action="/FinishRace">
-                @if(ManageRaceModel.NoOfLaps != 0){
-            <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
+            <form method="get" style="display:inline" action="/FinishRace">
+                @if (ManageRaceModel.NoOfLaps != 0)
+                {
+                    <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
                 }
-                </form>
+                else
+                {
+                    <button style="display:none" id="finishbutton" type="submit" class="btn btn-link">Finish race</button>
+
+                }
+            </form>
         </div>
         <p id="demo"></p>
         <div id="table-wrapper">
@@ -187,6 +196,7 @@
                 let x = document.getElementById('table1').rows[i].insertCell(8);
                 x.innerHTML = h.toString();
             }
+            document.getElementById("finishbutton").style.display = "inline";
 
 
 
@@ -404,28 +414,29 @@
         function myTimer(resulting) {
 
             console.log("Repeating function invoked.");
-
-            var e = resulting;
-            var d = new Date();
-            x = d.getTime();
-            f = x - e;
+            var d = moment().tz("America/Los_Angeles");
+            x = d.valueOf();
+            
+            f = x - resulting;
 
             // Create a new JavaScript Date object based on the timestamp
             // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-            var date = new Date(f);
+            var date = new Date(f).toLocaleTimeString();
+
+            //var date = new moment(f).toLocaleTimeString();
             // Hours part from the timestamp
-            var hours = date.getHours();
+            //var hours = date.getHours();
             // Minutes part from the timestamp
-            var minutes = "0" + date.getMinutes();
+            //var minutes = "0" + date.getMinutes();
             // Seconds part from the timestamp
-            var seconds = "0" + date.getSeconds();
+            //var seconds = "0" + date.getSeconds();
 
 
-            var milliseconds = "0" + date.getMilliseconds();
+            //var milliseconds = "0" + date.getMilliseconds();
             // Will display time in 10:30:23 format
 
-            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-            new CountUpTimer(formattedTime, function (times, parameters) {
+            //var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            new CountUpTimer(date, function (times, parameters) {
                 document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
 
             });
