@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "ManageRace";
 }
-
+@using static RaceHelpers;
 <h2>Manage Race</h2>
 
 <html>
@@ -45,15 +45,14 @@
     else
     {
         <div>
-            <form id="submit1" style="display:inline" method="post">
+
                 <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()" class="btn btn-primary">Click to start race.</button>
-            </form>
             <form id="submit" style="display:inline" method="get">
                 <button style="display:inline"type="submit" class="btn btn-success">Refresh</button>
             </form>
             <button style="display:inline" onclick="removerace()" class="btn btn-danger" >Remove race</button>
             <form method="get" style="display:inline" action="/FinishRace">
-                @if (ManageRaceModel.NoOfLaps != 0)
+                @if (NoOfLaps(ManageRaceModel.Race) != 0)
                 {
                     <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
                 }
@@ -63,6 +62,7 @@
 
                 }
             </form>
+            <a href="~/json/race.json" download>Download race here</a>
         </div>
         <p id="demo">Elapsed Time: </p>
         <div id="table-wrapper">
@@ -77,7 +77,7 @@
                     <th>Notes</th>
                     <th>Corrected Time</th>
                     <th>Place</th>
-                    @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
+                    @for (int i = NoOfLaps(ManageRaceModel.Race); i > (0); i--)
                     {
                         <th>@String.Concat("Lap ", i)</th>
                     }
@@ -101,16 +101,16 @@
                             </td>
                             <td>@key.Key.Py</td>
                             <td>@key.Key.Notes</td>
-                            <td>@ManageRaceModel.CorrectedTime(key.Key).ToString(@"hh\:mm\:ss")</td>
+                            <td>@CorrectedTime(key.Key, ManageRaceModel.Race).ToString(@"hh\:mm\:ss")</td>
 
 
                             <td>
-                                @(ManageRaceModel.PlaceOf(key.Key))
+                                @(PlaceOf(key.Key, ManageRaceModel.Race))
                             </td>
 
 
 
-                            @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
+                            @for (int i = NoOfLaps(ManageRaceModel.Race); i > (0); i--)
                             {
                                 try
                                 {
@@ -357,7 +357,7 @@
 
                                             }
                                         }
-                                        x = tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
+                                        tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
                                         x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                         $.ajax({
                                             url: "/Folder/GetLapTime",
@@ -374,7 +374,7 @@
                                     }
                                     else {
 
-                                        x = tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                        tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
                                         x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                         $.ajax({
                                             url: "/Folder/GetLapTime",
@@ -452,7 +452,7 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function (resulting) {
-                    if (resulting > 0) {
+                    if (resulting != 0) {
                         console.log("Set repeating function");
                         myTimer(resulting);
                     }
@@ -468,15 +468,16 @@
         }
         function startrace() {
 
-
+            start = Date.now();
             $.ajax({
                 url: "/Folder/StartRace",
+                data: {datetime: start},
                 headers: {
                     RequestVerificationToken:
                         $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function (data) {
-                    document.getElementById("submit1").submit();
+                    document.getElementById("submit").submit();
                 }
 
             });

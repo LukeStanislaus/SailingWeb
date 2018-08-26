@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "FinishRace";
 }
+@using static RaceHelpers;
 <html>
 <head>
     <style>
@@ -30,7 +31,7 @@
             <th>Notes</th>
             <th>Corrected Time</th>
             <th>Place</th>
-            @for (int i = ManageRaceModel.NoOfLaps; i > (0); i--)
+            @for (int i = NoOfLaps(ManageRaceModel.Race); i > (0); i--)
             {
                 <th>@String.Concat("Lap ", i)</th>
             }
@@ -43,13 +44,13 @@
                 try
                 {
         <tr>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).Name</td>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).Crew</td>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).Boat</td>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).BoatNumber</td>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).Py</td>
-            <td>@ManageRaceModel.ReturnBoatFromPos(a).Notes</td>
-            <td>@ManageRaceModel.CorrectedTime(ManageRaceModel.ReturnBoatFromPos(a)).ToString(@"hh\:mm\:ss")</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).Name</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).Crew</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).Boat</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).BoatNumber</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).Py</td>
+            <td>@ReturnBoatFromPos(a, ManageRaceModel.Race).Notes</td>
+            <td>@CorrectedTime(ReturnBoatFromPos(a, ManageRaceModel.Race), ManageRaceModel.Race).ToString(@"hh\:mm\:ss")</td>
 
 
             <td>
@@ -58,21 +59,21 @@
 
 
 
-            @for (int i = ManageRaceModel.NoOfLaps-1; i > (-1); i--)
+            @for (int i = NoOfLaps(ManageRaceModel.Race)-1; i > (-1); i--)
             {
                 try
                 {
                     foreach (KeyValuePair<SailingWeb.Data.BoatsTidy, List<SailingWeb.Data.BoatLap>> x in ManageRaceModel.Race.Item2)
                     {
-                        if (x.Key.Boat.Equals(ManageRaceModel.ReturnBoatFromPos(a).Boat) && x.Key.BoatNumber.Equals(ManageRaceModel.ReturnBoatFromPos(a).BoatNumber)
-                                && x.Key.Crew.Equals(ManageRaceModel.ReturnBoatFromPos(a).Crew) &&
-                                x.Key.Name.Equals(ManageRaceModel.ReturnBoatFromPos(a).Name) && x.Key.Notes.Equals(ManageRaceModel.ReturnBoatFromPos(a).Notes) &&
-                                x.Key.Py.Equals(ManageRaceModel.ReturnBoatFromPos(a).Py))
+                        if (x.Key.Boat.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).Boat) && x.Key.BoatNumber.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).BoatNumber)
+                                && x.Key.Crew.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).Crew) &&
+                                x.Key.Name.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).Name) && x.Key.Notes.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).Notes) &&
+                                x.Key.Py.Equals(ReturnBoatFromPos(a, ManageRaceModel.Race).Py))
                         {
                             if (x.Value[i].LapNumber == i+1)
                             {
                                 <td>
-                                    @ManageRaceModel.Race.Item2[ManageRaceModel.ReturnBoatFromPos(a)][i].LapTime.ToString(@"hh\:mm\:ss")
+                                    @ManageRaceModel.Race.Item2[ReturnBoatFromPos(a, ManageRaceModel.Race)][i].LapTime.ToString(@"hh\:mm\:ss")
 
                                 </td>}
                         }

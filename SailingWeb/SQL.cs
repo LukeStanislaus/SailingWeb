@@ -6,12 +6,100 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SailingWeb
 {
     public static class Sql
     {
+        public async static Task<IEnumerable<BoatLap>> GetLaps(BoatsTidy boat, Calendar cal)
+        {
+           
+            
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.QueryAsync<BoatLap>("select racelap, laptime from races where name = @name and " +
+                    "summary = @summary", new
+                    {
+                        name = boat.Name,
+                        summary = cal.Summary
 
+                    });
+
+
+            }
+        }
+        public async static Task<IEnumerable<int>> NoOfLaps(BoatsTidy boat, Calendar cal)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.QueryAsync<int>("select max(racelap) from races where name = @name and " +
+                    "summary = @summary", new
+                    {
+                        name = boat.Name,
+                        summary = cal.Summary
+
+                    });
+                    
+            }
+        }
+
+        public async static Task<IEnumerable<BoatsTidy>> GetRacers(Calendar cal)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.QueryAsync<BoatsTidy>("select name, boat, boatNumber, crew, py, notes from signonlists where" +
+                    "summary = @summary and dateTime = @dateTime and sailingClub = @sailingClub"
+                    , new
+                    {
+                        
+                        summary = cal.Summary,
+                        dateTime = cal.DateTime,
+                        sailingClub = "Whitefriars Sailing Club"
+
+                    });
+
+
+            }
+        }
+        public async static Task<int> RemoveLap(BoatsTidy boat, Calendar cal, int lapNo)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.ExecuteAsync("delete from races where name = @name and " +
+                    "summary = @summary and racelap = @racelap and eventStart = @eventStart", new
+                    {
+                        name = boat.Name,
+                        summary = cal.Summary,
+                        racelap = lapNo,
+                        eventStart = cal.DateTime
+                    });
+
+
+            }
+        }
+
+        public async static Task<int> NewLap(BoatsTidy boat, DateTime lapTime, Calendar cal)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.ExecuteAsync("insert into races values(@name, @summary, @sailingClub," +
+                    " @racelap, @laptime)", new
+                    {
+                        name = boat.Name,
+                        summary = cal.Summary,
+                        sailingClub = "Whitefriars Sailing Club",
+                        racelap = NoOfLaps(boat, cal),
+                        laptime= lapTime
+
+                    });
+
+
+
+            }
+
+
+            }
 
         /// <summary>
         /// Returns a stored procedure that returns all classes from boat data db.
@@ -168,7 +256,7 @@ namespace SailingWeb
         /// Adds a new boat/person
         /// </summary>
         /// <param name="boat">Boat data to add.</param>
-        public static void SetNewFullBoat(Boats boat)
+        public async static Task<IEnumerable<dynamic>> SetNewFullBoat(Boats boat)
         {
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
@@ -176,7 +264,7 @@ namespace SailingWeb
 
                 //Appends together the query, stops SQL injection.
                 // Query.
-                connection.Query("insert into fulllist value (@name, @boatName, " +
+                return await connection.QueryAsync("insert into fulllist value (@name, @boatName, " +
                     "@boatNumber, @py, @sailingClub)", new {
                         name = boat.Name,
                         boatName = boat.BoatName,
@@ -221,13 +309,13 @@ namespace SailingWeb
         /// </summary>
         /// <param name="boat">Boat data of person to add.</param>
         /// <param name="crew">Are they crew?</param>
-        public static void SetBoats(BoatsTidy boat, Calendar race)
+        public async static Task<int> SetBoats(BoatsTidy boat, Calendar race)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 string str = "insert into signonlists values(@name, @boatName, @boatNumber, @crew, " +
                     "@py, @notes, @summary, @dateTime, @sailingClub)";
-                connection.Query(str, new {
+                return await connection.ExecuteAsync(str, new {
                         name = boat.Name,
                         boatName = boat.Boat,
                         boatNumber = boat.BoatNumber,

@@ -11,7 +11,7 @@ namespace SailingWeb.Pages.Folder
     {
         public JsonResult OnGet()
         {
-            return new JsonResult(DateTime.Now - ManageRaceModel.StartTime);
+            return new JsonResult(DateTime.Now - ManageRaceModel.Race.Item3);
         }
     }
 }

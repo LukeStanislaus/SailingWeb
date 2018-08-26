@@ -1,0 +1,116 @@
+﻿@page
+@model SailingWeb.Pages.ParseRaceModel
+@{
+    ViewData["Title"] = "ParseRace";
+}
+@using static RaceHelpers;
+
+
+<html>
+<head>
+    <style>
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+            width: 200px;
+            overflow: auto;
+            overflow-y: visible;
+        }
+    </style>
+
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" asp-for="Upload" />
+        <input type="submit" />
+    </form>
+
+    <h2>FinishRace</h2>
+    <div id="table-wrapper">
+        <table id="table1">
+            <tr>
+                <th>Helm</th>
+                <th>Crew</th>
+                <th>Boat Name</th>
+                <th>Boat Number</th>
+                <th>Py</th>
+                <th>Notes</th>
+                <th>Corrected Time</th>
+                <th>Place</th>
+                @for (int i = NoOfLaps(ParseRaceModel.Race); i > (0); i--)
+                {
+                    <th>@String.Concat("Lap ", i)</th>
+                }
+            </tr>
+            @if (1 == 1)
+            {
+                var u = 0;
+                for (int a = 1; a < ParseRaceModel.Race.Item2.Count + 1; a++)
+                {
+                    try
+                    {
+                        <tr>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Name</td>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Crew</td>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Boat</td>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).BoatNumber</td>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Py</td>
+                            <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Notes</td>
+                            <td>@CorrectedTime(ReturnBoatFromPos(a, ParseRaceModel.Race), ParseRaceModel.Race).ToString(@"hh\:mm\:ss")</td>
+
+
+                            <td>
+                                @a
+                            </td>
+
+
+
+                            @for (int i = NoOfLaps(ParseRaceModel.Race) - 1; i > (-1); i--)
+                            {
+                                try
+                                {
+                                    foreach (KeyValuePair<SailingWeb.Data.BoatsTidy, List<SailingWeb.Data.BoatLap>> x in ParseRaceModel.Race.Item2)
+                                    {
+                                        if (x.Key.Boat.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).Boat) && x.Key.BoatNumber.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).BoatNumber)
+                                                && x.Key.Crew.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).Crew) &&
+                                                x.Key.Name.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).Name) && x.Key.Notes.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).Notes) &&
+                                                x.Key.Py.Equals(ReturnBoatFromPos(a, ParseRaceModel.Race).Py))
+                                        {
+                                            if (x.Value[i].LapNumber == i + 1)
+                                            {
+                                                <td>
+                                                    @ParseRaceModel.Race.Item2[ReturnBoatFromPos(a, ParseRaceModel.Race)][i].LapTime.ToString(@"hh\:mm\:ss")
+
+                                                </td>}
+                                        }
+                                    }
+
+                                }
+                                catch
+                                {
+                                    <td></td>
+
+                                }
+                            }
+
+
+                        </tr>
+                    }
+                    catch
+                    {
+
+
+                    }
+                    u++;
+                }
+
+            }
+        </table>
+    </div>
+
+
+</body>
+</html>
+
+

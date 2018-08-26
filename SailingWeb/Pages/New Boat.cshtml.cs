@@ -18,7 +18,7 @@ namespace SailingWeb.Pages
         {
             Boat.Py = Sql.ReturnClass().Find(x => x.BoatName == Boat.BoatName).Py;
             // Remove boat from db
-            Sql.SetNewFullBoat(Boat);
+            await Sql.SetNewFullBoat(Boat);
             // Create boat alerttext
             Program.Globals.Alerttext = "You have added your boat, a " + Boat.BoatName + 
                                         " with boat number " + Boat.BoatNumber + ".";

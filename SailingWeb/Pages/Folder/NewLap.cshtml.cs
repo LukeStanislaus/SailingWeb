@@ -22,7 +22,7 @@ namespace SailingWeb.Pages.Folder
                 x++;
                 var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
 
-                var lapTime2 = lapTime.Subtract(ManageRaceModel.StartTime);
+                var lapTime2 = lapTime.Subtract(ManageRaceModel.Race.Item3);
 
                 BoatLap lap = new BoatLap(lapNumber, lapTime2);
                 foreach (KeyValuePair<BoatsTidy, List<BoatLap>> x in ManageRaceModel.Race.Item2)

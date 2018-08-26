@@ -16,7 +16,7 @@ namespace SailingWeb.Pages.Folder
             var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
             try
             {
-                return new JsonResult(ManageRaceModel.PlaceOf(boat1));
+                return new JsonResult(RaceHelpers.PlaceOf(boat1, ManageRaceModel.Race));
             }
             catch
             {

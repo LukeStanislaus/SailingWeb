@@ -13,7 +13,7 @@ namespace SailingWeb.Pages.Folder
         {
             ManageRaceModel.Race = null;
             ManageRaceModel.RaceNameStatic = null;
-            ManageRaceModel.StartTime = new DateTime();
+            //ManageRaceModel.Race.Item3 = new DateTime();
         }
     }
 }

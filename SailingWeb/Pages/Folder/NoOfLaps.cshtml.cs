@@ -11,7 +11,7 @@ namespace SailingWeb.Pages.Folder
     {
         public JsonResult OnGet()
         {
-            return new JsonResult(ManageRaceModel.NoOfLaps);
+            return new JsonResult(RaceHelpers.NoOfLaps(ManageRaceModel.Race));
         }
     }
 }
