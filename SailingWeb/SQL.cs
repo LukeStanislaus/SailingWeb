@@ -44,7 +44,7 @@ namespace SailingWeb
             }
         }
 
-        public async static Task<IEnumerable<BoatsTidy>> GetRacers(Calendar cal)
+        public async static Task<IEnumerable<BoatsTidy>> GetRacersReel(Calendar cal)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
