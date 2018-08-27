@@ -242,10 +242,8 @@ function newlap(boatin, rowNumber) {
                                     }
                                 });
                             }
-                            //
                         }
                     });
-                    //document.getElementById("submit").submit();
                 }
             });
         }

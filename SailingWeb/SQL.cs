@@ -12,10 +12,22 @@ namespace SailingWeb
 {
     public static class Sql
     {
+        public async static Task<IEnumerable<int>> NoOfLaps( Calendar cal)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                return await connection.QueryAsync<int>("select max(racelap) from races where " +
+                    "summary = @summary and eventStart = @eventStart", new
+                    {
+                        summary = cal.Summary,
+                        eventStart = cal.DateTime
+                    });
+
+            }
+        }
         public async static Task<IEnumerable<BoatLap>> GetLaps(BoatsTidy boat, Calendar cal)
         {
            
-            
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 return await connection.QueryAsync<BoatLap>("select racelap, laptime from races where name = @name and " +
