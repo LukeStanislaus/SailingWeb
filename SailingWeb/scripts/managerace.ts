@@ -1,7 +1,8 @@
 ﻿import * as $ from "jquery";
 import * as bootbox from "bootbox";
 import "jquery-ui";
-
+import * as moment from "moment-timezone";
+import * as countdown from "countdown";
 function loaddatad(string: string, i: string) {
 
     $(i).data(JSON.parse(string));
@@ -131,9 +132,9 @@ function editLap(username: any, lapNo: Int16Array, time: Date) {
 }
 
 
-function newlap(boatin, rowNumber) {
+function newlap(boatin: any, rowNumber: string) {
     var lapno;
-    rowNum = parseInt(rowNumber);
+    let rowNum = parseInt(rowNumber);
     $.ajax({
         url: "/Folder/GetNextLap",
         data: { boat: JSON.stringify(boatin) },
@@ -151,8 +152,7 @@ function newlap(boatin, rowNumber) {
                         $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                 },
                 success: function (data) {
-                    ajax = 0;
-                    ajax = JSON.parse(data);
+                    let ajax = JSON.parse(data);
                     $.ajax({
                         url: "/Folder/NewLap",
                         data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
@@ -161,24 +161,24 @@ function newlap(boatin, rowNumber) {
                                 $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                         },
                         success: function (data) {
-                            var tbl = document.getElementById('table1'), // table reference
-                                i;
+                            var tbl = document.getElementById('table1') as HTMLTableElement // table reference
+                            let i;
                             console.log(data);
-                            muchFurther = ajax - lap;
+                            let muchFurther = ajax - lap;
                             if (muchFurther == (-1)) {
                                 for (i = 0; i < tbl.rows.length; i++) {
                                     if (i == 0) {
-                                        x = tbl.rows[i].insertCell(10 + muchFurther);
+                                        let x = tbl.rows[i].insertCell(10 + muchFurther);
                                         x.innerHTML = "Lap ".concat(ajax + 1);
 
                                     }
                                     else {
-                                        x = tbl.rows[i].insertCell(10 + muchFurther);
+                                        let x = tbl.rows[i].insertCell(10 + muchFurther);
 
                                     }
                                 }
                                 tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                let x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                 $.ajax({
                                     url: "/Folder/GetLapTime",
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
@@ -195,7 +195,7 @@ function newlap(boatin, rowNumber) {
                             else {
 
                                 tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
-                                x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
+                                let x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                 $.ajax({
                                     url: "/Folder/GetLapTime",
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
@@ -209,55 +209,27 @@ function newlap(boatin, rowNumber) {
                                     }
                                 });
                             }
-                            //
                         }
-
                     });
-
-
-
-
-
-
-
-                    //document.getElementById("submit").submit();
                 }
-
             });
-
         }
     });
     updatePlaces();
-
 }
 
-function myTimer(resulting) {
+function myTimer(resulting: number) {
 
     console.log("Repeating function invoked.");
-    var d = moment().tz("America/Los_Angeles");
-    x = d.valueOf();
+    var d = moment();
+    let x = d.valueOf();
 
-    f = x - resulting;
-
-    // Create a new JavaScript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    let f = x - resulting;
     var date = new Date(f).toLocaleTimeString();
 
-    //var date = new moment(f).toLocaleTimeString();
-    // Hours part from the timestamp
-    //var hours = date.getHours();
-    // Minutes part from the timestamp
-    //var minutes = "0" + date.getMinutes();
-    // Seconds part from the timestamp
-    //var seconds = "0" + date.getSeconds();
 
-
-    //var milliseconds = "0" + date.getMilliseconds();
-    // Will display time in 10:30:23 format
-
-    //var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    new CountUpTimer(date, function (times, parameters) {
-        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
+    let cd = countdown(new Date(f), function (times: any) {
+        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times.toString());
 
     });
 
@@ -288,7 +260,7 @@ function onloader() {
 }
 function startrace() {
 
-    start = Date.now();
+    let start = Date.now();
     $.ajax({
         url: "/Folder/StartRace",
         data: { datetime: start },
@@ -297,7 +269,7 @@ function startrace() {
                 $('input:hidden[name="__RequestVerificationToken"]').val().toString()
         },
         success: function (data) {
-            document.getElementById("submit").submit();
+            (document.getElementById("submit") as any).submit();
         }
 
     });
