@@ -6,6 +6,7 @@
     "gulp": "3.9.0",
     "del": "2.2.0",
     "@types/jquery": "3.3.6",
-    "@types/bootbox": "4.4.36"
+    "@types/bootbox": "4.4.36",
+    "@types/jqueryui": "1.12.4"
   }
 }

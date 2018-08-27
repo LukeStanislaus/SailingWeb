@@ -1,5 +1,7 @@
 ﻿import * as $ from "jquery";
 import * as bootbox from "bootbox";
+import "jquery-ui";
+
 function loaddatad(string: string, i: string) {
 
     $(i).data(JSON.parse(string));
@@ -69,14 +71,16 @@ function removerace() {
             }
         }
     })
-
-
 }
-function editLap(username: object, lapNo: Int16Array, time: Date) {
+
+
+function editLap(username: any, lapNo: Int16Array, time: Date) {
     document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
-    document.getElementById("password").value = time;
+    let x = <HTMLInputElement>document.getElementById("password")
+    x.value = time.toDateString();
     document.getElementById("dialog-form").style.display = "inline";
-    $("#dialog-form").dialog({
+    let form = document.getElementById("dialog-form") as any;
+    form.dialog({
         autoOpen: false,
         buttons: {
             "Remove Lap": function () {
@@ -87,27 +91,30 @@ function editLap(username: object, lapNo: Int16Array, time: Date) {
                     },
                     headers: {
                         RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                     },
                     success: function (data) {
-                        document.getElementById("submit").submit();
+                        let submit = document.getElementById("submit") as any;
+                        submit.submit();
                         updatePlaces();
                     }
 
                 });
             },
             "Enter": function () {
+                let timeresponse = document.getElementById("password") as HTMLInputElement;
                 $.ajax({
                     url: "/Folder/UpdateTime",
                     data: {
-                        name: JSON.stringify(username), lapNumber: lapNo, lapTime: document.getElementById("password").value
+                        name: JSON.stringify(username), lapNumber: lapNo, lapTime: timeresponse.value
                     },
                     headers: {
                         RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                     },
                     success: function (data) {
-                        document.getElementById("submit").submit();
+                        let submit = document.getElementById("submit") as any
+                        submit.submit();
                         updatePlaces()
                     }
 
@@ -121,38 +128,9 @@ function editLap(username: object, lapNo: Int16Array, time: Date) {
         }
     });
     $("#dialog-form").dialog("open");
-    /*
-        .dialog({
-        autoOpen: true,
-        height: 400,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Create an account": function () {
-                $.ajax({
-                    url: "/Folder/UpdateTime",
-                    data: {
-                        name: JSON.stringify(username), lapNumber: lapNo, lapTime: time
-                    },
-                    headers: {
-                        RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (data) {
-                        document.getElementById("submit").submit();
-                    }
-
-                });
-            },
-            Cancel: function () {
-                dialog.dialog("close");
-            }
-        },
-        close: function () {
-        }
-    });
-    */
 }
+
+
 function newlap(boatin, rowNumber) {
     var lapno;
     rowNum = parseInt(rowNumber);
@@ -161,7 +139,7 @@ function newlap(boatin, rowNumber) {
         data: { boat: JSON.stringify(boatin) },
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val()
+                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
         },
         success: function (resulting) {
             lapno = JSON.parse(resulting);
@@ -170,7 +148,7 @@ function newlap(boatin, rowNumber) {
                 url: "/Folder/NoOfLaps",
                 headers: {
                     RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                        $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                 },
                 success: function (data) {
                     ajax = 0;
@@ -180,7 +158,7 @@ function newlap(boatin, rowNumber) {
                         data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
                         headers: {
                             RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                         },
                         success: function (data) {
                             var tbl = document.getElementById('table1'), // table reference
@@ -206,7 +184,7 @@ function newlap(boatin, rowNumber) {
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                     headers: {
                                         RequestVerificationToken:
-                                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                                     },
                                     success: function (resulting) {
                                         x.onclick = function () { editLap(boatin, lap, resulting) };
@@ -223,7 +201,7 @@ function newlap(boatin, rowNumber) {
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                     headers: {
                                         RequestVerificationToken:
-                                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
                                     },
                                     success: function (resulting) {
                                         x.onclick = function () { editLap(boatin, lap, resulting) };
@@ -291,7 +269,7 @@ function onloader() {
         url: "/Folder/GetStartTime",
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val()
+                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
         },
         success: function (resulting) {
             if (resulting != 0) {
@@ -316,7 +294,7 @@ function startrace() {
         data: { datetime: start },
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val()
+                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
         },
         success: function (data) {
             document.getElementById("submit").submit();
