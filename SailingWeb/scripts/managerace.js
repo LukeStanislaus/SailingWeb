@@ -36,10 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
-var bootbox = require("bootbox");
 require("jquery-ui");
-var moment = require("moment-timezone");
+var moment = require("moment");
+//import * as momenttz from "moment-timezone";
 var countdown = require("countdown");
+//import * as bootbox from "bootbox";
 function loaddatad(string, i) {
     $(i).data(JSON.parse(string));
     //tbl.rows[i].cells[0].data();

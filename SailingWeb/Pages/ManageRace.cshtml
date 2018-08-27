@@ -19,8 +19,12 @@
             overflow-y: visible;
         }
     </style>
+    <script src="~/js/managerace.js" type="text/javascript">
+        // index.js is the transpiled index.ts
+        //SystemJS.import('/js/managerace.js');
+    </script>
 </head>
-<body onload="onloader();">
+<body onload="onloader()">
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
@@ -38,11 +42,11 @@
     {
         <div>
 
-                <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()" class="btn btn-primary">Click to start race.</button>
+            <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()" class="btn btn-primary">Click to start race.</button>
             <form id="submit" style="display:inline" method="get">
-                <button style="display:inline"type="submit" class="btn btn-success">Refresh</button>
+                <button style="display:inline" type="submit" class="btn btn-success">Refresh</button>
             </form>
-            <button style="display:inline" onclick="removerace()" class="btn btn-danger" >Remove race</button>
+            <button style="display:inline" onclick="removerace()" class="btn btn-danger">Remove race</button>
             <form method="get" style="display:inline" action="/FinishRace">
                 @if (NoOfLaps(ManageRaceModel.Race) != 0)
                 {
@@ -60,7 +64,7 @@
         <div id="table-wrapper">
             <table id="table1">
                 <tr>
-                    <th >Helm</th>
+                    <th>Helm</th>
                     <th>Crew</th>
                     <th>Boat Name</th>
                     <th>Boat Number</th>
@@ -145,7 +149,7 @@
             </fieldset>
         </form>
     </div>
-    <script src="~/js/managerace.js"></script>
+    <!--<script src="~/js/managerace.js"></script>-->
     <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
 
 

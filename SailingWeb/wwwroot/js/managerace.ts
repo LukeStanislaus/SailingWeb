@@ -1,8 +1,11 @@
 import * as $ from "jquery";
-import * as bootbox from "bootbox";
 import "jquery-ui";
-import * as moment from "moment-timezone";
+import * as moment from "moment";
+//import * as momenttz from "moment-timezone";
 import * as countdown from "countdown";
+//import * as bootbox from "bootbox";
+
+
 function loaddatad(string: string, i: string) {
 
     $(i).data(JSON.parse(string));
@@ -209,26 +212,13 @@ function newlap(boatin: any, rowNumber: string) {
                                     }
                                 });
                             }
-                            //
                         }
-
                     });
-
-
-
-
-
-
-
-                    //document.getElementById("submit").submit();
                 }
-
             });
-
         }
     });
     updatePlaces();
-
 }
 
 function myTimer(resulting: number) {
