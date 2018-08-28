@@ -1,8 +1,10 @@
-﻿import * as $ from "jquery";
+﻿import "jquery";
 import "jquery-ui";
-import * as moment from "moment";
+//import * as moment from "moment";
 //import * as momenttz from "moment-timezone";
-import * as countdown from "countdown";
+//import * as countdown from "countdown";
+//import * as countdown from "countdown";
+import "moment";
 //import * as bootbox from "bootbox";
 
 
@@ -224,43 +226,22 @@ function newlap(boatin: any, rowNumber: string) {
 function myTimer(resulting: number) {
 
     console.log("Repeating function invoked.");
-    var d = moment();
+    var d = new Date();
     let x = d.valueOf();
 
     let f = x - resulting;
     var date = new Date(f).toLocaleTimeString();
 
 
-    let cd = countdown(new Date(f), function (times: any) {
-        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times.toString());
+    //let cd = countdown(new Date(f), function (times: any) {
+    //    document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times.toString());
 
-    });
+    //});
 
 
 }
 //var time;
-function onloader() {
-    $.ajax({
-        url: "/Folder/GetStartTime",
-        headers: {
-            RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
-        },
-        success: function (resulting) {
-            if (resulting != 0) {
-                console.log("Set repeating function");
-                myTimer(resulting);
-            }
-            else {
-                document.getElementById("startracebutton").style.visibility = "visible";
-                document.getElementById("startracebutton").style.display = "block";
-            }
 
-
-        }
-    });
-
-}
 function startrace() {
 
     let start = Date.now();

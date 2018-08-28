@@ -19,12 +19,16 @@
             overflow-y: visible;
         }
     </style>
-    <script src="~/js/managerace.js" type="text/javascript">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="~/js/bundle.js" type="text/javascript">
         // index.js is the transpiled index.ts
         //SystemJS.import('/js/managerace.js');
     </script>
 </head>
-<body onload="onloader()">
+<body>
+
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
@@ -46,6 +50,7 @@
             <form id="submit" style="display:inline" method="get">
                 <button style="display:inline" type="submit" class="btn btn-success">Refresh</button>
             </form>
+
             <button style="display:inline" onclick="removerace()" class="btn btn-danger">Remove race</button>
             <form method="get" style="display:inline" action="/FinishRace">
                 @if (NoOfLaps(ManageRaceModel.Race) != 0)
@@ -151,7 +156,36 @@
     </div>
     <!--<script src="~/js/managerace.js"></script>-->
     <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
+    <script>
+        onloader();
+        function onloader() {
+            $.ajax({
+                url: "/Folder/GetStartTime",
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (resulting) {
+                    if (resulting != 0) {
+                        console.log("Set repeating function");
+                        myTimer(resulting);
+                    }
+                    else {
+                        try {
+                            document.getElementById("startracebutton").style.visibility = "visible";
+                            document.getElementById("startracebutton").style.display = "block";
+                        }
+                        catch{
+                            console.log("button doesnt exist")
+                        }
+                    }
 
+
+                }
+            });
+
+        }
+    </script>
 
 </body>
 

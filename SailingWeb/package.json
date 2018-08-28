@@ -11,6 +11,10 @@
     "@types/moment": "2.13.0",
     "@types/moment-timezone": "0.5.8",
     "@types/countdown": "0.0.6",
-    "browserify": "16.2.2"
+    "browserify": "16.2.2",
+    "moment": "2.22.2",
+    "countdown": "2.6.0",
+    "jquery": "3.3.1",
+    "jquery-ui": "1.12.1"
   }
 }

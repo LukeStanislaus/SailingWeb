@@ -20,9 +20,8 @@ gulp.task('clean', function () {
 gulp.task('default', function () {
     gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js'));
     browserify('wwwroot/js/managerace.js', {
-        entries: './node_modules/'
     })
         .bundle()
-        .pipe(gulp.dest("wwwroot/js"));
-        //.pipe(fs.createWriteStream("./wwwroot/js/bundle.js"));
+        //.pipe(gulp.dest("wwwroot/js"));
+        .pipe(fs.createWriteStream("./wwwroot/js/bundle.js"));
 });
