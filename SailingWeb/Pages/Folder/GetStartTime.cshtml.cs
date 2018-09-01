@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 
 namespace SailingWeb.Pages.Folder
 {
@@ -11,16 +8,12 @@ namespace SailingWeb.Pages.Folder
     {
         public JsonResult OnGet()
         {
-            try
+            DateTime x = Sql.GetStartTime(ManageRaceModel.RaceNameStatic);
+            if (x != new DateTime())
             {
-                if (ManageRaceModel.Race.Item3 != DateTime.MinValue)
-                {
-                    var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
-                    return new JsonResult((ManageRaceModel.Race.Item3.ToUniversalTime().Ticks - time) / 10000);
-                }
-                return new JsonResult(0);
+                return new JsonResult(Sql.GetStartTime(ManageRaceModel.RaceNameStatic));
             }
-            catch
+            else
             {
                 return new JsonResult(0);
             }

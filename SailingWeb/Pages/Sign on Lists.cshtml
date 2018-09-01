@@ -29,6 +29,9 @@
                 background-color: RoyalBlue;
             }
     </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -76,13 +79,13 @@
     </form>
 
     <!--If we have a race name, print the race data.-->
-    @if (Program.Globals.Racename.Summary != null)
+    @if (Model.RaceName != null)
     {
 
         <!--Try to display-->
         try
         {
-            var list = Sql.GetRacers();
+            var list = Sql.GetRacers(Model.RaceName);
             <!-- <label for="table1">List of racers: </label> -->
             <table id="table1">
                 <tr>
@@ -92,15 +95,15 @@
                     <th>Boat Number</th>
                     <th>Options</th>
                 </tr>
-                @for (int i = 0; i < Sql.GetRacers().Count; i++)
+                @for (int i = 0; i < Sql.GetRacers(Model.RaceName).Count; i++)
                 {
                     <tr>
-                        <td>@Sql.GetRacers()[i].Name</td>
-                        <td>@Sql.GetRacers()[i].Crew</td>
-                        <td>@Sql.GetRacers()[i].Boat</td>
-                        <td>@Sql.GetRacers()[i].BoatNumber</td>
+                        <td>@Sql.GetRacers(Model.RaceName)[i].Name</td>
+                        <td>@Sql.GetRacers(Model.RaceName)[i].Crew</td>
+                        <td>@Sql.GetRacers(Model.RaceName)[i].Boat</td>
+                        <td>@Sql.GetRacers(Model.RaceName)[i].BoatNumber</td>
                         <td>
-                                <button class="btn" onclick="ajax4(@i)" aria-label="Close">
+                                <button class="btn" onclick="ajax4(@i, '@string.Concat(Model.RaceName.Summary,"abc123",Model.RaceName.DateTime)')" aria-label="Close">
                                     <span aria-hidden="true"><i class="fa fa-close"> Remove</i></span>
                                 </button>
                         </td>
@@ -121,10 +124,10 @@
 
 
     <script>
-        function ajax4(index) {
+        function ajax4(index, race1) {
             $.ajax({
                 url: "/Folder/RemoveBoat",
-                data: { indexof: index },
+                data: { indexof: index, race: race1 },
                 headers: {
                     RequestVerificationToken:
                         $('input:hidden[name="__RequestVerificationToken"]').val()

@@ -15,17 +15,24 @@ namespace SailingWeb.Pages
 {
     public class ManageRaceModel : PageModel
     {
-        public static Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime> Race { get; set; }
+        //public static Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime> Race { get; set; }
 
         [BindProperty]
         public string RaceName { get; set; }
 
-        public static string RaceNameStatic { get; set; }
+        public static Calendar RaceNameStatic { get; set; }
 
         public void OnGet()
         {
-            if (RaceNameStatic == null)
-                RaceNameStatic = RaceName;
+            if (RaceNameStatic == null && RaceName != null)
+            {
+                RaceNameStatic = Sql.Todaysevent().Where(x => x.Summary == RaceName.Split("abc123")[0] &&
+                    Convert.ToDateTime(RaceName.Split("abc123")[1]) == x.DateTime
+                    ).First();
+                RaceName = null;
+            }
+
+            /*
             try
             {
                 System.IO.File.WriteAllText("wwwroot/json/race.json", JsonConvert.SerializeObject(ConvertToJSON(Race), Formatting.Indented));
@@ -33,15 +40,20 @@ namespace SailingWeb.Pages
             catch (NullReferenceException)
             {
 
-            }
+            }*/
         }
 
         public void OnPost()
         {
-            if (RaceNameStatic == null)
-                RaceNameStatic = RaceName;
+            if (RaceNameStatic == null && RaceName != null)
+            {
+                RaceNameStatic = Sql.Todaysevent().Where(x => x.Summary == RaceName.Split("abc123")[0] &&
+                    Convert.ToDateTime(RaceName.Split("abc123")[1]) == x.DateTime
+                    ).First();
+                RaceName = null;
+            }
 
-            RefreshTable(RaceNameStatic, Race);
+            //  RefreshTable(RaceNameStatic, Race);
 
         }
 

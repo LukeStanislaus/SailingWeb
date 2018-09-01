@@ -1,5 +1,6 @@
 ﻿@page
-@model SailingWeb.Pages.ManageRaceModel
+@using SailingWeb.Data;
+@model ManageRaceModel
 @{
     ViewData["Title"] = "ManageRace";
 }
@@ -8,6 +9,27 @@
 
 <html>
 <head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            width: 100%;
+            padding: 5px;
+        }
+        /* Style buttons */
+        .btn {
+            background-color: DodgerBlue; /* Blue background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 12px 16px; /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+        }
+
+            /* Darker background on mouse-over */
+            .btn:hover {
+                background-color: RoyalBlue;
+            }
+    </style>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <style>
 
@@ -19,16 +41,20 @@
             overflow-y: visible;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
     <script src="~/js/bundle.js" type="text/javascript">
         // index.js is the transpiled index.ts
         //SystemJS.import('/js/managerace.js');
     </script>
+    <!--<script src="https://github.com/makeusabrew/bootbox/releases/download/v4.4.0/bootbox.min.js"></script>-->
 </head>
 <body>
+    @if (ManageRaceModel.RaceNameStatic != null)
+    {
 
+        <button id="removerace" style="display:inline" class="btn-danger">Remove race</button>
+    }
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
@@ -42,18 +68,15 @@
             <input type="submit" />
         </form>
     }
-    else
+    else if (Sql.GetStartTime(ManageRaceModel.RaceNameStatic) != new DateTime())
     {
         <div>
-
-            <button style="visibility:collapse; display:none;" id="startracebutton" onclick="startrace()" class="btn btn-primary">Click to start race.</button>
             <form id="submit" style="display:inline" method="get">
                 <button style="display:inline" type="submit" class="btn btn-success">Refresh</button>
             </form>
 
-            <button style="display:inline" onclick="removerace()" class="btn btn-danger">Remove race</button>
             <form method="get" style="display:inline" action="/FinishRace">
-                @if (NoOfLaps(ManageRaceModel.Race) != 0)
+                @if (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic) != 0)
                 {
                     <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
                 }
@@ -63,7 +86,6 @@
 
                 }
             </form>
-            <a href="~/json/race.json" download>Download race here</a>
         </div>
         <p id="demo">Elapsed Time: </p>
         <div id="table-wrapper">
@@ -78,7 +100,7 @@
                     <th>Notes</th>
                     <th>Corrected Time</th>
                     <th>Place</th>
-                    @for (int i = NoOfLaps(ManageRaceModel.Race); i > (0); i--)
+                    @for (int i = (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic)); i > (0); i--)
                     {
                         <th>@String.Concat("Lap ", i)</th>
                     }
@@ -86,39 +108,39 @@
                 @if (1 == 1)
                 {
                     var u = 0;
-                    @foreach (KeyValuePair<Data.BoatsTidy, List<Data.BoatLap>> key in ManageRaceModel.Race.Item2)
+                    @foreach (var person in Sql.GetRacers(ManageRaceModel.RaceNameStatic))
                     {
                         <tr>
-                            <td id="@u" data-internalid="@u" data-string="@Html.Raw(Json.Serialize(key.Key)).ToString()">@key.Key.Name</td>
-                            <td>@key.Key.Crew</td>
-                            <td>@key.Key.Boat</td>
-                            <td>@key.Key.BoatNumber</td>
+                            <td id="@u" data-internalid="@u" data-string="@Html.Raw(Json.Serialize(person)).ToString()">@person.Name</td>
+                            <td>@person.Crew</td>
+                            <td>@person.Boat</td>
+                            <td>@person.BoatNumber</td>
                             <td>
                                 <button class="btn" data-int="@u" onclick="
-                                newlap(@Html.Raw(Json.Serialize(key.Key)).ToString(), this.getAttribute('data-int'));">
+                                newlap(@Html.Raw(Json.Serialize(person)).ToString(), this.getAttribute('data-int'));">
                                     Lap
                                 </button>
 
                             </td>
-                            <td>@key.Key.Py</td>
-                            <td>@key.Key.Notes</td>
-                            <td>@CorrectedTime(key.Key, ManageRaceModel.Race).ToString(@"hh\:mm\:ss")</td>
+                            <td>@person.Py</td>
+                            <td>@person.Notes</td>
+                            <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"hh\:mm\:ss")</td>
 
 
                             <td>
-                                @(PlaceOf(key.Key, ManageRaceModel.Race))
+                                @(Sql.PlaceOf(ManageRaceModel.RaceNameStatic, person))
                             </td>
 
 
 
-                            @for (int i = NoOfLaps(ManageRaceModel.Race); i > (0); i--)
+                            @for (int i = Sql.NoOfLaps(ManageRaceModel.RaceNameStatic); i > (0); i--)
                             {
                                 try
+                                { 
+                                    if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
                                 {
-                                    if (key.Value.Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
-                                    {
-                                        <td onclick="editLap(@Html.Raw(Json.Serialize(key.Key)).ToString(), @i, '@key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
-                                            @key.Value.Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
+                                        <td onclick="editLap(@Html.Raw(Json.Serialize(person)).ToString(), @i, '@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
+                                            @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
 
                                         </td>
                                     }
@@ -140,7 +162,81 @@
         </div>
 
     }
+    else if (Sql.GetStartTime(ManageRaceModel.RaceNameStatic) == new DateTime())
+    {<form id="button" method="get">
+            <button style="visibility:collapse"></button>
+        </form>
+        <button style="visibility:collapse; display:none;" id="startracebutton" class="btn btn-primary">Click to start race.</button>
 
+
+        @if (ManageRaceModel.RaceNameStatic != null)
+        {
+
+            <!--Try to display-->
+            try
+            {
+                var list = Sql.GetRacers(ManageRaceModel.RaceNameStatic);
+                <!-- <label for="table1">List of racers: </label> -->
+                <table id="table1">
+                    <tr>
+                        <th>Helm</th>
+                        <th>Crew</th>
+                        <th>Boat Name</th>
+                        <th>Boat Number</th>
+                        <th>Options</th>
+                    </tr>
+                    @for (int i = 0; i < Sql.GetRacers(ManageRaceModel.RaceNameStatic).Count; i++)
+                    {
+                        <tr>
+                            <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].Name</td>
+                            <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].Crew</td>
+                            <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].Boat</td>
+                            <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].BoatNumber</td>
+                            <td>
+                                <button class="btn" onclick="ajax4(@i, '@string.Concat(ManageRaceModel.RaceNameStatic.Summary,"abc123", ManageRaceModel.RaceNameStatic.DateTime)')" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fa fa-close"> Remove</i></span>
+                                </button>
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+            }
+            catch
+            {
+                <p1> This race does not exist.</p1>
+
+
+            }
+
+
+        }
+
+
+        <script>
+            function ajax4(index, race1) {
+                $.ajax({
+                    url: "/Folder/RemoveBoat",
+                    data: { indexof: index, race: race1 },
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+
+                        alert("done");
+                        document.getElementById("button").submit();
+                    }
+
+                });
+            }
+
+
+        </script>
+
+
+
+    }
 
 
     <div style="display:none" id="dialog-form" title="Edit data.">
@@ -184,6 +280,22 @@
                 }
             });
 
+        }
+        function confirmer(text, func) {
+            bootbox.confirm({
+                message: text,
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) { func(result) }
+            });
         }
     </script>
 

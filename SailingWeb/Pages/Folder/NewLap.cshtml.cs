@@ -14,34 +14,10 @@ namespace SailingWeb.Pages.Folder
     {
 
         public static int x = 0;
-        public void OnGet(string boat, DateTime lapTime, int lapNumber)
+        public async void OnGet(string boat, DateTime lapTime, int lapNumber)
         {
-            if(x==0)
-            {
-                bool z = true;
-                x++;
-                var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
-
-                var lapTime2 = lapTime.Subtract(ManageRaceModel.Race.Item3);
-
-                BoatLap lap = new BoatLap(lapNumber, lapTime2);
-                foreach (KeyValuePair<BoatsTidy, List<BoatLap>> x in ManageRaceModel.Race.Item2)
-                    if (x.Key.Boat.Equals(boat1.Boat) && x.Key.BoatNumber.Equals(boat1.BoatNumber) && x.Key.Crew.Equals(boat1.Crew) &&
-                        x.Key.Name.Equals(boat1.Name) && x.Key.Notes.Equals(boat1.Notes) &&
-                        x.Key.Py.Equals(boat1.Py))
-                    {
-                        foreach (var y in x.Value)
-                        {
-                            if (y.LapNumber == lap.LapNumber)
-                                z = false; break;
-                            
-                        }
-                        if(z)
-                        ManageRaceModel.Race.Item2[x.Key].Add(lap);
-                    }
-                x--;
-            }
-            
+            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
+            var x = await Sql.NewLap(boat1, lapTime, ManageRaceModel.RaceNameStatic);
         }
     }
 }

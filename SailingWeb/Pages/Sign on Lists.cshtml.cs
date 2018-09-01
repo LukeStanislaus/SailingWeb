@@ -14,6 +14,7 @@ namespace SailingWeb.Pages
         [BindProperty]
         public string Race { get; set; }
         //[BindProperty]
+        public Calendar RaceName { get; set; }
         //public List<BoatsTidy> List { get; set; }
 
         public void OnGet()
@@ -22,15 +23,15 @@ namespace SailingWeb.Pages
             Message = "Your contact page.";
         }
         public async Task<IActionResult> OnPostAsync()
-        {
-            for (int i = 0; i < Sql.GetRacers().Count; i++)
+        {/*
+            for (int i = 0; i < Sql.GetRacers(RaceName).Count; i++)
             {
-                var thing = Sql.GetRacers()[i];
+                var thing = Sql.GetRacers(RaceName)[i];
                 int integer = i;
-            }
+            }*/
             if (Race != null)
             {
-                Program.Globals.Racename = Program.Globals.Todaysevents[int.Parse(Race)];
+                   this.RaceName  = Program.Globals.Todaysevents[int.Parse(Race)];
             }
             //var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();

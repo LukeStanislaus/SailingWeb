@@ -10,7 +10,7 @@ var browserify = require('browserify')
 var fs = require("fs");
 
 var paths = {
-    scripts: ['scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.map']
+    scripts: ['scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.map', 'scripts/managerace.js']
 };
 
 gulp.task('clean', function () {

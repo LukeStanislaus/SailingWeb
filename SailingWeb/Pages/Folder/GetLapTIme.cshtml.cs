@@ -14,15 +14,8 @@ namespace SailingWeb.Pages.Folder
         public JsonResult OnGet(string boat, int lapNumber)
         {
             var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
-            foreach (KeyValuePair<BoatsTidy, List<BoatLap>> x in ManageRaceModel.Race.Item2)
-                if (x.Key.Boat.Equals(boat1.Boat) && x.Key.BoatNumber.Equals(boat1.BoatNumber) && x.Key.Crew.Equals(boat1.Crew) &&
-                    x.Key.Name.Equals(boat1.Name) && x.Key.Notes.Equals(boat1.Notes) &&
-                    x.Key.Py.Equals(boat1.Py))
-                {
-                    return new JsonResult(x.Value.Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"hh\:mm\:ss"));
-                }
-
-            return new JsonResult("Failed to search");
+            return new JsonResult(Sql.GetLaps(boat1, ManageRaceModel.RaceNameStatic).Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"hh\:mm\:ss"));
+            
         }
     }
 }

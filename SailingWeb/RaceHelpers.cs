@@ -141,21 +141,5 @@ namespace SailingWeb
             return tup;
 
         }
-
-        public static void RefreshTable(string racename, Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime> Race)
-        {
-            var arr = racename.Split("abc123");
-            Calendar cal = new Calendar(arr[0], "", Convert.ToDateTime(arr[1]));
-
-            Dictionary<BoatsTidy, List<BoatLap>> dictionary = new Dictionary<BoatsTidy, List<BoatLap>>();
-            foreach (var person in Sql.GetRacers(cal))
-            {
-                dictionary.Add(person, new List<BoatLap>());
-            }
-            Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime> tup = new Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime>(cal, dictionary, DateTime.MinValue);
-
-            Race = tup;
-        }
-
     }
 }

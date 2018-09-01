@@ -11,7 +11,6 @@ namespace SailingWeb.Pages.Folder
     {
         public void OnGet()
         {
-            ManageRaceModel.Race = null;
             ManageRaceModel.RaceNameStatic = null;
             //ManageRaceModel.Race.Item3 = new DateTime();
         }

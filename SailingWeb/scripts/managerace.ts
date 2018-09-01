@@ -1,13 +1,24 @@
-﻿import "jquery";
+﻿import * as $ from "jquery";
+import "jquery";
 import "jquery-ui";
-//import * as moment from "moment";
-//import * as momenttz from "moment-timezone";
-//import * as countdown from "countdown";
-//import * as countdown from "countdown";
-import "moment";
-//import * as bootbox from "bootbox";
+//import "bootbox";
+import "bootstrap";
+import * as bootbox from "bootbox";
+//import "moment";
+setTimeout(function () {
+    console.log("check check");
+    bootbox.alert("hey");
+}, 10000);
+console.log("test");
 
-
+function confirmcaller(text: string, func: Function) {
+    return confirmer(text, func);
+}
+if (1 == 0 ) {
+    function confirmer(text, func) {
+        return true;
+    }
+}
 function loaddatad(string: string, i: string) {
 
     $(i).data(JSON.parse(string));
@@ -56,27 +67,26 @@ function finishrace() {
 }
 */
 function removerace() {
-    bootbox.confirm({
-        size: "small",
-        message: "Are you sure you want to delete this race? You will not be able to get it back!",
-        callback: function (result) {
-            if (result) {
-                $.ajax({
-                    url: "/Folder/RemoveRace",
-                    headers: {
-                        RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
-                    },
-                    success: function (data) {
-                        let x = <HTMLFormElement>document.getElementById("submit");
-                        x.submit();
-                    }
+    console.log("bootboxing");
+    let x = confirmcaller("Are you sure you want to delete this race? You will not be able to get it back!", removeraceajax);
 
-                });
+}
+function removeraceajax(result: boolean) {
+    if (result) {
+        $.ajax({
+            url: "/Folder/RemoveRace",
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val() as any
+            },
+            success: function (data) {
+                location = location.href as any;
 
+                console.log("after");
             }
-        }
-    })
+
+        });
+    }
 }
 
 
@@ -242,6 +252,12 @@ function myTimer(resulting: number) {
 }
 //var time;
 
+setTimeout(function () {
+
+    document.getElementById("removerace").onclick = removerace;
+    document.getElementById("startracebutton").onclick = startrace;
+    console.log("success of the onclick");
+}, 100)
 function startrace() {
 
     let start = Date.now();
@@ -250,10 +266,10 @@ function startrace() {
         data: { datetime: start },
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                $('input:hidden[name="__RequestVerificationToken"]').val() as any
         },
         success: function (data) {
-            (document.getElementById("submit") as any).submit();
+            location = location.href as any;
         }
 
     });

@@ -21,6 +21,8 @@ namespace SailingWeb.Pages.Folder
 
         public void OnGet(string dateTime)
         {
+            Sql.SetStartTime(ManageRaceModel.RaceNameStatic, JavaTimeStampToDateTime(double.Parse(dateTime)));
+            /*
             var datetime = JavaTimeStampToDateTime(double.Parse(dateTime)).AddMinutes(0);
             var arr = ManageRaceModel.RaceNameStatic.Split("abc123");
             Calendar cal = new Calendar(arr[0], "", Convert.ToDateTime(arr[1]));
@@ -32,7 +34,7 @@ namespace SailingWeb.Pages.Folder
             }
             Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime> tup = new Tuple<Calendar, Dictionary<BoatsTidy, List<BoatLap>>, DateTime>(cal, dictionary, datetime);
             //ManageRaceModel.Race.Item3 = DateTime.Now.AddMinutes(5);
-            ManageRaceModel.Race = tup;
+            ManageRaceModel.Race = tup;*/
         }
     }
 }
