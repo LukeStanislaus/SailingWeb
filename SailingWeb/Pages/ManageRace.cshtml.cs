@@ -31,10 +31,9 @@ namespace SailingWeb.Pages
                 var x = Race.Item2[boat];
 
                 TimeSpan totaltime = new TimeSpan();
-                foreach (var y in x)
-                {
-                    totaltime += y.LapTime;
-                }
+
+                totaltime = x.Max(y => y.LapTime);
+
                 TimeSpan averageperlap = totaltime / x.Count;
                 TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * ManageRaceModel.NoOfLaps * 1000) / (boat.Py * x.Count));
                 //TimeSpan correctedttime = (averageperlap / boat.Py) * 1000;
@@ -56,10 +55,9 @@ namespace SailingWeb.Pages
                     if (x.Value.Count != 0)
                     {
                         TimeSpan totaltime = new TimeSpan();
-                        foreach (var y in x.Value)
-                        {
-                            totaltime += y.LapTime;
-                        }
+
+                            totaltime = x.Value.Max(y => y.LapTime);
+
                         TimeSpan averageperlap = totaltime / x.Value.Count;
                         TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * ManageRaceModel.NoOfLaps * 1000) / (x.Key.Py * x.Value.Count));
                         //TimeSpan correctedttime = (averageperlap / x.Key.Py) * 1000;
