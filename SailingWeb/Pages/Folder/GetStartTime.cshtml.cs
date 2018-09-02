@@ -11,7 +11,7 @@ namespace SailingWeb.Pages.Folder
             DateTime x = Sql.GetStartTime(ManageRaceModel.RaceNameStatic);
             if (x != new DateTime())
             {
-                return new JsonResult(Sql.GetStartTime(ManageRaceModel.RaceNameStatic));
+                return new JsonResult(Sql.GetStartTime(ManageRaceModel.RaceNameStatic).Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds);
             }
             else
             {

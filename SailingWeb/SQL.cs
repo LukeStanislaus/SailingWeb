@@ -64,22 +64,29 @@ namespace SailingWeb
         }
         public static TimeSpan CorrectedTime(Calendar cal, BoatsTidy boat)
         {
-            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            try
             {
+                using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+                {
 
-                DateTime totaltimedt = Convert.ToDateTime(connection.Query<MySql.Data.Types.MySqlDateTime>("select max(laptime) from races where " +
-    "summary = @summary and eventStart = @dateTime and name = @name", new
-    {
-        summary = cal.Summary,
-        dateTime = cal.DateTime,
-        name = boat.Name
-    }).First().Value);
-                TimeSpan totaltime = totaltimedt - Sql.GetStartTime(cal);
+                    DateTime totaltimedt = connection.Query<DateTime>("select max(laptime) from races where " +
+        "summary = @summary and eventStart = @dateTime and name = @name", new
+        {
+            summary = cal.Summary,
+            dateTime = cal.DateTime,
+            name = boat.Name
+        }).First();
+                    TimeSpan totaltime = totaltimedt - Sql.GetStartTime(cal);
 
-                int nooflaps = NoOfLaps(cal);
-                //TimeSpan averageperlap = totaltime / x.Count;
-                TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * nooflaps * 1000) / (boat.Py * Sql.NoOfLaps(boat, cal)));
-                return correctedTime;
+                    int nooflaps = NoOfLaps(cal);
+                    //TimeSpan averageperlap = totaltime / x.Count;
+                    TimeSpan correctedTime = TimeSpan.FromSeconds((totaltime.TotalSeconds * nooflaps * 1000) / (boat.Py * Sql.NoOfLaps(boat, cal)));
+                    return correctedTime;
+                }
+            }
+            catch
+            {
+                return new TimeSpan();
             }
         }
         public static DateTime GetStartTime(Calendar cal)
@@ -88,27 +95,28 @@ namespace SailingWeb
             {
                 using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
                 {
-                    MySql.Data.Types.MySqlDateTime x = connection.Query<MySql.Data.Types.MySqlDateTime>("select startTime from calendar where " +
-                        "summary = @summary and dateTime = @dateTime", new
+                    IEnumerable<DateTime> x = connection.Query<DateTime>("select startTime from calendar where " +
+                        "summary = @summary", new
                         {
-                            summary = cal.Summary,
-                            dateTime = cal.DateTime
-                        }).First();
-                    return Convert.ToDateTime(x.Value);
+                            summary = cal.Summary
+                            //,
+                            //dateTime = cal.DateTime
+                        });
+
+                    return Convert.ToDateTime(x.First());
                 }
             }
-            catch(MySqlConversionException)
+
+            catch (MySqlConversionException)
             {
                 return new DateTime();
             }
+
             catch (NullReferenceException)
             {
                 return new DateTime();
             }
-            catch
-            {
-                return new DateTime();
-            }
+
 
 
         }
@@ -117,12 +125,19 @@ namespace SailingWeb
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                return connection.Query<int>("select max(racelap) from races where " +
-                    "summary = @summary and eventStart = @eventStart", new
-                    {
-                        summary = cal.Summary,
-                        eventStart = cal.DateTime
-                    }).First();
+                try
+                {
+                    return connection.Query<int>("select max(racelap) from races where " +
+                        "summary = @summary and eventStart = @eventStart", new
+                        {
+                            summary = cal.Summary,
+                            eventStart = cal.DateTime
+                        }).First();
+                }
+                catch
+                {
+                    return 0;
+                }
 
             }
         }
@@ -131,28 +146,49 @@ namespace SailingWeb
 
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                return connection.Query<BoatLap>("select racelap, laptime from races where name = @name and " +
-                    "summary = @summary", new
-                    {
-                        name = boat.Name,
-                        summary = cal.Summary
 
-                    }).ToList();
+                    var x = connection.Query<DateTime>("select laptime from races where name = @name and " +
+                        "summary = @summary", new
+                        {
+                            name = boat.Name,
+                            summary = cal.Summary
 
+                        }).ToList();
+                var y = connection.Query<int>("select racelap from races where name = @name and " +
+    "summary = @summary", new
+    {
+        name = boat.Name,
+        summary = cal.Summary
 
+    }).ToList();
+                List<BoatLap> a = new List<BoatLap>();
+                for (int i = 0; i < x.Count; i++)
+                {
+                    var z = x[i] - Sql.GetStartTime(cal);
+                    a.Add(new BoatLap(y[i], z));
+                }
+               
+                return a;
             }
         }
         public static int NoOfLaps(BoatsTidy boat, Calendar cal)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                return connection.Query<int>("select max(racelap) from races where name = @name and " +
-                    "summary = @summary", new
-                    {
-                        name = boat.Name,
-                        summary = cal.Summary
+                try
+                {
+                    return connection.Query<int>("select max(racelap) from races where name = @name and " +
+                        "summary = @summary", new
+                        {
+                            name = boat.Name,
+                            summary = cal.Summary
 
-                    }).First();
+                        }).First();
+                }
+                catch
+                {
+                    return 1;
+                }
 
             }
         }
@@ -193,19 +229,19 @@ namespace SailingWeb
             }
         }
 
-        public async static Task<int> NewLap(BoatsTidy boat, DateTime lapTime, Calendar cal)
+        public async static void NewLap(BoatsTidy boat, DateTime lapTime, Calendar cal)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                return await connection.ExecuteAsync("insert into races values(@name, @summary, @sailingClub," +
-                    " @racelap, @laptime)", new
+                await connection.ExecuteAsync("insert into races values(@name, @summary, @sailingClub," +
+                    " @racelap, @laptime, @eventStart)", new
                     {
                         name = boat.Name,
                         summary = cal.Summary,
                         sailingClub = "Whitefriars Sailing Club",
-                        racelap = NoOfLaps(boat, cal),
-                        laptime = lapTime
-
+                        racelap = (NoOfLaps(boat, cal) + 1),
+                        laptime = lapTime,
+                        eventStart = cal.DateTime
                     });
 
 

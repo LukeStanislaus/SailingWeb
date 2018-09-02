@@ -2,22 +2,20 @@
 import "jquery";
 import "jquery-ui";
 //import "bootbox";
-import "bootstrap";
-import * as bootbox from "bootbox";
-//import "moment";
+//import "bootstrap";
+//import * as bootbox from "bootbox";
+import "moment";
+import "countup-timer-js";
+import "jquery.countdown";
+
+
 setTimeout(function () {
     console.log("check check");
-    bootbox.alert("hey");
 }, 10000);
 console.log("test");
 
 function confirmcaller(text: string, func: Function) {
     return confirmer(text, func);
-}
-if (1 == 0 ) {
-    function confirmer(text, func) {
-        return true;
-    }
 }
 function loaddatad(string: string, i: string) {
 
@@ -34,7 +32,7 @@ async function returnPlace(username: string) {
         },
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                $('input:hidden[name="__RequestVerificationToken"]').val()as any
         },
 
 
@@ -107,7 +105,7 @@ function editLap(username: any, lapNo: Int16Array, time: Date) {
                     },
                     headers: {
                         RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                            $('input:hidden[name="__RequestVerificationToken"]').val()as any
                     },
                     success: function (data) {
                         let submit = document.getElementById("submit") as any;
@@ -126,7 +124,7 @@ function editLap(username: any, lapNo: Int16Array, time: Date) {
                     },
                     headers: {
                         RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                            $('input:hidden[name="__RequestVerificationToken"]').val()as any 
                     },
                     success: function (data) {
                         let submit = document.getElementById("submit") as any
@@ -147,6 +145,35 @@ function editLap(username: any, lapNo: Int16Array, time: Date) {
 }
 
 
+function onloader() {
+    console.log("hi");
+    $.ajax({
+        url: "/Folder/GetStartTime",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val() as any
+        },
+        success: function (resulting) {
+            if (resulting != 0) {
+                console.log("Set repeating function");
+                myTimer(resulting);
+            }
+            else {
+                try {
+                    document.getElementById("startracebutton").style.visibility = "visible";
+                    document.getElementById("startracebutton").style.display = "block";
+                }
+                catch{
+                    console.log("button doesnt exist")
+                }
+            }
+
+
+        }
+    });
+
+}
+
 function newlap(boatin: any, rowNumber: string) {
     var lapno;
     let rowNum = parseInt(rowNumber);
@@ -155,25 +182,26 @@ function newlap(boatin: any, rowNumber: string) {
         data: { boat: JSON.stringify(boatin) },
         headers: {
             RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                $('input:hidden[name="__RequestVerificationToken"]').val() as any
         },
         success: function (resulting) {
             lapno = JSON.parse(resulting);
-            var lap = lapno + 1;
+            var lap = lapno;
             $.ajax({
                 url: "/Folder/NoOfLaps",
                 headers: {
                     RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                        $('input:hidden[name="__RequestVerificationToken"]').val()as any
                 },
                 success: function (data) {
                     let ajax = JSON.parse(data);
+                    console.log(boatin);
                     $.ajax({
                         url: "/Folder/NewLap",
-                        data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
+                        data: { boat: boatin, lapTime: new Date().toJSON(), lapNumber: lap },
                         headers: {
                             RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                                $('input:hidden[name="__RequestVerificationToken"]').val()as any
                         },
                         success: function (data) {
                             var tbl = document.getElementById('table1') as HTMLTableElement // table reference
@@ -199,7 +227,7 @@ function newlap(boatin: any, rowNumber: string) {
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                     headers: {
                                         RequestVerificationToken:
-                                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                                            $('input:hidden[name="__RequestVerificationToken"]').val() as any
                                     },
                                     success: function (resulting) {
                                         x.onclick = function () { editLap(boatin, lap, resulting) };
@@ -216,7 +244,7 @@ function newlap(boatin: any, rowNumber: string) {
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                     headers: {
                                         RequestVerificationToken:
-                                            $('input:hidden[name="__RequestVerificationToken"]').val().toString()
+                                            $('input:hidden[name="__RequestVerificationToken"]').val()as any
                                     },
                                     success: function (resulting) {
                                         x.onclick = function () { editLap(boatin, lap, resulting) };
@@ -237,27 +265,41 @@ function myTimer(resulting: number) {
 
     console.log("Repeating function invoked.");
     var d = new Date();
-    let x = d.valueOf();
+    var x = d.valueOf();
 
-    let f = x - resulting;
+    var f = x - resulting;
+
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(f).toLocaleTimeString();
+    new CountUpTimer(date, function (times, parameters) {
+        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
 
-
-    //let cd = countdown(new Date(f), function (times: any) {
-    //    document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times.toString());
-
-    //});
-
-
+    });
 }
 //var time;
 
 setTimeout(function () {
+    try {
+        document.getElementById("removerace").onclick = removerace;
+        document.getElementById("startracebutton").onclick = startrace;
+    }
+    catch{ }
 
-    document.getElementById("removerace").onclick = removerace;
-    document.getElementById("startracebutton").onclick = startrace;
+    var els = document.getElementsByClassName("btn");
+    Array.prototype.forEach.call(els, function (item: Element) {
+        console.log("hu");
+        item.addEventListener("click", function () {
+            console.log(item.getAttribute('data-item') + item.getAttribute('data-int'));
+            newlap(item.getAttribute('data-item'),
+                item.getAttribute('data-int'))
+        })
+    });
+    
+    //document.getElementById("startracebutton").onclick = startrace;
+    onloader();
     console.log("success of the onclick");
-}, 100)
+}, 1000)
 function startrace() {
 
     let start = Date.now();

@@ -16,8 +16,8 @@ namespace SailingWeb.Pages.Folder
         public static int x = 0;
         public async void OnGet(string boat, DateTime lapTime, int lapNumber)
         {
-            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(boat.ToString());
-            var x = await Sql.NewLap(boat1, lapTime, ManageRaceModel.RaceNameStatic);
+            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(boat).ToString());
+            Sql.NewLap(boat1, lapTime, ManageRaceModel.RaceNameStatic);
         }
     }
 }
