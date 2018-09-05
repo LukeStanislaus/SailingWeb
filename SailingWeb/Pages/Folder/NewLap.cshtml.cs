@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using SailingWeb.Data;
+using System;
 
 namespace SailingWeb.Pages.Folder
 {
@@ -14,10 +9,22 @@ namespace SailingWeb.Pages.Folder
     {
 
         public static int x = 0;
-        public async void OnGet(string boat, DateTime lapTime, int lapNumber)
+        public void OnGet(string boat, DateTime lapTime)
         {
-            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(boat).ToString());
-            Sql.NewLap(boat1, lapTime, ManageRaceModel.RaceNameStatic);
+            try
+            {
+                BoatsTidy boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(boat).ToString());
+                Sql.NewLap(boat1, lapTime, ManageRaceModel.RaceNameStatic);
+            }
+            catch (NullReferenceException)
+            {
+
+            }
+            catch (ArgumentNullException)
+            {
+
+            }
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,23 @@ namespace SailingWeb.Pages.Folder
 {
     public class UpdateTimeModel : PageModel
     {
-        public async void OnGet(string name, int lapNumber, TimeSpan lapTime)
+        public async void OnGet(string name, int lapNumber, string lapTime)
         {
-            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(name.ToString());
-            await Sql.RemoveLap(boat1, ManageRaceModel.RaceNameStatic, lapNumber);
-            await Sql.NewLap(boat1, Sql.GetStartTime(ManageRaceModel.RaceNameStatic) + lapTime, ManageRaceModel.RaceNameStatic, lapNumber);
+            TimeSpan d;
+            Console.WriteLine(lapTime);
+            try
+            {
+               d = DateTime.ParseExact(lapTime, "HH:mm:ss", CultureInfo.InvariantCulture).TimeOfDay;
+
+            }
+            catch
+            {
+
+                d = DateTime.ParseExact(lapTime, "d.HH:mm:ss", CultureInfo.InvariantCulture).TimeOfDay;
+            }
+            var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(name).ToString());
+            Sql.RemoveLap(boat1, ManageRaceModel.RaceNameStatic, lapNumber, false);
+            await Sql.NewLap(boat1, Sql.GetStartTime(ManageRaceModel.RaceNameStatic) + d, ManageRaceModel.RaceNameStatic, lapNumber);
 
         }
     }

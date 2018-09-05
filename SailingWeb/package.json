@@ -12,7 +12,7 @@
     "@types/moment-timezone": "0.5.8",
     "@types/countdown": "0.0.6",
     "browserify": "16.2.2",
-    "jquery.countdown": "1.2.8", 
+    "jquery.countdown": "1.2.8",
     "countup-timer-js": "1.1.6",
     "moment": "2.22.2",
     "countdown": "2.6.0",

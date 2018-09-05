@@ -17,7 +17,7 @@ namespace SailingWeb.Pages.Folder
             {
                 dynamic boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(boat).ToString());
                 List<BoatLap> laps = Sql.GetLaps(boat1, ManageRaceModel.RaceNameStatic);
-                return new JsonResult((laps.Max(x => x.LapNumber)) + 1);
+                return new JsonResult((laps.Max(x => x.LapNumber)));
             }
             catch
             {

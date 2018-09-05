@@ -1,12 +1,12 @@
 ﻿import * as $ from "jquery";
-import "jquery";
-import "jquery-ui";
+//import "jquery";
+//import "jquery-ui";
 //import "bootbox";
 //import "bootstrap";
 //import * as bootbox from "bootbox";
-import "moment";
-import "countup-timer-js";
-import "jquery.countdown";
+//import "moment";
+//import "countup-timer-js";
+//import "jquery.countdown";
 
 
 setTimeout(function () {
@@ -40,20 +40,38 @@ async function returnPlace(username: string) {
     return result;
 
 }
+
+
+
+
 async function updatePlaces() {
 
     let tbl: HTMLTableElement = <HTMLTableElement>document.getElementById('table1'); // table reference
     for (let i = 1; i < tbl.rows.length; i++) {
         let username: string = document.getElementById((i - 1).toString()).getAttribute("data-string");
-        let h = await returnPlace(username);
+        let h = await $.ajax({
+            url: "/Folder/ReturnPlace",
+            data: {
+                boat: username
+            },
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val() as any
+            },
+
+
+        });
         let y = <HTMLTableElement>document.getElementById('table1');
         y.rows[i].deleteCell(8);
-        let x = <HTMLTableElement>document.getElementById('table1');
-        x.rows[i].insertCell(8);
-        x.innerHTML = h.toString();
+        let z = y.rows[i].insertCell(8);
+        z.innerHTML = h.toString();
     }
-    document.getElementById("finishbutton").style.display = "inline";
+    try {
+        document.getElementById("finishbutton").style.display = "inline";
+    }
+    catch{
 
+    }
 
 
 
@@ -86,63 +104,13 @@ function removeraceajax(result: boolean) {
         });
     }
 }
+async function editLapCaller(username: any, lapNo: number, time: any) {
+    editLap(username, lapNo, time);
 
 
-function editLap(username: any, lapNo: Int16Array, time: Date) {
-    document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
-    let x = <HTMLInputElement>document.getElementById("password")
-    x.value = time.toDateString();
-    document.getElementById("dialog-form").style.display = "inline";
-    let form = document.getElementById("dialog-form") as any;
-    form.dialog({
-        autoOpen: false,
-        buttons: {
-            "Remove Lap": function () {
-                $.ajax({
-                    url: "/Folder/RemoveTime",
-                    data: {
-                        name: JSON.stringify(username), lapNumber: lapNo
-                    },
-                    headers: {
-                        RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val()as any
-                    },
-                    success: function (data) {
-                        let submit = document.getElementById("submit") as any;
-                        submit.submit();
-                        updatePlaces();
-                    }
-
-                });
-            },
-            "Enter": function () {
-                let timeresponse = document.getElementById("password") as HTMLInputElement;
-                $.ajax({
-                    url: "/Folder/UpdateTime",
-                    data: {
-                        name: JSON.stringify(username), lapNumber: lapNo, lapTime: timeresponse.value
-                    },
-                    headers: {
-                        RequestVerificationToken:
-                            $('input:hidden[name="__RequestVerificationToken"]').val()as any 
-                    },
-                    success: function (data) {
-                        let submit = document.getElementById("submit") as any
-                        submit.submit();
-                        updatePlaces()
-                    }
-
-                });
-            },
-            Cancel: function () {
-                $("#dialog-form").dialog("close");
-            }
-        },
-        close: function () {
-        }
-    });
-    $("#dialog-form").dialog("open");
 }
+
+
 
 
 function onloader() {
@@ -174,10 +142,10 @@ function onloader() {
 
 }
 
-function newlap(boatin: any, rowNumber: string) {
+async function newlap(boatin: any, rowNumber: string) {
     var lapno;
     let rowNum = parseInt(rowNumber);
-    $.ajax({
+    await $.ajax({
         url: "/Folder/GetNextLap",
         data: { boat: JSON.stringify(boatin) },
         headers: {
@@ -194,7 +162,7 @@ function newlap(boatin: any, rowNumber: string) {
                         $('input:hidden[name="__RequestVerificationToken"]').val()as any
                 },
                 success: function (data) {
-                    let ajax = JSON.parse(data);
+                    let ajax = JSON.parse(data) -1;
                     console.log(boatin);
                     $.ajax({
                         url: "/Folder/NewLap",
@@ -206,6 +174,7 @@ function newlap(boatin: any, rowNumber: string) {
                         success: function (data) {
                             var tbl = document.getElementById('table1') as HTMLTableElement // table reference
                             let i;
+                            
                             console.log(data);
                             let muchFurther = ajax - lap;
                             if (muchFurther == (-1)) {
@@ -272,9 +241,8 @@ function myTimer(resulting: number) {
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(f).toLocaleTimeString();
-    new CountUpTimer(date, function (times, parameters) {
+    new CountUpTimer(date, function (times : any, parameters: any) {
         document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
-
     });
 }
 //var time;
@@ -288,13 +256,25 @@ setTimeout(function () {
 
     var els = document.getElementsByClassName("btn");
     Array.prototype.forEach.call(els, function (item: Element) {
-        console.log("hu");
+       
         item.addEventListener("click", function () {
-            console.log(item.getAttribute('data-item') + item.getAttribute('data-int'));
+            //console.log(item.getAttribute('data-item') + item.getAttribute('data-int'));
             newlap(item.getAttribute('data-item'),
                 item.getAttribute('data-int'))
         })
     });
+    var table = document.getElementById("table1") as HTMLTableElement;
+
+    for (let i = 1; i < table.rows.length; i++) {
+        for (let a = 9; a < table.rows[i].cells.length; a++) {
+            let x = table.rows[i].cells[a];
+            x.addEventListener("click", function () {
+                editLap(x.getAttribute("data-0"), parseInt(x.getAttribute("data-1")), x.getAttribute("data-2"));
+            }
+            )
+            
+}
+    }
     
     //document.getElementById("startracebutton").onclick = startrace;
     onloader();

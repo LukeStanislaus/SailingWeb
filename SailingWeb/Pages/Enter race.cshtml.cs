@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPagesContacts.Data;
 using SailingWeb;
 using SailingWeb.Data;
-using static SailingWeb.Program;
+using System;
+using System.Threading.Tasks;
 
 namespace RazorPagesContacts.Pages
 {
@@ -29,7 +27,7 @@ namespace RazorPagesContacts.Pages
         [BindProperty]
         public string Crew { get; set; }
         [BindProperty]
-        public String Race { get; set; }
+        public string Race { get; set; }
         [BindProperty]
         public string Notes { get; set; }
         [BindProperty]
@@ -37,28 +35,23 @@ namespace RazorPagesContacts.Pages
 
 
 
-        public async void SetBoats(BoatsTidy boats)
+        public async Task<int> SetBoats(BoatsTidy boats)
         {
             string[] str = Race.Split("abc123");
             Calendar cal = new Calendar(str[0], null,
     Convert.ToDateTime(str[1]));
             try
             {
-
-                
-                var result = await Sql.SetBoats(boats, cal);
-                Program.Exit(boats, cal);
-                Program.Globals.Racename = new Calendar(Race, "", new DateTime());
-
+                return await Sql.SetBoats(boats, cal);
             }
-            catch
+            catch (Exception)
             {
-                Program.Globals.Removeboat = boats;
-                Program.Globals.Alerttext = "You are already added to the race, would you like to remove yourself?";
-                Program.Globals.Racename = cal;
-                
+                throw;
             }
+            
+
         }
+
 
         public async void OnGetAsyc()
         {
@@ -67,21 +60,32 @@ namespace RazorPagesContacts.Pages
 
         public async Task<IActionResult> OnPost()
         {
+            try
+            {
+                string[] str = Race.Split("abc123");
+                Calendar cal = new Calendar(str[0], null,
+        Convert.ToDateTime(str[1]));
+                ViewData["Calendar"] = cal;
+            }
+            catch
+            {
 
-                // If they have not selected a boat, split the "boatandnumber" string into constituent parts
-                if (Boatandnumber != "test")
-                {
-                    var str = Boatandnumber.Split(", ");
-                    Boats.Boat = str[0];
-                    Boats.BoatNumber = str[1];
-                }
-                else
-                {
-                    Boats.Boat = Boatandnumber;
-                }
-            
+            }
 
-                //If they have entered their boat info, figure out boat py and add.
+            // If they have not selected a boat, split the "boatandnumber" string into constituent parts
+            if (Boatandnumber != "test")
+            {
+                string[] str = Boatandnumber.Split(", ");
+                Boats.Boat = str[0];
+                Boats.BoatNumber = str[1];
+            }
+            else
+            {
+                Boats.Boat = Boatandnumber;
+            }
+
+
+            //If they have entered their boat info, figure out boat py and add.
             if (Boats.Name != null && Boats.Boat != "test")
             {
 
@@ -89,12 +93,31 @@ namespace RazorPagesContacts.Pages
                 //if we have a crew, add the crew
                 if (Crew != null)
                 {
-                    SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
-                    return RedirectToPage("/Index");
+                    try
+                    {
+                        SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
+                        ViewData["Alreadyin"] = true;
+                    }
+                    catch
+                    {
+                        ViewData["Alreadyin"] = false;
+                    }
+                    ViewData["SetCrew"] = new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes);
+                    return Page();
                 }
                 // Else just add the boat to the race
-                SetBoats(Boats);
-                return RedirectToPage("/Index");
+                try
+                {
+                    await SetBoats(new BoatsTidy(Boats.Name, Boats.Boat, Boats.BoatNumber, Crew, Boats.Py, Notes));
+                    ViewData["Alreadyin"] = true;
+                }
+                catch
+                {
+                    ViewData["Alreadyin"] = false;
+                }
+
+                ViewData["SetBoat"] = Boats;
+                return Page();
             }
             //Else if we need to add a new boat, add that boat then enter the person to the race.
             else if (Boats.Boat == "test" && Boats.Name != null && Response1.BoatName != null &&
@@ -103,11 +126,12 @@ namespace RazorPagesContacts.Pages
                 Response1.Name = Boats.Name;
                 // Ensure we have finished adding the boat properly before we add the boat to the race.
                 await Sql.SetNewFullBoat(Response1);
-                SetBoats(new BoatsTidy(Response1.Name, Response1.BoatName, Response1.BoatNumber, Crew, Response1.Py, ""));
-                return RedirectToPage("/Index");
+                //ViewData["Alreadyin"] = SetBoats(new BoatsTidy(Response1.Name, Response1.BoatName, Response1.BoatNumber, Crew, Response1.Py, ""));
+                ViewData["SetAndEntered"] = new BoatsTidy(Response1.Name, Response1.BoatName, Response1.BoatNumber, Crew, Response1.Py, "");
+                return Page();
             }
             return Page();
         }
-        
+
     }
 }

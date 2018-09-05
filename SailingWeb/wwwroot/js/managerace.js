@@ -36,14 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
-require("jquery");
-require("jquery-ui");
+//import "jquery";
+//import "jquery-ui";
 //import "bootbox";
 //import "bootstrap";
 //import * as bootbox from "bootbox";
-require("moment");
-require("countup-timer-js");
-require("jquery.countdown");
+//import "moment";
+//import "countup-timer-js";
+//import "jquery.countdown";
 setTimeout(function () {
     console.log("check check");
 }, 10000);
@@ -78,7 +78,7 @@ function returnPlace(username) {
 }
 function updatePlaces() {
     return __awaiter(this, void 0, void 0, function () {
-        var tbl, i, username, h, y, x;
+        var tbl, i, username, h, y, z;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -88,20 +88,31 @@ function updatePlaces() {
                 case 1:
                     if (!(i < tbl.rows.length)) return [3 /*break*/, 4];
                     username = document.getElementById((i - 1).toString()).getAttribute("data-string");
-                    return [4 /*yield*/, returnPlace(username)];
+                    return [4 /*yield*/, $.ajax({
+                            url: "/Folder/ReturnPlace",
+                            data: {
+                                boat: username
+                            },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                        })];
                 case 2:
                     h = _a.sent();
                     y = document.getElementById('table1');
                     y.rows[i].deleteCell(8);
-                    x = document.getElementById('table1');
-                    x.rows[i].insertCell(8);
-                    x.innerHTML = h.toString();
+                    z = y.rows[i].insertCell(8);
+                    z.innerHTML = h.toString();
                     _a.label = 3;
                 case 3:
                     i++;
                     return [3 /*break*/, 1];
                 case 4:
-                    document.getElementById("finishbutton").style.display = "inline";
+                    try {
+                        document.getElementById("finishbutton").style.display = "inline";
+                    }
+                    catch (_b) {
+                    }
                     return [2 /*return*/];
             }
         });
@@ -131,56 +142,13 @@ function removeraceajax(result) {
         });
     }
 }
-function editLap(username, lapNo, time) {
-    document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
-    var x = document.getElementById("password");
-    x.value = time.toDateString();
-    document.getElementById("dialog-form").style.display = "inline";
-    var form = document.getElementById("dialog-form");
-    form.dialog({
-        autoOpen: false,
-        buttons: {
-            "Remove Lap": function () {
-                $.ajax({
-                    url: "/Folder/RemoveTime",
-                    data: {
-                        name: JSON.stringify(username), lapNumber: lapNo
-                    },
-                    headers: {
-                        RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (data) {
-                        var submit = document.getElementById("submit");
-                        submit.submit();
-                        updatePlaces();
-                    }
-                });
-            },
-            "Enter": function () {
-                var timeresponse = document.getElementById("password");
-                $.ajax({
-                    url: "/Folder/UpdateTime",
-                    data: {
-                        name: JSON.stringify(username), lapNumber: lapNo, lapTime: timeresponse.value
-                    },
-                    headers: {
-                        RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (data) {
-                        var submit = document.getElementById("submit");
-                        submit.submit();
-                        updatePlaces();
-                    }
-                });
-            },
-            Cancel: function () {
-                $("#dialog-form").dialog("close");
-            }
-        },
-        close: function () {
-        }
+function editLapCaller(username, lapNo, time) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            editLap(username, lapNo, time);
+            return [2 /*return*/];
+        });
     });
-    $("#dialog-form").dialog("open");
 }
 function onloader() {
     console.log("hi");
@@ -207,82 +175,92 @@ function onloader() {
     });
 }
 function newlap(boatin, rowNumber) {
-    var lapno;
-    var rowNum = parseInt(rowNumber);
-    $.ajax({
-        url: "/Folder/GetNextLap",
-        data: { boat: JSON.stringify(boatin) },
-        headers: {
-            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-        },
-        success: function (resulting) {
-            lapno = JSON.parse(resulting);
-            var lap = lapno;
-            $.ajax({
-                url: "/Folder/NoOfLaps",
-                headers: {
-                    RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                success: function (data) {
-                    var ajax = JSON.parse(data);
-                    console.log(boatin);
-                    $.ajax({
-                        url: "/Folder/NewLap",
-                        data: { boat: boatin, lapTime: new Date().toJSON(), lapNumber: lap },
-                        headers: {
-                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                        },
-                        success: function (data) {
-                            var tbl = document.getElementById('table1'); // table reference
-                            var i;
-                            console.log(data);
-                            var muchFurther = ajax - lap;
-                            if (muchFurther == (-1)) {
-                                for (i = 0; i < tbl.rows.length; i++) {
-                                    if (i == 0) {
-                                        var x_1 = tbl.rows[i].insertCell(10 + muchFurther);
-                                        x_1.innerHTML = "Lap ".concat(ajax + 1);
-                                    }
-                                    else {
-                                        var x_2 = tbl.rows[i].insertCell(10 + muchFurther);
-                                    }
-                                }
-                                tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                var x_3 = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+    return __awaiter(this, void 0, void 0, function () {
+        var lapno, rowNum;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    rowNum = parseInt(rowNumber);
+                    return [4 /*yield*/, $.ajax({
+                            url: "/Folder/GetNextLap",
+                            data: { boat: JSON.stringify(boatin) },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (resulting) {
+                                lapno = JSON.parse(resulting);
+                                var lap = lapno;
                                 $.ajax({
-                                    url: "/Folder/GetLapTime",
-                                    data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                    url: "/Folder/NoOfLaps",
                                     headers: {
                                         RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                     },
-                                    success: function (resulting) {
-                                        x_3.onclick = function () { editLap(boatin, lap, resulting); };
-                                        x_3.innerHTML = resulting.toString();
+                                    success: function (data) {
+                                        var ajax = JSON.parse(data) - 1;
+                                        console.log(boatin);
+                                        $.ajax({
+                                            url: "/Folder/NewLap",
+                                            data: { boat: boatin, lapTime: new Date().toJSON(), lapNumber: lap },
+                                            headers: {
+                                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                                            },
+                                            success: function (data) {
+                                                var tbl = document.getElementById('table1'); // table reference
+                                                var i;
+                                                console.log(data);
+                                                var muchFurther = ajax - lap;
+                                                if (muchFurther == (-1)) {
+                                                    for (i = 0; i < tbl.rows.length; i++) {
+                                                        if (i == 0) {
+                                                            var x_1 = tbl.rows[i].insertCell(10 + muchFurther);
+                                                            x_1.innerHTML = "Lap ".concat(ajax + 1);
+                                                        }
+                                                        else {
+                                                            var x_2 = tbl.rows[i].insertCell(10 + muchFurther);
+                                                        }
+                                                    }
+                                                    tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
+                                                    var x_3 = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                                    $.ajax({
+                                                        url: "/Folder/GetLapTime",
+                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                                        headers: {
+                                                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                                                        },
+                                                        success: function (resulting) {
+                                                            x_3.onclick = function () { editLap(boatin, lap, resulting); };
+                                                            x_3.innerHTML = resulting.toString();
+                                                        }
+                                                    });
+                                                }
+                                                else {
+                                                    tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                                    var x_4 = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
+                                                    $.ajax({
+                                                        url: "/Folder/GetLapTime",
+                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                                        headers: {
+                                                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                                                        },
+                                                        success: function (resulting) {
+                                                            x_4.onclick = function () { editLap(boatin, lap, resulting); };
+                                                            x_4.innerHTML = resulting.toString();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
                                     }
                                 });
                             }
-                            else {
-                                tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
-                                var x_4 = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
-                                $.ajax({
-                                    url: "/Folder/GetLapTime",
-                                    data: { boat: JSON.stringify(boatin), lapNumber: lap },
-                                    headers: {
-                                        RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                                    },
-                                    success: function (resulting) {
-                                        x_4.onclick = function () { editLap(boatin, lap, resulting); };
-                                        x_4.innerHTML = resulting.toString();
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-        }
+                        })];
+                case 1:
+                    _a.sent();
+                    updatePlaces();
+                    return [2 /*return*/];
+            }
+        });
     });
-    updatePlaces();
 }
 function myTimer(resulting) {
     console.log("Repeating function invoked.");
@@ -305,12 +283,23 @@ setTimeout(function () {
     catch (_a) { }
     var els = document.getElementsByClassName("btn");
     Array.prototype.forEach.call(els, function (item) {
-        console.log("hu");
         item.addEventListener("click", function () {
-            console.log(item.getAttribute('data-item') + item.getAttribute('data-int'));
+            //console.log(item.getAttribute('data-item') + item.getAttribute('data-int'));
             newlap(item.getAttribute('data-item'), item.getAttribute('data-int'));
         });
     });
+    var table = document.getElementById("table1");
+    for (var i = 1; i < table.rows.length; i++) {
+        var _loop_1 = function (a) {
+            var x = table.rows[i].cells[a];
+            x.addEventListener("click", function () {
+                editLap(x.getAttribute("data-0"), parseInt(x.getAttribute("data-1")), x.getAttribute("data-2"));
+            });
+        };
+        for (var a = 9; a < table.rows[i].cells.length; a++) {
+            _loop_1(a);
+        }
+    }
     //document.getElementById("startracebutton").onclick = startrace;
     onloader();
     console.log("success of the onclick");

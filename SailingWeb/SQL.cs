@@ -29,18 +29,23 @@ namespace SailingWeb
 
             }
         }
+
         public async static Task<int> NewLap(BoatsTidy boat, DateTime lapTime, Calendar cal, int lapNo)
         {
+
+
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
+
                 return await connection.ExecuteAsync("insert into races values(@name, @summary, @sailingClub," +
-                    " @racelap, @laptime)", new
+                    " @racelap, @laptime, @eventStart)", new
                     {
                         name = boat.Name,
                         summary = cal.Summary,
                         sailingClub = "Whitefriars Sailing Club",
                         racelap = lapNo,
-                        laptime = lapTime
+                        laptime = lapTime,
+                        eventStart = cal.DateTime
 
                     });
 
@@ -51,15 +56,19 @@ namespace SailingWeb
         public static int PlaceOf(Calendar cal, BoatsTidy boat)
         {
             Dictionary<BoatsTidy, TimeSpan> list = new Dictionary<BoatsTidy, TimeSpan>();
+
             foreach (BoatsTidy person in Sql.GetRacers(cal))
             {
+                if (Sql.GetLaps(person, cal).Count != 0)
+                {
 
-                list.Add(person, CorrectedTime(cal, person));
+                    list.Add(person, CorrectedTime(cal, person));
+                }
             }
             IOrderedEnumerable<KeyValuePair<BoatsTidy, TimeSpan>> list1 = list.ToList().OrderBy(x => x.Value.TotalSeconds);
             KeyValuePair<BoatsTidy, TimeSpan> y = new KeyValuePair<BoatsTidy, TimeSpan>(boat, CorrectedTime(cal, boat));
-
-            return list1.ToList().IndexOf(y);
+            // TODO: This should be more robust
+            return list1.ToList().FindIndex(x => x.Key.Name == y.Key.Name && x.Key.Boat == y.Key.Boat) + 1;
 
         }
         public static TimeSpan CorrectedTime(Calendar cal, BoatsTidy boat)
@@ -147,27 +156,30 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
-                    var x = connection.Query<DateTime>("select laptime from races where name = @name and " +
-                        "summary = @summary", new
+                List<DateTime> x = connection.Query<DateTime>("select laptime from races where name = @name and " +
+                        "summary = @summary and eventStart = @eventStart", new
                         {
                             name = boat.Name,
-                            summary = cal.Summary
+                            summary = cal.Summary,
+                            eventStart = cal.DateTime
 
                         }).ToList();
-                var y = connection.Query<int>("select racelap from races where name = @name and " +
-    "summary = @summary", new
+                List<int> y = connection.Query<int>("select racelap from races where name = @name and " +
+    "summary = @summary and eventStart = @eventStart", new
     {
         name = boat.Name,
         summary = cal.Summary
+        ,
+        eventStart = cal.DateTime
 
     }).ToList();
                 List<BoatLap> a = new List<BoatLap>();
                 for (int i = 0; i < x.Count; i++)
                 {
-                    var z = x[i] - Sql.GetStartTime(cal);
+                    TimeSpan z = x[i] - Sql.GetStartTime(cal);
                     a.Add(new BoatLap(y[i], z));
                 }
-               
+
                 return a;
             }
         }
@@ -178,16 +190,17 @@ namespace SailingWeb
                 try
                 {
                     return connection.Query<int>("select max(racelap) from races where name = @name and " +
-                        "summary = @summary", new
+                        "summary = @summary and eventStart = @eventStart", new
                         {
                             name = boat.Name,
                             summary = cal.Summary
-
+                            ,
+                            eventStart = cal.DateTime
                         }).First();
                 }
                 catch
                 {
-                    return 1;
+                    return 0;
                 }
 
             }
@@ -212,11 +225,29 @@ namespace SailingWeb
 
             }
         }
-        public async static Task<int> RemoveLap(BoatsTidy boat, Calendar cal, int lapNo)
+        public async static void UpdateLapNo(BoatsTidy boat, int LapNo, Calendar cal)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
-                return await connection.ExecuteAsync("delete from races where name = @name and " +
+                await connection.ExecuteAsync("update races set racelap = @racelap" +
+                    " where name = @name and " +
+                    "summary = @summary and eventStart = @eventStart and racelap = @racelap1", new
+                    { 
+                        racelap1 = LapNo,
+                        racelap = LapNo - 1,
+                        name = boat.Name,
+                        summary = cal.Summary,
+                        eventStart = cal.DateTime
+                    });
+
+
+            }
+        }
+        public async static void RemoveLap(BoatsTidy boat, Calendar cal, int lapNo, bool update)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                await connection.ExecuteAsync("delete from races where name = @name and " +
                     "summary = @summary and racelap = @racelap and eventStart = @eventStart", new
                     {
                         name = boat.Name,
@@ -224,7 +255,14 @@ namespace SailingWeb
                         racelap = lapNo,
                         eventStart = cal.DateTime
                     });
-
+                if (update)
+                {
+                    for (int i = lapNo + 1; i < Sql.GetLaps(boat, cal).Count + 2; i++)
+                    {
+                        UpdateLapNo(boat, i, cal);
+                    }
+                }
+                 
 
             }
         }

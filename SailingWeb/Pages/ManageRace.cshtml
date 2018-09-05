@@ -9,6 +9,8 @@
 
 <html>
 <head>
+
+    <script src="~/js/countup_timer.min.js"></script>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -41,7 +43,6 @@
             overflow-y: visible;
         }
     </style>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
 
     <script src="~/js/bundle.js" type="text/javascript">
         // index.js is the transpiled index.ts
@@ -58,22 +59,28 @@
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
-        <form method="POST">
-            <select id="select" class="form-control" asp-for="RaceName">
-                @foreach (Calendar race in Program.Globals.Todaysevents)
-                {
-                    <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.TimeOfDay</option>
-                }
-            </select>
-            <input type="submit" />
-        </form>
+        if (Sql.Todaysevent().Count != 0)
+        {
+            <form method="POST">
+                <select id="select" class="form-control" asp-for="RaceName">
+                    @foreach (Calendar race in Sql.Todaysevent())
+                    {
+                        <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.TimeOfDay</option>
+                    }
+                </select>
+                <input type="submit" />
+            </form>
+        }
+        else
+        {
+            @: Apologies but there is no race today.
+        }
     }
     else if (Sql.GetStartTime(ManageRaceModel.RaceNameStatic) != new DateTime())
     {
         <div>
-            <form id="submit" style="display:inline" method="get">
-                <button style="display:inline" type="submit" class="btn btn-success">Refresh</button>
-            </form>
+                <button style="display:inline" onclick="refresh.reload();" class="btn btn-success">Refresh</button>
+            
 
             <form method="get" style="display:inline" action="/FinishRace">
                 @if (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic) != 0)
@@ -87,7 +94,7 @@
                 }
             </form>
         </div>
-        <p id="demo">Elapsed Time: </p>
+        <p id="demo" onclick="editstarttime()">Elapsed Time: </p>
         <div id="table-wrapper">
             <table id="table1">
                 <tr>
@@ -135,10 +142,11 @@
                             @for (int i = Sql.NoOfLaps(ManageRaceModel.RaceNameStatic); i > (0); i--)
                             {
                                 try
-                                { 
-                                    if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
                                 {
-                                        <td onclick="editLap(@Html.Raw(Json.Serialize(person)).ToString(), @i, '@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
+                                    if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                                    {
+                                        <td data-0="@Html.Raw(Json.Serialize(person)).ToString()" data-1="@i"
+                                            data-2="@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime">
                                             @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
 
                                         </td>
@@ -250,183 +258,17 @@
         </form>
     </div>
     <div id="clock"></div>
+    <div id="dialog"><p>Working!</p></div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+       // $(function () {
+         //   $("#dialog").dialog();
+        //});
+    </script>
     <!--<script src="~/js/managerace.js"></script>-->
     <!--<p onclick="document.getElementById('submit1').submit();">There was an error, try refreshing?</p>-->
     <script>
-        function editLap(username, lapNo, time) {
-            document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
-            let x = document.getElementById("password")
-            x.value = time.toDateString();
-            document.getElementById("dialog-form").style.display = "inline";
-            let form = document.getElementById("dialog-form");
-    form.dialog({
-                    autoOpen: false,
-        buttons: {
-                    "Remove Lap": function () {
-                    $.ajax({
-                        url: "/Folder/RemoveTime",
-                        data: {
-                            name: JSON.stringify(username), lapNumber: lapNo
-                        },
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
-                        },
-                        success: function (data) {
-                            let submit = document.getElementById("submit");
-                            submit.submit();
-                            updatePlaces();
-                        }
-
-                    });
-                },
-            "Enter": function () {
-                    let timeresponse = document.getElementById("password") ;
-                $.ajax({
-                    url: "/Folder/UpdateTime",
-                    data: {
-                    name: JSON.stringify(username), lapNumber: lapNo, lapTime: timeresponse.value
-            },
-                    headers: {
-                    RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val().toString()
-        },
-                    success: function (data) {
-                    let submit = document.getElementById("submit")
-                submit.submit();
-                updatePlaces()
-            }
-
-        });
-    },
-            Cancel: function () {
-                    $("#dialog-form").dialog("close");
-                }
-            },
-        close: function () {
-                }
-    });
-                $("#dialog-form").dialog("open");
-            }
-        async function returnPlace(username) {
-            let result = await $.ajax({
-                url: "/Folder/ReturnPlace",
-                data: {
-                    boat: username
-                },
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-
-
-            });
-            return result;
-
-        }
-        async function updatePlaces() {
-
-            let tbl= document.getElementById('table1'); // table reference
-    for (let i = 1; i < tbl.rows.length; i++) {
-                    let username = document.getElementById((i - 1).toString()).getAttribute("data-string");
-                let h = await returnPlace(username);
-        let y = document.getElementById('table1');
-                y.rows[i].deleteCell(8);
-        let x = document.getElementById('table1');
-                    x.rows[i].insertCell(8);
-                    x.innerHTML = h.toString();
-                }
-                document.getElementById("finishbutton").style.display = "inline";
-            
-            
-            
-            
-            }
-        function newlap(boatin, rowNumber) {
-            var lapno;
-            let rowNum = parseInt(rowNumber);
-            $.ajax({
-                url: "/Folder/GetNextLap",
-                data: { boat: JSON.stringify(boatin) },
-                headers: {
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val() 
-                },
-                success: function (resulting) {
-                    lapno = JSON.parse(resulting);
-                    var lap = lapno + 1;
-                    $.ajax({
-                        url: "/Folder/NoOfLaps",
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val() 
-                        },
-                        success: function (data) {
-                            let ajax = JSON.parse(data);
-                            $.ajax({
-                                url: "/Folder/NewLap",
-                                data: { boat: JSON.stringify(boatin), lapTime: new Date().toJSON(), lapNumber: lap },
-                                headers: {
-                                    RequestVerificationToken:
-                                        $('input:hidden[name="__RequestVerificationToken"]').val() 
-                                },
-                                success: function (data) {
-                                    var tbl = document.getElementById('table1')  // table reference
-                                    let i;
-                                    console.log(data);
-                                    let muchFurther = ajax - lap;
-                                    if (muchFurther == (-1)) {
-                                        for (i = 0; i < tbl.rows.length; i++) {
-                                            if (i == 0) {
-                                                let x = tbl.rows[i].insertCell(10 + muchFurther);
-                                                x.innerHTML = "Lap ".concat(ajax + 1);
-
-                                            }
-                                            else {
-                                                let x = tbl.rows[i].insertCell(10 + muchFurther);
-
-                                            }
-                                        }
-                                        tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                        let x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
-                                        $.ajax({
-                                            url: "/Folder/GetLapTime",
-                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
-                                            headers: {
-                                                RequestVerificationToken:
-                                                    $('input:hidden[name="__RequestVerificationToken"]').val() 
-                                            },
-                                            success: function (resulting) {
-                                                x.onclick = function () { editLap(boatin, lap, resulting) };
-                                                x.innerHTML = resulting.toString();
-                                            }
-                                        });
-                                    }
-                                    else {
-
-                                        tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
-                                        let x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
-                                        $.ajax({
-                                            url: "/Folder/GetLapTime",
-                                            data: { boat: JSON.stringify(boatin), lapNumber: lap },
-                                            headers: {
-                                                RequestVerificationToken:
-                                                    $('input:hidden[name="__RequestVerificationToken"]').val() 
-                                            },
-                                            success: function (resulting) {
-                                                x.onclick = function () { editLap(boatin, lap, resulting) };
-                                                x.innerHTML = resulting.toString();
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-            updatePlaces();
-        }
         function confirmer(text, func) {
             bootbox.confirm({
                 message: text,
@@ -441,6 +283,158 @@
                     }
                 },
                 callback: function (result) { func(result) }
+            });
+        }
+        function updatePlacesInline() {
+
+            let tbl = document.getElementById('table1'); // table reference
+            for (let i = 1; i < tbl.rows.length; i++) {
+                let username = document.getElementById((i - 1).toString()).getAttribute("data-string");
+                let h = $.ajax({
+                    url: "/Folder/ReturnPlace",
+                    data: {
+                        boat: username
+                    },
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+
+
+                });
+                let y = document.getElementById('table1');
+                y.rows[i].deleteCell(8);
+                let z = y.rows[i].insertCell(8);
+                z.innerHTML = h.toString();
+            }
+            document.getElementById("finishbutton").style.display = "inline";
+
+
+
+
+        }
+        function editLap(username, lapNo, time) {
+            document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
+            let x = document.getElementById("password")
+            //x.value = "hi";
+            x.value = time.toString();
+            document.getElementById("dialog-form").style.display = "inline";
+            let form = document.getElementById("dialog-form");
+            $(function () {
+                //$("#dialog").dialog();
+                //$("#dialog-form").dialog();
+
+                $("#dialog-form").dialog({
+                    autoOpen: false,
+                    buttons: {
+                        "Remove Lap": function () {
+                            $.ajax({
+                                url: "/Folder/RemoveTime",
+                                data: {
+                                    name: JSON.stringify(username), lapNumber: lapNo
+                                },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    let submit = document.getElementById("submit");
+                                    submit.submit();
+                                    updateplacesinline();
+                                }
+
+                            });
+                        },
+                        "Enter": function () {
+                            let timeresponse = document.getElementById("password");
+                            $.ajax({
+                                url: "/Folder/UpdateTime",
+                                data: {
+                                    name: JSON.stringify(username), lapNumber: lapNo, lapTime: timeresponse.value
+                                },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    let submit = document.getElementById("submit");
+                                    submit.submit();
+                                    updateplacesinline();
+                                }
+
+                            });
+                        },
+                        Cancel: function () {
+                            $("#dialog-form").dialog("close");
+                        }
+                    },
+                    close: function () {
+
+                    }
+                });
+                $("#dialog-form").dialog("open");
+            });
+        }
+        function editstarttime() {
+            document.getElementById("dialog-form").title = "Edit start time";
+            let x = document.getElementById("password")
+            //x.value = "hi";, 
+            x.value = '@Sql.GetStartTime(ManageRaceModel.RaceNameStatic).ToString()';
+            document.getElementById("dialog-form").style.display = "inline";
+            let form = document.getElementById("dialog-form");
+            $(function () {
+                //$("#dialog").dialog();
+                //$("#dialog-form").dialog();
+                
+                $("#dialog-form").dialog({
+                    autoOpen: false,
+                    buttons: {
+                        "Remove Race": function () {
+                            $.ajax({
+                                url: "/Folder/RemoveTime",
+                                data: {
+                                    name: JSON.stringify(username), lapNumber: lapNo
+                                },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    let submit = document.getElementById("submit");
+                                    submit.submit();
+                                    updateplacesinline();
+                                }
+
+                            });
+                        },
+                        "Enter": function () {
+                            let timeresponse = document.getElementById("password");
+                            $.ajax({
+                                url: "/Folder/UpdateRaceTime",
+                                data: {
+                                    racecal: JSON.stringify(@Html.Raw(Json.Serialize(ManageRaceModel.RaceNameStatic))), racetime: timeresponse.value
+                                },
+                                headers: {
+                                    RequestVerificationToken:
+                                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    let submit = document.getElementById("submit");
+                                    submit.submit();
+                                    updateplacesinline();
+                                }
+
+                            });
+                        },
+                        Cancel: function () {
+                            $("#dialog-form").dialog("close");
+                        }
+                    },
+                    close: function () {
+                  
+                  }
+                });
+                $("#dialog-form").dialog("open");
             });
         }
     </script>

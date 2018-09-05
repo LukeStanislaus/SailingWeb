@@ -48,7 +48,7 @@
 
 
     <form id="button" method="post">
-        @if (Program.Globals.Todaysevents.Count == 0)
+        @if (Sql.Todaysevent().Count == 0)
         {
             <p1>I'm afraid there is no race on today.</p1>
 
@@ -61,10 +61,10 @@
         <!-- <label for="table2">Race Lists: </label>-->
         <select asp-for="Race">
 
-            @foreach (var race1 in Program.Globals.Todaysevents)
+            @foreach (var race1 in Sql.Todaysevent())
             {
 
-                <option value="@Program.Globals.Todaysevents.IndexOf(race1)">@race1.Summary</option>
+                <option value="@Sql.Todaysevent().IndexOf(race1)">@race1.Summary</option>
 
             }
         </select>
