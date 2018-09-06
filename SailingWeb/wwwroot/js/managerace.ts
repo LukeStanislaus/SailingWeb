@@ -241,8 +241,13 @@ function myTimer(resulting: number) {
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(f).toLocaleTimeString();
-    new CountUpTimer(date, function (times : any, parameters: any) {
-        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
+    new CountUpTimer(date, function (times: any, parameters: any) {
+        if (parameters.isNextDay) {
+            document.getElementById("demo").innerHTML = "Elapsed Time: 1:".concat(times);
+        }
+        else {
+            document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
+        }
     });
 }
 //var time;

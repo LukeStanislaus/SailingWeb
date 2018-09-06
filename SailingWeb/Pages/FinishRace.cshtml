@@ -46,7 +46,7 @@
                         <td>@person.Boat</td>
                         <td>@person.BoatNumber</td>
 
-                        <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"hh\:mm\:ss")</td>
+                        <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"d\:hh\:mm\:ss")</td>
 
 
                         <td>
@@ -62,7 +62,7 @@
                                 if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
                                 {
                                     <td onclick="editLap(@Html.Raw(Json.Serialize(person)).ToString(), @i, '@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
-                                        @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
+                                        @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"d\:hh\:mm\:ss")
 
                                     </td>
                                 }

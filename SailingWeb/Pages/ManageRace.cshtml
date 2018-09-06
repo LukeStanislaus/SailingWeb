@@ -79,8 +79,8 @@
     else if (Sql.GetStartTime(ManageRaceModel.RaceNameStatic) != new DateTime())
     {
         <div>
-                <button style="display:inline" onclick="refresh.reload();" class="btn btn-success">Refresh</button>
-            
+            <button style="display:inline" onclick="refresh.reload();" class="btn btn-success">Refresh</button>
+
 
             <form method="get" style="display:inline" action="/FinishRace">
                 @if (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic) != 0)
@@ -130,7 +130,7 @@
                             </td>
                             <td>@person.Py</td>
                             <td>@person.Notes</td>
-                            <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"hh\:mm\:ss")</td>
+                            <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"d\:hh\:mm\:ss")</td>
 
 
                             <td>
@@ -147,7 +147,7 @@
                                     {
                                         <td data-0="@Html.Raw(Json.Serialize(person)).ToString()" data-1="@i"
                                             data-2="@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime">
-                                            @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
+                                            @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"d\:hh\:mm\:ss")
 
                                         </td>
                                     }
@@ -232,7 +232,7 @@
                     success: function (data) {
 
                         alert("done");
-                        document.getElementById("button").submit();
+                        location.reload();
                     }
 
                 });
@@ -261,9 +261,11 @@
     <div id="dialog"><p>Working!</p></div>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script>
-       // $(function () {
-         //   $("#dialog").dialog();
+        // $(function () {
+        //   $("#dialog").dialog();
         //});
     </script>
     <!--<script src="~/js/managerace.js"></script>-->
@@ -338,8 +340,7 @@
                                         $('input:hidden[name="__RequestVerificationToken"]').val()
                                 },
                                 success: function (data) {
-                                    let submit = document.getElementById("submit");
-                                    submit.submit();
+                                    location.reload();
                                     updateplacesinline();
                                 }
 
@@ -357,8 +358,7 @@
                                         $('input:hidden[name="__RequestVerificationToken"]').val()
                                 },
                                 success: function (data) {
-                                    let submit = document.getElementById("submit");
-                                    submit.submit();
+                                    location.reload();
                                     updateplacesinline();
                                 }
 
@@ -378,14 +378,14 @@
         function editstarttime() {
             document.getElementById("dialog-form").title = "Edit start time";
             let x = document.getElementById("password")
-            //x.value = "hi";, 
+            //x.value = "hi";,
             x.value = '@Sql.GetStartTime(ManageRaceModel.RaceNameStatic).ToString()';
             document.getElementById("dialog-form").style.display = "inline";
             let form = document.getElementById("dialog-form");
             $(function () {
                 //$("#dialog").dialog();
                 //$("#dialog-form").dialog();
-                
+
                 $("#dialog-form").dialog({
                     autoOpen: false,
                     buttons: {
@@ -400,8 +400,7 @@
                                         $('input:hidden[name="__RequestVerificationToken"]').val()
                                 },
                                 success: function (data) {
-                                    let submit = document.getElementById("submit");
-                                    submit.submit();
+                                    location.reload();
                                     updateplacesinline();
                                 }
 
@@ -419,8 +418,7 @@
                                         $('input:hidden[name="__RequestVerificationToken"]').val()
                                 },
                                 success: function (data) {
-                                    let submit = document.getElementById("submit");
-                                    submit.submit();
+                                    location.reload();
                                     updateplacesinline();
                                 }
 
@@ -431,7 +429,7 @@
                         }
                     },
                     close: function () {
-                  
+
                   }
                 });
                 $("#dialog-form").dialog("open");

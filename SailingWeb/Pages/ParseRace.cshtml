@@ -57,7 +57,7 @@
                             <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).BoatNumber</td>
                             <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Py</td>
                             <td>@ReturnBoatFromPos(a, ParseRaceModel.Race).Notes</td>
-                            <td>@CorrectedTime(ReturnBoatFromPos(a, ParseRaceModel.Race), ParseRaceModel.Race).ToString(@"hh\:mm\:ss")</td>
+                            <td>@CorrectedTime(ReturnBoatFromPos(a, ParseRaceModel.Race), ParseRaceModel.Race).ToString(@"d\:hh\:mm\:ss")</td>
 
 
                             <td>
@@ -80,7 +80,7 @@
                                             if (x.Value[i].LapNumber == i + 1)
                                             {
                                                 <td>
-                                                    @ParseRaceModel.Race.Item2[ReturnBoatFromPos(a, ParseRaceModel.Race)][i].LapTime.ToString(@"hh\:mm\:ss")
+                                                    @ParseRaceModel.Race.Item2[ReturnBoatFromPos(a, ParseRaceModel.Race)][i].LapTime.ToString(@"d\:hh\:mm\:ss")
 
                                                 </td>}
                                         }

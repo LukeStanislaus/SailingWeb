@@ -271,7 +271,12 @@ function myTimer(resulting) {
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(f).toLocaleTimeString();
     new CountUpTimer(date, function (times, parameters) {
-        document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
+        if (parameters.isNextDay) {
+            document.getElementById("demo").innerHTML = "Elapsed Time: 1:".concat(times);
+        }
+        else {
+            document.getElementById("demo").innerHTML = "Elapsed Time: ".concat(times);
+        }
     });
 }
 //var time;

@@ -14,7 +14,7 @@ namespace SailingWeb.Pages.Folder
         public JsonResult OnGet(string boat, int lapNumber)
         {
             var boat1 = JsonConvert.DeserializeObject<BoatsTidy>(JsonConvert.DeserializeObject(boat).ToString());
-            return new JsonResult(Sql.GetLaps(boat1, ManageRaceModel.RaceNameStatic).Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"hh\:mm\:ss"));
+            return new JsonResult(Sql.GetLaps(boat1, ManageRaceModel.RaceNameStatic).Where(y => y.LapNumber == lapNumber).First().LapTime.ToString(@"d\:hh\:mm\:ss"));
             
         }
     }
