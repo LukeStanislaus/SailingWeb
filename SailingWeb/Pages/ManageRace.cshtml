@@ -130,7 +130,7 @@
                             </td>
                             <td>@person.Py</td>
                             <td>@person.Notes</td>
-                            <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"d\:hh\:mm\:ss")</td>
+                            <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"hh\:mm\:ss")</td>
 
 
                             <td>
@@ -146,8 +146,8 @@
                                     if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
                                     {
                                         <td data-0="@Html.Raw(Json.Serialize(person)).ToString()" data-1="@i"
-                                            data-2="@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime">
-                                            @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"d\:hh\:mm\:ss")
+                                            data-2="@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")">
+                                            @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
 
                                         </td>
                                     }
@@ -317,7 +317,7 @@
 
         }
         function editLap(username, lapNo, time) {
-            document.getElementById("dialog-form").title = "Edit time for ".concat(username.name).concat(" on lap ").concat(lapNo.toString());
+            document.getElementById("dialog-form").title = "Edit time for ".concat(JSON.parse(username).name).concat(" on lap ").concat(lapNo.toString());
             let x = document.getElementById("password")
             //x.value = "hi";
             x.value = time.toString();

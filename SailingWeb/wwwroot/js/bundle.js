@@ -10580,7 +10580,7 @@ function newlap(boatin, rowNumber) {
                                                     for (i = 0; i < tbl.rows.length; i++) {
                                                         if (i == 0) {
                                                             var x_1 = tbl.rows[i].insertCell(10 + muchFurther);
-                                                            x_1.innerHTML = "Lap ".concat(ajax + 1);
+                                                            x_1.innerHTML = "Lap ".concat(ajax + 2);
                                                         }
                                                         else {
                                                             var x_2 = tbl.rows[i].insertCell(10 + muchFurther);
@@ -10590,7 +10590,7 @@ function newlap(boatin, rowNumber) {
                                                     var x_3 = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                                     $.ajax({
                                                         url: "/Folder/GetLapTime",
-                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap + 1 },
                                                         headers: {
                                                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                                         },
@@ -10605,7 +10605,7 @@ function newlap(boatin, rowNumber) {
                                                     var x_4 = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                                     $.ajax({
                                                         url: "/Folder/GetLapTime",
-                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap },
+                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap + 1 },
                                                         headers: {
                                                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                                         },
