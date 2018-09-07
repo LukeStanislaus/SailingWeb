@@ -11,6 +11,75 @@ namespace SailingWeb
 {
     public static class Sql
     {
+        public static void RemoveFulllistAll(string person)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                // Creates query.
+
+                string str = "delete from fulllist where name = @name";
+                connection.Execute(str, new
+                {
+                    name = person
+
+                });
+
+
+            }
+
+        }
+        public static void RemoveFulllist(string person, string boatclass, string boatnumber, int boatpy)
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                // Creates query.
+
+                string str = "delete from fulllist where name = @name and boatName = @boatName " +
+                        "and boatNumber = @boatNumber and py = @py and sailingClub = @sailingClub";
+                connection.Execute(str, new
+                {
+                    name=person,
+                    boatName = boatclass,
+                    boatNumber = boatnumber,
+                    py = boatpy,
+                    sailingClub = "Whitefriars Sailing Club"
+
+                });
+
+
+            }
+
+        }
+
+        public static Dictionary<string, List<Tuple<string, string, int>>> GetFulllist()
+        {
+            using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
+            {
+                var x =connection.Query<dynamic>("select * from fulllist");
+                var dict = new Dictionary<string, List<Tuple<string, string, int>>>();
+                
+                foreach (var item in x)
+                {
+                    try
+                    {
+                        var u = new Tuple<string, string, int>(item.boatName, item.boatNumber, item.py);
+                        dict[item.name].Add(u);
+
+                    }
+                    catch
+                    {
+                        var u = new List<Tuple<string, string, int>>();
+                        dict.Add(item.name, u);
+                        var v = new Tuple<string, string, int>(item.boatName, item.boatNumber, item.py);
+                        dict[item.name].Add(v);
+
+                    }
+                    
+                }
+                return dict;
+
+            }
+        }
         public static void SetStartTime(Calendar cal, DateTime startTime)
         {
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
