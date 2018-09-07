@@ -11,14 +11,6 @@ namespace RazorPagesContacts.Pages
     public class CreateModel : PageModel
     {
 
-
-        protected void Autocomplete(object sender, EventArgs e)
-        {
-
-            //string name = Request.Form["Name"];
-            //string email = autocomplete.Value;
-        }
-
         [BindProperty]
         public string Boatandnumber { get; set; }
         public static int NewBoat { get; set; }

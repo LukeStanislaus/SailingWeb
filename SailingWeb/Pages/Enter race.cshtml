@@ -7,6 +7,7 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="~/css/enterrace.css" />
     <style>
         #submit {
             margin-top: 10px;
@@ -66,7 +67,7 @@
 
 
             <script>
-                                                                                                                                    bootbox.alert("You have been entered into the race")
+                                                                                                                                                    bootbox.alert("You have been entered into the race")
             </script>
         }
         else
@@ -146,8 +147,12 @@
             haven't entered their name but have entered the race from dropdown, ask their name.-->
 
             <div></div>
-            <label class="form-check-label" for="autocomplete">Helm name: </label>
-            <input asp-for="Boats.Name" class="form-control" id="autocomplete" value="" />
+            <div class="col-3 input-effect" style="display:flex">
+                <input asp-for="Boats.Name" class="effect-17" id="autocomplete" value="" />
+
+                <label>Helm name </label>
+                <span class="focus-border"></span>
+            </div>
             <div><a asp-page="/New Boat"><font size="1">Name not in list? Click here.</font></a></div>
             <label class="form-check-label" for="select">Boat class: </label>
             <select id="select" class="form-control" asp-for="Boatandnumber"></select>
@@ -167,10 +172,18 @@
 
 
             <div>
-                <label class="form-check-label" for="autocomplete1">Crew name (or leave blank): </label>
-                <input asp-for="Crew" class="form-control" id="autocomplete1" />
-                <label class="form-check-label" for="autocomplete1">Notes (or leave blank): </label>
-                <input asp-for="Boats.Notes" class="form-control" id="autocompletenotes" />
+                <div class="col-3 input-effect" style="display:flex">
+                    <input asp-for="Crew" class="effect-17" id="autocomplete1" />
+
+                    <label>Crew name (or leave blank) </label>
+                    <span class="focus-border"></span>
+                </div>
+                <div class="col-3 input-effect" style="display:flex">
+                    <input asp-for="Boats.Notes" class="effect-17" id="autocompletenotes" />
+
+                    <label>Notes (or leave blank) </label>
+                    <span class="focus-border"></span>
+                </div>
             </div>
             <div>
                 <input id="submit" class="btn btn-primary" type="submit" />
@@ -191,7 +204,17 @@
                 }
             }
             <script>
+                                $(window).load(function () {
+                        $(".col-3 input").val("");
 
+                        $(".input-effect input").focusout(function () {
+                            if ($(this).val() != "") {
+                                $(this).addClass("has-content");
+                            } else {
+                                $(this).removeClass("has-content");
+                            }
+                        })
+                    });
 
                                         $("#newboatautocomplete").autocomplete({
             source: ['@Html.Raw(string.Join("', '", Returnclass()))']

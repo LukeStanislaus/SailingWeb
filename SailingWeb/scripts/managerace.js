@@ -182,29 +182,29 @@ function newlap(boatin, rowNumber) {
                 case 0:
                     rowNum = parseInt(rowNumber);
                     return [4 /*yield*/, $.ajax({
-                            url: "/Folder/GetNextLap",
-                            data: { boat: JSON.stringify(boatin) },
+                            url: "/Folder/NewLap",
+                            data: { boat: boatin, lapTime: new Date().toJSON() },
                             headers: {
                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                             },
-                            success: function (resulting) {
-                                lapno = JSON.parse(resulting);
-                                var lap = lapno;
+                            success: function (data) {
                                 $.ajax({
-                                    url: "/Folder/NoOfLaps",
+                                    url: "/Folder/GetNextLap",
+                                    data: { boat: JSON.stringify(boatin) },
                                     headers: {
                                         RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                     },
-                                    success: function (data) {
-                                        var ajax = JSON.parse(data) - 1;
-                                        console.log(boatin);
+                                    success: function (resulting) {
+                                        lapno = JSON.parse(resulting);
+                                        var lap = lapno;
                                         $.ajax({
-                                            url: "/Folder/NewLap",
-                                            data: { boat: boatin, lapTime: new Date().toJSON(), lapNumber: lap },
+                                            url: "/Folder/NoOfLaps",
                                             headers: {
                                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                             },
                                             success: function (data) {
+                                                var ajax = JSON.parse(data) - 1;
+                                                console.log(boatin);
                                                 var tbl = document.getElementById('table1'); // table reference
                                                 var i;
                                                 console.log(data);
@@ -213,7 +213,7 @@ function newlap(boatin, rowNumber) {
                                                     for (i = 0; i < tbl.rows.length; i++) {
                                                         if (i == 0) {
                                                             var x_1 = tbl.rows[i].insertCell(10 + muchFurther);
-                                                            x_1.innerHTML = "Lap ".concat(ajax + 2);
+                                                            x_1.innerHTML = "<b>Lap ".concat(ajax + 1).concat("</b>");
                                                         }
                                                         else {
                                                             var x_2 = tbl.rows[i].insertCell(10 + muchFurther);
@@ -223,7 +223,7 @@ function newlap(boatin, rowNumber) {
                                                     var x_3 = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                                     $.ajax({
                                                         url: "/Folder/GetLapTime",
-                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap + 1 },
+                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                                         headers: {
                                                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                                         },

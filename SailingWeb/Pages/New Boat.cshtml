@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8">
     <title>Enter race</title>
+    <link rel="stylesheet" href="~/css/enterrace.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -13,29 +14,69 @@
 <h2>Enter your data here.</h2>
 <form method="POST">
     <!--Enter their name.-->
-    <label for="autocomplete">Enter your name: </label>
-    <input asp-for="Boat.Name" id="autocomplete" />
+    <div class="col-3 input-effect" style="display:flex">
+        <input asp-for="Boat.Name" id="autocomplete" class="effect-17" type="text" placeholder="" />
+        <label>Enter your name </label>
+        <span class="focus-border"></span>
+    </div>
+    <div class="col-3 input-effect" style="display:flex">
+        <input asp-for="Boat.BoatName" onkeyup="updatepy()" onchange="updatepy()" id="boatName" class="effect-17" placeholder="" />
+        <label>Enter your boat class </label>
+        <span class="focus-border"></span>
+    </div>
+    <!--Enter their boat name.-->
+    <div class="col-3 input-effect" style="display:flex">
+        <input asp-for="Boat.BoatNumber" id="boatNumber" class="effect-17" placeholder="" />
+        <label>Enter your boat number</label>
+        <span class="focus-border"></span>
+    </div>
+    <div class="col-3 input-effect">
+        <input asp-for="Boat.Py" id="boatPy" class="effect-17" placeholder="" />
+        <label>Enter your boat py</label>
+        <span class="focus-border"></span>
+    </div>
+    <div style="display:block">
+        <button type="submit" class="btn btn-default">Enter boat to database.</button>
+    </div>
     <script type="text/javascript">
+        function updatepy() {
+            $.ajax({
+                url: "/Folder/GetClasses",
+                data: { name: document.getElementById("boatName").value },
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                }
+            }).done(function (resulting) {
+                    $("#boatPy").addClass("has-content");
 
-        $("#autocomplete").autocomplete({
+                document.getElementById("boatPy").value = resulting.py;
+
+            });
+
+        }
+        $("#boatName").autocomplete({
+                    source: [ '@Html.Raw(string.Join("', '", Sql.ReturnClassNames()))' ]
+        }
+        );
+                $("#autocomplete").autocomplete({
                     source: [ '@Html.Raw(string.Join("', '", Sql.GetNames()))' ]
         }
             );
 
-    </script>
-    <!--Enter their boat name.-->
-    <label for="boatName">Enter your Boat Name: </label>
-    <input asp-for="Boat.BoatName" id="boatName" />
-    <script type="text/javascript">
+        // JavaScript for label effects only
+        $(window).load(function () {
+            $(".col-3 input").val("");
 
-        $("#boatName").autocomplete({
-                    source: [ '@Html.Raw(string.Join("', '", Sql.ReturnClassNames()))' ]
-        }
-            );
-
+            $(".input-effect input").focusout(function () {
+                if ($(this).val() != "") {
+                    $(this).addClass("has-content");
+                } else {
+                    $(this).removeClass("has-content");
+                }
+            })
+        });
     </script>
     <!--Enter their boat number.-->
-    <label for="boatNumber">Enter your Boat Number: </label>
-    <input asp-for="Boat.BoatNumber" id="boatNumber" />
-    <button type="submit">Enter boat to database.</button>
+
 </form>

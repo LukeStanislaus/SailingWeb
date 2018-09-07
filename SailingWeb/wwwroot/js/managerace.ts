@@ -146,6 +146,14 @@ async function newlap(boatin: any, rowNumber: string) {
     var lapno;
     let rowNum = parseInt(rowNumber);
     await $.ajax({
+        url: "/Folder/NewLap",
+        data: { boat: boatin, lapTime: new Date().toJSON()},
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val() as any
+        },
+        success: function (data) {
+        $.ajax({
         url: "/Folder/GetNextLap",
         data: { boat: JSON.stringify(boatin) },
         headers: {
@@ -164,14 +172,7 @@ async function newlap(boatin: any, rowNumber: string) {
                 success: function (data) {
                     let ajax = JSON.parse(data) -1;
                     console.log(boatin);
-                    $.ajax({
-                        url: "/Folder/NewLap",
-                        data: { boat: boatin, lapTime: new Date().toJSON(), lapNumber: lap },
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()as any
-                        },
-                        success: function (data) {
+
                             var tbl = document.getElementById('table1') as HTMLTableElement // table reference
                             let i;
                             
@@ -181,7 +182,7 @@ async function newlap(boatin: any, rowNumber: string) {
                                 for (i = 0; i < tbl.rows.length; i++) {
                                     if (i == 0) {
                                         let x = tbl.rows[i].insertCell(10 + muchFurther);
-                                        x.innerHTML = "Lap ".concat(ajax + 2);
+                                        x.innerHTML = "<b>Lap ".concat(ajax + 1).concat("</b>");
 
                                     }
                                     else {
@@ -193,7 +194,7 @@ async function newlap(boatin: any, rowNumber: string) {
                                 let x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
                                 $.ajax({
                                     url: "/Folder/GetLapTime",
-                                    data: { boat: JSON.stringify(boatin), lapNumber: lap+1 },
+                                    data: { boat: JSON.stringify(boatin), lapNumber: lap },
                                     headers: {
                                         RequestVerificationToken:
                                             $('input:hidden[name="__RequestVerificationToken"]').val() as any

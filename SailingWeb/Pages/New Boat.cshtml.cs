@@ -16,12 +16,9 @@ namespace SailingWeb.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Boat.Py = Sql.ReturnClass().Find(x => x.BoatName == Boat.BoatName).Py;
             // Remove boat from db
             await Sql.SetNewFullBoat(Boat);
             // Create boat alerttext
-            Program.Globals.Alerttext = "You have added your boat, a " + Boat.BoatName + 
-                                        " with boat number " + Boat.BoatNumber + ".";
             //Return home.
             return RedirectToPage("/Index");
         }
