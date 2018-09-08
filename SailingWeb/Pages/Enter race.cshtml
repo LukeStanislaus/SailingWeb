@@ -139,7 +139,7 @@
                 @foreach (Calendar race in Program.Globals.Todaysevents)
                 {
                     <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">
-                        @race.Summary, @string.Format("{0}:{1}", race.DateTime.TimeOfDay.Hours, race.DateTime.TimeOfDay.Minutes == 00 ? 00 : race.DateTime.TimeOfDay.Minutes)
+                        @race.Summary, @string.Format("{0}:{1}", race.DateTime.TimeOfDay.Hours < 10? "0" + race.DateTime.TimeOfDay.Hours.ToString() : race.DateTime.TimeOfDay.Hours.ToString(), race.DateTime.TimeOfDay.Minutes == 0 ? "00" : race.DateTime.TimeOfDay.Minutes.ToString())
                     </option>
                 }
             </select>
@@ -151,11 +151,11 @@
             <div class="col-3 input-effect" style="display:flex">
                 <input asp-for="Boats.Name" style="padding-top:10px" class="effect-17 input-lg" id="autocomplete" value="" />
 
-                <label>Helm name </label>
+                <label style="font-size:large">Helm name </label>
                 <span class="focus-border"></span>
             </div>
             <div style="text-align:center"><a asp-page="/New Boat"><font size="3">Name not in list? Click here.</font></a></div>
-            <label style="color:#aaa"class="form-check-label" for="select">Boat class: </label>
+            <label style="color:#aaa; font-size:large;"class="form-check-label" for="select">Boat class: </label>
             <select id="select" class="form-control input-lg" asp-for="Boatandnumber"></select>
             <!--TODO Ajaxify.-->
 
@@ -176,13 +176,13 @@
                 <div class="col-3 input-effect" style="display:flex">
                     <input asp-for="Crew" class="effect-17 input-lg" id="autocomplete1" />
 
-                    <label>Crew name (or leave blank) </label>
+                    <label  style="font-size:large" >Crew name (or leave blank) </label>
                     <span class="focus-border"></span>
                 </div>
                 <div class="col-3 input-effect" style="display:flex">
                     <input asp-for="Boats.Notes" class="effect-17 input-lg" id="autocompletenotes" />
 
-                    <label style="color:#aaa">Notes (or leave blank) </label>
+                    <label style="font-size:large">Notes (or leave blank) </label>
                     <span class="focus-border"></span>
                 </div>
             </div>

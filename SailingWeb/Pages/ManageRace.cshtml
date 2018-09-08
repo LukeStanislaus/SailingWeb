@@ -62,13 +62,13 @@
         if (Program.Globals.Todayseventsmanage.Count != 0)
         {
             <form method="POST">
-                <select id="select" class="form-control" asp-for="RaceName">
+                <select id="select" class="form-control input-lg" asp-for="RaceName">
                     @foreach (Calendar race in Program.Globals.Todayseventsmanage)
                     {
-                        <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.TimeOfDay</option>
+                    <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.ToShortDateString() @race.DateTime.ToShortTimeString()</option>
                     }
                 </select>
-                <input type="submit" />
+                <input class="btn btn-default" type="submit" style="margin-top:10px;" />
             </form>
         }
         else
@@ -123,7 +123,7 @@
                             <td>@person.Boat</td>
                             <td>@person.BoatNumber</td>
                             <td>
-                                <button class="btn-default" data-item='@Html.Raw(Json.Serialize(person)).ToString()' data-int="@u">
+                                <button class="btn" data-item='@Html.Raw(Json.Serialize(person)).ToString()' data-int="@u">
                                     Lap
                                 </button>
 
