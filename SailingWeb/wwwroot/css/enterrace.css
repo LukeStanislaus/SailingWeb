@@ -555,7 +555,7 @@ input[type="text"] {
 
     .effect-17:focus ~ label, .has-content.effect-17 ~ label {
         top: -16px;
-        font-size: 12px;
+        font-size: 120px;
         color: #3399FF;
         transition: 0.3s;
     }

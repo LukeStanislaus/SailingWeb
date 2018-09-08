@@ -84,7 +84,7 @@ function finishrace() {
 */
 function removerace() {
     console.log("bootboxing");
-    let x = confirmcaller("Are you sure you want to delete this race? You will not be able to get it back!", removeraceajax);
+    let x = confirmcaller("Are you sure you want to stop managing this race?", removeraceajax);
 
 }
 function removeraceajax(result: boolean) {

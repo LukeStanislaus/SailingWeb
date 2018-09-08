@@ -26,7 +26,7 @@ namespace SailingWeb.Pages
         {
             if (RaceNameStatic == null && RaceName != null)
             {
-                RaceNameStatic = Program.Globals.Todaysevents.Where(x => x.Summary == RaceName.Split("abc123")[0] &&
+                RaceNameStatic = Program.Globals.Todayseventsmanage.Where(x => x.Summary == RaceName.Split("abc123")[0] &&
                     Convert.ToDateTime(RaceName.Split("abc123")[1]) == x.DateTime
                     ).First();
                 RaceName = null;
@@ -47,7 +47,7 @@ namespace SailingWeb.Pages
         {
             if (RaceNameStatic == null && RaceName != null)
             {
-                RaceNameStatic = Program.Globals.Todaysevents.Where(x => x.Summary == RaceName.Split("abc123")[0] &&
+                RaceNameStatic = Program.Globals.Todayseventsmanage.Where(x => x.Summary == RaceName.Split("abc123")[0] &&
                     Convert.ToDateTime(RaceName.Split("abc123")[1]) == x.DateTime
                     ).First();
                 RaceName = null;

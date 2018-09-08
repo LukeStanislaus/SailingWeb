@@ -79,7 +79,7 @@
     else if (Sql.GetStartTime(ManageRaceModel.RaceNameStatic) != new DateTime())
     {
         <div>
-            <button style="display:inline" onclick="refresh.reload();" class="btn btn-success">Refresh</button>
+            <button style="display:inline" onclick="location.reload(true)" class="btn-success">Refresh</button>
 
 
             <form method="get" style="display:inline" action="/FinishRace">
@@ -123,7 +123,7 @@
                             <td>@person.Boat</td>
                             <td>@person.BoatNumber</td>
                             <td>
-                                <button class="btn" data-item='@Html.Raw(Json.Serialize(person)).ToString()' data-int="@u">
+                                <button class="btn-default" data-item='@Html.Raw(Json.Serialize(person)).ToString()' data-int="@u">
                                     Lap
                                 </button>
 
@@ -173,7 +173,7 @@
     {<form id="button" method="get">
             <button style="visibility:collapse"></button>
         </form>
-        <button style="visibility:collapse; display:none;" id="startracebutton" class="btn btn-primary">Click to start race.</button>
+        <button style="visibility:collapse; display:none;" id="startracebutton" class="btn-primary">Click to start race.</button>
 
 
         @if (ManageRaceModel.RaceNameStatic != null)
@@ -201,7 +201,7 @@
                             <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].Boat</td>
                             <td>@Sql.GetRacers(ManageRaceModel.RaceNameStatic)[i].BoatNumber</td>
                             <td>
-                                <button class="btn" onclick="ajax4(@i, '@string.Concat(ManageRaceModel.RaceNameStatic.Summary,"abc123", ManageRaceModel.RaceNameStatic.DateTime)')" aria-label="Close">
+                                <button class="btn-danger" onclick="ajax4(@i, '@string.Concat(ManageRaceModel.RaceNameStatic.Summary,"abc123", ManageRaceModel.RaceNameStatic.DateTime)')" aria-label="Close">
                                     <span aria-hidden="true"><i class="fa fa-close"> Remove</i></span>
                                 </button>
                             </td>

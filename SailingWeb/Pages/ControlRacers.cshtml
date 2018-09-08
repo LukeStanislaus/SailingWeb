@@ -44,7 +44,7 @@
             <td></td>
             <td></td>
             <td>
-                <button type="button" onclick="removeall('@item.Key')">Remove person</button>
+                <button type="button" class="btn-danger" onclick="removeall('@item.Key')">Remove person</button>
             </td>
         </tr>
         foreach (var item1 in item.Value)
@@ -55,7 +55,7 @@
                 <td>@item1.Item2</td>
                 <td>@item1.Item3</td>
                 <td>
-                    <button type="button" onclick="remove('@item.Key', '@item1.Item1', '@item1.Item2', @item1.Item3)">Remove</button>
+                    <button type="button" class="btn-default"onclick="remove('@item.Key', '@item1.Item1', '@item1.Item2', @item1.Item3)">Remove</button>
                 </td>
             </tr>
         }

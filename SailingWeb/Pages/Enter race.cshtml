@@ -149,14 +149,14 @@
 
             <div></div>
             <div class="col-3 input-effect" style="display:flex">
-                <input asp-for="Boats.Name" class="effect-17" id="autocomplete" value="" />
+                <input asp-for="Boats.Name" style="padding-top:10px" class="effect-17 input-lg" id="autocomplete" value="" />
 
                 <label>Helm name </label>
                 <span class="focus-border"></span>
             </div>
-            <div><a asp-page="/New Boat"><font size="1">Name not in list? Click here.</font></a></div>
-            <label class="form-check-label" for="select">Boat class: </label>
-            <select id="select" class="form-control" asp-for="Boatandnumber"></select>
+            <div style="text-align:center"><a asp-page="/New Boat"><font size="3">Name not in list? Click here.</font></a></div>
+            <label style="color:#aaa"class="form-check-label" for="select">Boat class: </label>
+            <select id="select" class="form-control input-lg" asp-for="Boatandnumber"></select>
             <!--TODO Ajaxify.-->
 
 
@@ -174,20 +174,20 @@
 
             <div>
                 <div class="col-3 input-effect" style="display:flex">
-                    <input asp-for="Crew" class="effect-17" id="autocomplete1" />
+                    <input asp-for="Crew" class="effect-17 input-lg" id="autocomplete1" />
 
                     <label>Crew name (or leave blank) </label>
                     <span class="focus-border"></span>
                 </div>
                 <div class="col-3 input-effect" style="display:flex">
-                    <input asp-for="Boats.Notes" class="effect-17" id="autocompletenotes" />
+                    <input asp-for="Boats.Notes" class="effect-17 input-lg" id="autocompletenotes" />
 
-                    <label>Notes (or leave blank) </label>
+                    <label style="color:#aaa">Notes (or leave blank) </label>
                     <span class="focus-border"></span>
                 </div>
             </div>
             <div>
-                <button id="submit" onclick="errorhandling()" class="btn btn-primary">Enter</button>
+                <button id="submit" onclick="errorhandling()" class="btn-lg btn-primary">Enter</button>
             </div>
             @functions{
                 public string[] Returnclass()
