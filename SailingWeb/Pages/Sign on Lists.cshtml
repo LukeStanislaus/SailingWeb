@@ -48,7 +48,7 @@
 
 
     <form id="button" method="post">
-        @if (Sql.Todaysevent().Count == 0)
+        @if (Program.Globals.Todaysevents.Count == 0)
         {
             <p1>I'm afraid there is no race on today.</p1>
 
@@ -61,11 +61,9 @@
         <!-- <label for="table2">Race Lists: </label>-->
         <select asp-for="Race">
 
-            @foreach (var race1 in Sql.Todaysevent())
+            @foreach (var race1 in Program.Globals.Todaysevents)
             {
-
-                <option value="@Sql.Todaysevent().IndexOf(race1)">@race1.Summary</option>
-
+                <option value="@Html.Raw(Json.Serialize(race1))">@race1.Summary</option>
             }
         </select>
 
@@ -103,7 +101,7 @@
                         <td>@Sql.GetRacers(Model.RaceName)[i].Boat</td>
                         <td>@Sql.GetRacers(Model.RaceName)[i].BoatNumber</td>
                         <td>
-                                <button class="btn" onclick="ajax4(@i, '@string.Concat(Model.RaceName.Summary,"abc123",Model.RaceName.DateTime)')" aria-label="Close">
+                                <button onclick="ajax4(@i, '@string.Concat(Model.RaceName.Summary,"abc123",Model.RaceName.DateTime)')" aria-label="Close">
                                     <span aria-hidden="true"><i class="fa fa-close"> Remove</i></span>
                                 </button>
                         </td>

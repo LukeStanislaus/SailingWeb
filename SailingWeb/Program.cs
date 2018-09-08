@@ -21,10 +21,21 @@ namespace SailingWeb
 
         public static class Globals
         {
+            public static List<Calendar> Todayseventsmanage
+            {
+                get
+                {
+                    
+                    var y = Events.FindAll(x => DateTime.Compare(x.DateTime, DateTime.Now.AddDays(2)) <= 0 &&
+                        DateTime.Compare(x.DateTime, DateTime.Now.AddDays(-2)) >= 0);
+                    return y;
+                }
+                set { }
+            }
             public static List<Calendar> Todaysevents { get {
-                    var y = DateTime.Now.AddDays(1);
-                    return Events.FindAll(x => DateTime.Compare(x.DateTime, y) <= 0 &&
-                        DateTime.Compare(x.DateTime, DateTime.Now) >= 0);
+                    var y = Events.FindAll(x => DateTime.Compare(x.DateTime, DateTime.Now.AddDays(1)) <= 0 &&
+                        DateTime.Compare(x.DateTime, DateTime.Now.AddHours(-5)) >= 0);
+                    return y;
                 }
                 set { } }
             /// <summary>
@@ -158,12 +169,12 @@ namespace SailingWeb
 
         public static Calendar ReturnRaceDateTime(string calname)
         {
-            return Sql.Todaysevent().Find(x => x.Summary.Equals(calname));
+            return Program.Globals.Todaysevents.Find(x => x.Summary.Equals(calname));
         }
 
         public static string ReturnRaceString(string cal)
         {
-            var calendar = Sql.Todaysevent().Find(x => x.Summary.Equals(cal));
+            var calendar = Program.Globals.Todaysevents.Find(x => x.Summary.Equals(cal));
             var racenametemp = new StringBuilder();
             racenametemp.Append(calendar.Summary.Replace(" ", "").Replace("&", ""));
             racenametemp.Append(calendar.DateTime.ToString().Replace(" ", "").Replace("/", "").Replace(":", ""));

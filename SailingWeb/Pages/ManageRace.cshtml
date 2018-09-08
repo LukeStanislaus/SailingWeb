@@ -59,11 +59,11 @@
 
     @if (ManageRaceModel.RaceNameStatic == null)
     {
-        if (Sql.Todaysevent().Count != 0)
+        if (Program.Globals.Todayseventsmanage.Count != 0)
         {
             <form method="POST">
                 <select id="select" class="form-control" asp-for="RaceName">
-                    @foreach (Calendar race in Sql.Todaysevent())
+                    @foreach (Calendar race in Program.Globals.Todayseventsmanage)
                     {
                         <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">@race.Summary, @race.DateTime.TimeOfDay</option>
                     }
@@ -316,7 +316,7 @@
 
         }
         function editLap(username, lapNo, time) {
-            document.getElementById("dialog-form").title = "Edit time for ".concat(JSON.parse(username).name).concat(" on lap ").concat(lapNo.toString());
+            //document.getElementById("dialog-form").title = "Edit time on lap ".concat(lapNo.toString());
             let x = document.getElementById("password")
             //x.value = "hi";
             x.value = time.toString();
@@ -327,6 +327,7 @@
                 //$("#dialog-form").dialog();
 
                 $("#dialog-form").dialog({
+                    title: "Edit time on lap ".concat(lapNo.toString()),
                     autoOpen: false,
                     buttons: {
                         "Remove Lap": function () {
@@ -376,7 +377,7 @@
             });
         }
         function editstarttime() {
-            document.getElementById("dialog-form").title = "Edit start time";
+            //document.getElementById("dialog-form").title = "Edit start time";
             let x = document.getElementById("password")
             //x.value = "hi";,
             x.value = '@Sql.GetStartTime(ManageRaceModel.RaceNameStatic).ToString()';
@@ -387,25 +388,9 @@
                 //$("#dialog-form").dialog();
 
                 $("#dialog-form").dialog({
+                    title: "Edit start time",
                     autoOpen: false,
                     buttons: {
-                        "Remove Race": function () {
-                            $.ajax({
-                                url: "/Folder/RemoveTime",
-                                data: {
-                                    name: JSON.stringify(username), lapNumber: lapNo
-                                },
-                                headers: {
-                                    RequestVerificationToken:
-                                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                                },
-                                success: function (data) {
-                                    location.reload();
-                                    updateplacesinline();
-                                }
-
-                            });
-                        },
                         "Enter": function () {
                             let timeresponse = document.getElementById("password");
                             $.ajax({

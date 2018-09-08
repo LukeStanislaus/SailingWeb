@@ -11,12 +11,13 @@ namespace SailingWeb.Pages.Folder
     {
         public JsonResult OnGet(string name)
         {
+            /*
           var list = new List<string>();
             foreach (var x in Sql.GetBoats(name))
             {
                 list.Add(x.BoatName);
-            }
-            var json = new JsonResult(name != null ? Sql.GetBoats(name) : null);
+            }*/
+            var json = new JsonResult(name != null ? Sql.GetBoats(name).ToArray() : null);
             //return new JsonResult(list);
             return json;
             

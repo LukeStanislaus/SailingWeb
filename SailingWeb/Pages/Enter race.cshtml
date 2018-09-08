@@ -31,10 +31,12 @@
 "></script>
 </head>
 <body>
-    @if (ViewData["SetAndEntered"] != null)
-    {
-        SailingWeb.Data.BoatsTidy obj = (SailingWeb.Data.BoatsTidy)ViewData["SetAndEntered"];
-        <script>
+    <form method="POST" id="submit1">
+
+        @if (ViewData["SetAndEntered"] != null)
+        {
+            SailingWeb.Data.BoatsTidy obj = (SailingWeb.Data.BoatsTidy)ViewData["SetAndEntered"];
+            <script>
 
             bootbox.prompt({
                 title: "Your boat have been added to our records, would you also " +
@@ -58,21 +60,21 @@
                         }
                     });
                         }
-        </script>
-    }
-    else if (ViewData["SetBoat"] != null)
-    {
-        if ((bool)ViewData["Alreadyin"])
-        {
-
-
-            <script>
-                                                                                                                                                    bootbox.alert("You have been entered into the race")
             </script>
         }
-        else
+        else if (ViewData["SetBoat"] != null)
         {
-            <script>
+            if ((bool)ViewData["Alreadyin"])
+            {
+
+
+                <script>
+                                                                                                                                                                                                        bootbox.alert("You have been entered into the race")
+                </script>
+            }
+            else
+            {
+                <script>
             bootbox.confirm("You have already been added to the race. Would you like to remove yourself?",
                 function (response) {
             if (response) {
@@ -92,20 +94,20 @@
                     });
                     }
                     });
-            </script>
+                </script>
+            }
         }
-    }
-    else if (ViewData["SetCrew"] != null)
-    {
-        if ((bool)ViewData["Alreadyin"])
+        else if (ViewData["SetCrew"] != null)
         {
-            <script>
-                bootbox.alert("You have been entered into the race with your crew.")
-            </script>
-        }
-        else
-        {
-            <script>
+            if ((bool)ViewData["Alreadyin"])
+            {
+                <script>
+                    bootbox.alert("You have been entered into the race with your crew.")
+                </script>
+            }
+            else
+            {
+                <script>
             bootbox.confirm("You have already been added to the race. Would you like to remove yourself?",
                 function (response) {
                 if (response) {
@@ -123,10 +125,9 @@
                     });
                 }
             }
-            </script>
+                </script>
+            }
         }
-    }
-    <form method="POST">
 
         @if (!Program.Globals.Todaysevents.Any())
         {
@@ -186,7 +187,7 @@
                 </div>
             </div>
             <div>
-                <input id="submit" class="btn btn-primary" type="submit" />
+                <button id="submit" onclick="errorhandling()" class="btn btn-primary">Enter</button>
             </div>
             @functions{
                 public string[] Returnclass()
@@ -204,6 +205,7 @@
                 }
             }
             <script>
+
                                 $(window).load(function () {
                         $(".col-3 input").val("");
 
@@ -305,23 +307,24 @@
                         headers: {
                             RequestVerificationToken:
                                 $('input:hidden[name="__RequestVerificationToken"]').val()
-                        }
-                    }).done(function (resulting) {
-                        document.getElementById("select").options.length = 0
-                        resulting.forEach(function (arrayElem) {
-                            var option = document.createElement("option");
-                            var str = arrayElem.boatName;
-                            var str1 = str.concat(", ")
-                            option.text = str1.concat(arrayElem.boatNumber);
-                            option.value = str1.concat(arrayElem.boatNumber);
-                            document.getElementById("select").add(option);
-                        })
+                        },
+                        success: function (resulting) {
+                            document.getElementById("select").options.length = 0
+                            resulting.forEach(function (arrayElem) {
+                                var option = document.createElement("option");
+                                var str = arrayElem.boatName;
+                                var str1 = str.concat(", ")
+                                option.text = str1.concat(arrayElem.boatNumber);
+                                option.value = str1.concat(arrayElem.boatNumber);
+                                document.getElementById("select").add(option);
+                            })
 
-                        if (resulting.length != 0) {
-                            var option = document.createElement("option");
-                            option.text = "New boat";
-                            option.value = "test";
-                            document.getElementById("select").add(option);
+                            if (resulting.length != 0) {
+                                var option = document.createElement("option");
+                                option.text = "New boat";
+                                option.value = "test";
+                                document.getElementById("select").add(option);
+                            }
                         }
                     });
                 }
@@ -352,11 +355,22 @@
                 document.getElementById("newboatautocomplete").onkeyup = function () {
                     ajax2();
                 }
+                function errorhandling() {
+                    if (document.getElementById("autocomplete").value == "" ||
+                        document.getElementById("select").options.length == 0
+                    ) {
+                        bootbox.alert("You must enter all data.")
+                    }
+                    else {
+                        document.getElementById("submit1").submit();
+                    }
+                }
             </script>
 
 
 
         }
+
 
     </form>
     <!--<div><a asp-page="/New Boat">Bought a new boat/New to the club?</a></div>-->

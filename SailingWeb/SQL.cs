@@ -716,7 +716,8 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
-                List<Calendar> value = connection.Query<Calendar>("call todaysevent").ToList();
+                List<Calendar> value = connection.Query<Calendar>("select summary, description, dateTime from calendar" +
+                    "").ToList();
                 return value;
             }
 

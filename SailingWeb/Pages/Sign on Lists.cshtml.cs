@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using SailingWeb.Data;
 
 namespace SailingWeb.Pages
@@ -31,7 +32,7 @@ namespace SailingWeb.Pages
             }*/
             if (Race != null)
             {
-                   this.RaceName  = Program.Globals.Todaysevents[int.Parse(Race)];
+                   this.RaceName  = JsonConvert.DeserializeObject<Calendar>(Race);
             }
             //var list = BoatsTidy.Tidyup(Sql.GetRacers());
             return Page();
