@@ -213,6 +213,7 @@
                     <th>Crew</th>
                     <th>Boat Name</th>
                     <th>Boat Number</th>
+                    <th>Py</th>
                 </tr>
             </table>
             @functions{
@@ -330,12 +331,14 @@
                         for (var i = 1; i < resulting.length + 1; i++) {
                             tbl.insertRow(i)
                             var x = tbl.rows[i].insertCell(0);
-                            x.innerHTML = resulting[i-1].name;
-                            var y = tbl.rows[i].insertCell(1);
+                            x.innerHTML = resulting[i - 1].name;
+                            var x = tbl.rows[i].insertCell(1);
+                            x.innerHTML = resulting[i - 1].crew;
+                            var y = tbl.rows[i].insertCell(2);
                             y.innerHTML = resulting[i-1].boat;
-                            var z = tbl.rows[i].insertCell(2);
+                            var z = tbl.rows[i].insertCell(3);
                             z.innerHTML = resulting[i-1].boatNumber;
-                            var a = tbl.rows[i].insertCell(3);
+                            var a = tbl.rows[i].insertCell(4);
                             a.innerHTML = resulting[i-1].py;
                         }
 
