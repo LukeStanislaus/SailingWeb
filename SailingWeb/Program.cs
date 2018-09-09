@@ -13,6 +13,7 @@ using static Google.Apis.Calendar.v3.EventsResource.ListRequest;
 using Humanizer;
 using Humanizer.DateTimeHumanizeStrategy;
 using Humanizer.Configuration;
+using Google.Apis;
 
 namespace SailingWeb
 {

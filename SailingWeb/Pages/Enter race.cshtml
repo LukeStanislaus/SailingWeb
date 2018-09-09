@@ -7,6 +7,27 @@
 <html lang="en">
 
 <head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            width: 100%;
+            padding: 5px;
+        }
+        /* Style buttons */
+        .btn {
+            background-color: DodgerBlue; /* Blue background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 12px 16px; /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+        }
+
+            /* Darker background on mouse-over */
+            .btn:hover {
+                background-color: RoyalBlue;
+            }
+    </style>
     <link rel="stylesheet" href="~/css/enterrace.css" />
     <style>
         #submit {
@@ -30,7 +51,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js
 "></script>
 </head>
-<body>
+<body onload="drawtable();">
     <form method="POST" id="submit1">
 
         @if (ViewData["SetAndEntered"] != null)
@@ -67,10 +88,6 @@
             if ((bool)ViewData["Alreadyin"])
             {
 
-
-                <script>
-                                                                                                                                                                                                        bootbox.alert("You have been entered into the race")
-                </script>
             }
             else
             {
@@ -86,14 +103,14 @@
                             RequestVerificationToken:
                                 $('input:hidden[name="__RequestVerificationToken"]').val()
                         },
-                                    success:
-                                        function() {
+                    success:
+                    function() {
                                             bootbox.alert("You have been entered into the race");
 
                                     }
                     });
                     }
-                    });
+                    })
                 </script>
             }
         }
@@ -102,7 +119,7 @@
             if ((bool)ViewData["Alreadyin"])
             {
                 <script>
-                    bootbox.alert("You have been entered into the race with your crew.")
+                                                                                bootbox.alert("You have been entered into the race with your crew.")
                 </script>
             }
             else
@@ -135,11 +152,11 @@
         }
         else
         {
-            <select asp-for="@Model.Race">
+            <select id="select1" onchange="drawtable();" asp-for="@Model.Race">
                 @foreach (Calendar race in Program.Globals.Todaysevents)
                 {
                     <option value="@string.Concat(race.Summary, "abc123", race.DateTime)">
-                        @race.Summary, @string.Format("{0}:{1}", race.DateTime.TimeOfDay.Hours < 10? "0" + race.DateTime.TimeOfDay.Hours.ToString() : race.DateTime.TimeOfDay.Hours.ToString(), race.DateTime.TimeOfDay.Minutes == 0 ? "00" : race.DateTime.TimeOfDay.Minutes.ToString())
+                        @race.Summary, @string.Format("{0}:{1}", race.DateTime.TimeOfDay.Hours < 10 ? "0" + race.DateTime.TimeOfDay.Hours.ToString() : race.DateTime.TimeOfDay.Hours.ToString(), race.DateTime.TimeOfDay.Minutes == 0 ? "00" : race.DateTime.TimeOfDay.Minutes.ToString())
                     </option>
                 }
             </select>
@@ -155,7 +172,7 @@
                 <span class="focus-border"></span>
             </div>
             <div style="text-align:center"><a asp-page="/New Boat"><font size="3">Name not in list? Click here.</font></a></div>
-            <label style="color:#aaa; font-size:large;"class="form-check-label" for="select">Boat class: </label>
+            <label style="color:#aaa; font-size:large;" class="form-check-label" for="select">Boat class: </label>
             <select id="select" class="form-control input-lg" asp-for="Boatandnumber"></select>
             <!--TODO Ajaxify.-->
 
@@ -176,7 +193,7 @@
                 <div class="col-3 input-effect" style="display:flex">
                     <input asp-for="Crew" class="effect-17 input-lg" id="autocomplete1" />
 
-                    <label  style="font-size:large" >Crew name (or leave blank) </label>
+                    <label style="font-size:large">Crew name (or leave blank) </label>
                     <span class="focus-border"></span>
                 </div>
                 <div class="col-3 input-effect" style="display:flex">
@@ -190,6 +207,14 @@
             <div>
                 <button type="button" id="submiter" onclick="errorhandling()" class="btn-lg btn-primary">Enter</button>
             </div>
+            <table id="table1">
+                <tr>
+                    <th>Helm</th>
+                    <th>Crew</th>
+                    <th>Boat Name</th>
+                    <th>Boat Number</th>
+                </tr>
+            </table>
             @functions{
                 public string[] Returnclass()
                 {
@@ -287,6 +312,36 @@
             </script>
 
             <script>
+                function drawtable() {
+                    console.log("log");
+                    $.ajax({
+                        url: "/Folder/GetRacers",
+                        data: { request: document.getElementById("select1").value },
+                        headers: {
+                            RequestVerificationToken:
+                                $('input:hidden[name="__RequestVerificationToken"]').val()
+                        }
+                    }).done(function (resulting) {
+
+                        tbl = document.getElementById("table1");
+                        for (var i = 1; i < tbl.rows.length; i++) {
+                            tbl.deleteRow(i);
+                        }
+                        for (var i = 1; i < resulting.length + 1; i++) {
+                            tbl.insertRow(i)
+                            var x = tbl.rows[i].insertCell(0);
+                            x.innerHTML = resulting[i-1].name;
+                            var y = tbl.rows[i].insertCell(1);
+                            y.innerHTML = resulting[i-1].boat;
+                            var z = tbl.rows[i].insertCell(2);
+                            z.innerHTML = resulting[i-1].boatNumber;
+                            var a = tbl.rows[i].insertCell(3);
+                            a.innerHTML = resulting[i-1].py;
+                        }
+
+
+                    })
+                }
                 function ajax2() {
                     $.ajax({
                         url: "/Folder/GetClasses",
