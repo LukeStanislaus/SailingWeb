@@ -203,24 +203,24 @@ function newlap(boatin, rowNumber) {
                                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                             },
                                             success: function (data) {
-                                                var ajax = JSON.parse(data) - 1;
+                                                var ajax = JSON.parse(data);
                                                 console.log(boatin);
                                                 var tbl = document.getElementById('table1'); // table reference
                                                 var i;
                                                 console.log(data);
                                                 var muchFurther = ajax - lap;
-                                                if (muchFurther == (-1)) {
+                                                if (muchFurther == (0)) {
                                                     for (i = 0; i < tbl.rows.length; i++) {
                                                         if (i == 0) {
-                                                            var x_1 = tbl.rows[i].insertCell(10 + muchFurther);
-                                                            x_1.innerHTML = "<b>Lap ".concat(ajax + 1).concat("</b>");
+                                                            var x_1 = tbl.rows[i].insertCell(9);
+                                                            x_1.innerHTML = "<b>Lap ".concat((ajax).toString()).concat("</b>");
                                                         }
                                                         else {
-                                                            var x_2 = tbl.rows[i].insertCell(10 + muchFurther);
+                                                            var x_2 = tbl.rows[i].insertCell(9);
                                                         }
                                                     }
-                                                    tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                                    var x_3 = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                                    tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                                    var x_3 = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                                     $.ajax({
                                                         url: "/Folder/GetLapTime",
                                                         data: { boat: JSON.stringify(boatin), lapNumber: lap },
@@ -238,7 +238,9 @@ function newlap(boatin, rowNumber) {
                                                     var x_4 = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                                     $.ajax({
                                                         url: "/Folder/GetLapTime",
-                                                        data: { boat: JSON.stringify(boatin), lapNumber: lap + 1 },
+                                                        data: {
+                                                            boat: JSON.stringify(boatin), lapNumber: lap
+                                                        },
                                                         headers: {
                                                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                                                         },

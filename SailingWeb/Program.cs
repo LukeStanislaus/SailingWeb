@@ -14,6 +14,7 @@ using Humanizer;
 using Humanizer.DateTimeHumanizeStrategy;
 using Humanizer.Configuration;
 using Google.Apis;
+using System.Linq;
 
 namespace SailingWeb
 {
@@ -22,6 +23,16 @@ namespace SailingWeb
 
         public static class Globals
         {
+            public static List<Calendar> Todayseventspast
+            {
+                get
+                {
+
+                    var y = Events.FindAll(x => DateTime.Compare(x.DateTime, DateTime.Now) < 0);
+                    return y.OrderByDescending(x => x.DateTime).ToList();
+                }
+                set { }
+            }
             public static List<Calendar> Todayseventsmanage
             {
                 get

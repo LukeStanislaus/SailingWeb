@@ -4,6 +4,7 @@
     <Platforms>AnyCPU;x86</Platforms>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <UserSecretsId>d21d0b99-29da-4ad0-8c6a-32b3b2a042f6</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="wwwroot\js\ServiceWorkers\**" />

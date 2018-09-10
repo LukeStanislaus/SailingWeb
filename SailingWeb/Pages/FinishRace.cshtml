@@ -16,73 +16,111 @@
             overflow-y: visible;
         }
     </style>
-    <meta http-equiv="refresh" content="5">
+
 </head>
 <body>
-    <h2>FinishRace</h2>
-    <div id="table-wrapper">
-        <table id="table1">
-            <tr>
-                <th>Helm</th>
-                <th>Crew</th>
-                <th>Boat Name</th>
-                <th>Boat Number</th>
+    @if (ViewData["race"] != null || Model.RaceCookie != null)
+    {
+        <script>
+            window.onload = function () {
+                setTimeout(function () {
+                    document.getElementById("submitter").submit();
+                }, 5000)
+            }
+        </script>
+    }
+    @try
+    {
+        var Race = new Calendar();
+        @if ((ViewData["race"] as Calendar).Summary != null)
+        {
+            Race = ViewData["race"] as Calendar;
+        }
 
-                <th>Corrected Time</th>
-                <th>Place</th>
-                @for (int i = (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic)); i > (0); i--)
+        <form id="submitter" method="post">
+            <input value="@Json.Serialize(ViewData["race"])" style="visibility:collapse" asp-for="RaceCookie" type="text" />
+        </form>
+        <form>
+            <input asp-page-handler="RemoveRace" type="submit" value="View Different Race" />
+        </form>
+        <h2>FinishRace</h2>
+        <div id="table-wrapper">
+            <table id="table1">
+                <tr>
+                    <th>Helm</th>
+                    <th>Crew</th>
+                    <th>Boat Name</th>
+                    <th>Boat Number</th>
+
+                    <th>Corrected Time</th>
+                    <th>Place</th>
+                    @for (int i = (Sql.NoOfLaps(Race)); i > (0); i--)
+                    {
+                        <th>@String.Concat("Lap ", i)</th>
+                    }
+                </tr>
+                @if (1 == 1)
                 {
-                    <th>@String.Concat("Lap ", i)</th>
-                }
-            </tr>
-            @if (1 == 1)
-            {
-                var u = 0;
-                @foreach (var person in Sql.GetRacers(ManageRaceModel.RaceNameStatic))
-                {
-                    <tr>
-                        <td id="@u" data-internalid="@u" data-string="@Html.Raw(Json.Serialize(person)).ToString()">@person.Name</td>
-                        <td>@person.Crew</td>
-                        <td>@person.Boat</td>
-                        <td>@person.BoatNumber</td>
+                    var u = 0;
+                    @foreach (var person in Sql.GetRacers(Race))
+                    {
+                        <tr>
+                            <td id="@u" data-internalid="@u" data-string="@Html.Raw(Json.Serialize(person)).ToString()">@person.Name</td>
+                            <td>@person.Crew</td>
+                            <td>@person.Boat</td>
+                            <td>@person.BoatNumber</td>
 
-                        <td>@Sql.CorrectedTime(ManageRaceModel.RaceNameStatic, person).ToString(@"hh\:mm\:ss")</td>
+                            <td>@Sql.CorrectedTime(Race, person).ToString(@"hh\:mm\:ss")</td>
 
 
-                        <td>
-                            @(Sql.PlaceOf(ManageRaceModel.RaceNameStatic, person))
-                        </td>
+                            <td>
+                                @(Sql.PlaceOf(Race, person))
+                            </td>
 
 
 
-                        @for (int i = Sql.NoOfLaps(ManageRaceModel.RaceNameStatic); i > (0); i--)
-                        {
-                            try
+                            @for (int i = Sql.NoOfLaps(Race); i > (0); i--)
                             {
-                                if (Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                                try
                                 {
-                                    <td onclick="editLap(@Html.Raw(Json.Serialize(person)).ToString(), @i, '@Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
-                                        @Sql.GetLaps(person, ManageRaceModel.RaceNameStatic).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
+                                    if (Sql.GetLaps(person, Race).Where(x => x.LapNumber.Equals(i)).First().LapNumber == i)
+                                    {
+                                        <td onclick="editLap(@Html.Raw(Json.Serialize(person)).ToString(), @i, '@Sql.GetLaps(person, Race).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime');">
+                                            @Sql.GetLaps(person, Race).Where(x => x.LapNumber.Equals(i)).FirstOrDefault().LapTime.ToString(@"hh\:mm\:ss")
 
-                                    </td>
+                                        </td>
+                                    }
+                                }
+                                catch
+                                {
+                                    <td></td>
+
                                 }
                             }
-                            catch
-                            {
-                                <td></td>
-
-                            }
-                        }
 
 
-                    </tr>
-                    u++;
+                        </tr>
+                        u++;
+                    }
+
                 }
+            </table>
+        </div>
 
-            }
-        </table>
-    </div>
+    }
+    catch (NullReferenceException)
+    {
 
+        <form method="POST">
+            <select id="select" class="form-control input-lg" asp-for="Race">
+                @foreach (Calendar race in Program.Globals.Todayseventspast)
+                {
+                    <option value="@Html.Raw(Json.Serialize(race))">@race.Summary, @race.DateTime.ToShortDateString() @race.DateTime.ToShortTimeString()</option>
+                }
+            </select>
+            <input class="btn btn-default" type="submit" style="margin-top:10px;" />
+        </form>
+    }
 
 </body>
 </html>

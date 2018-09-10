@@ -10,7 +10,7 @@ var browserify = require('browserify')
 var fs = require("fs");
 
 var paths = {
-    scripts: ['scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.map', 'scripts/managerace.js']
+    scripts: ['scripts/managerace.js', 'scripts/managerace.ts', 'scripts/managerace.js.map']
 };
 
 gulp.task('clean', function () {
@@ -18,7 +18,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('default', function () {
-    gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js'));
+    gulp.src(paths.scripts).pipe(gulp.dest('./wwwroot/js'));
     browserify('wwwroot/js/managerace.js', {
     })
         .bundle()

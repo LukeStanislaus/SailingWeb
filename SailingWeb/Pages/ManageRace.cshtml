@@ -82,17 +82,7 @@
             <button style="display:inline" onclick="location.reload(true)" class="btn-success">Refresh</button>
 
 
-            <form method="get" style="display:inline" action="/FinishRace">
-                @if (Sql.NoOfLaps(ManageRaceModel.RaceNameStatic) != 0)
-                {
-                    <button style="display:inline" type="submit" class="btn btn-link">Finish race</button>
-                }
-                else
-                {
-                    <button style="display:none" id="finishbutton" type="submit" class="btn btn-link">Finish race</button>
 
-                }
-            </form>
         </div>
         <p id="demo" onclick="editstarttime()">Elapsed Time: </p>
         <div id="table-wrapper">
@@ -295,7 +285,8 @@
                 let h = $.ajax({
                     url: "/Folder/ReturnPlace",
                     data: {
-                        boat: username
+                        
+        boat: username
                     },
                     headers: {
                         RequestVerificationToken:

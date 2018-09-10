@@ -59,28 +59,29 @@
             SailingWeb.Data.BoatsTidy obj = (SailingWeb.Data.BoatsTidy)ViewData["SetAndEntered"];
             <script>
 
-            bootbox.prompt({
-                title: "Your boat have been added to our records, would you also " +
-                    "  like to be entered into the race? If you have a crew, could you" +
-                " enter their name here, or leave blank.",
-                inputType: 'text',
-                callback: function (result) {
-                    $.ajax({
-                        url: "/Folder/NewRacer",
-                        data: {
-                            boat: '@Html.Raw(Json.Serialize(obj))', cal: '@Html.Raw(Json.Serialize(ViewData["Calendar"]))', crew: result
-                        },
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()
-                        },
-                        success: {
-                            function() {
-                                bootbox.alert("You have been entered into the race");
+                bootbox.prompt({
+                    title: "Your boat have been added to our records, would you also " +
+                        "  like to be entered into the race? If you have a crew, could you" +
+                        " enter their name here, or leave blank.",
+                    inputType: 'text',
+                    callback: function (result) {
+                        $.ajax({
+                            url: "/Folder/NewRacer",
+                            data: {
+                                boat: '@Html.Raw(Json.Serialize(obj))', cal: '@Html.Raw(Json.Serialize(ViewData["Calendar"]))', crew: result
+                            },
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: {
+                                function() {
+                                    bootbox.alert("You have been entered into the race");
+                                }
                             }
-                        }
-                    });
-                        }
+                        });
+                    }
+                });
             </script>
         }
         else if (ViewData["SetBoat"] != null)
@@ -105,7 +106,7 @@
                         },
                     success:
                     function() {
-                                            bootbox.alert("You have been entered into the race");
+                                            bootbox.alert("You have been remove from the race");
 
                                     }
                     });

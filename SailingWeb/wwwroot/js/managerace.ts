@@ -170,7 +170,7 @@ async function newlap(boatin: any, rowNumber: string) {
                         $('input:hidden[name="__RequestVerificationToken"]').val()as any
                 },
                 success: function (data) {
-                    let ajax = JSON.parse(data) -1;
+                    let ajax = JSON.parse(data);
                     console.log(boatin);
 
                             var tbl = document.getElementById('table1') as HTMLTableElement // table reference
@@ -178,20 +178,20 @@ async function newlap(boatin: any, rowNumber: string) {
                             
                             console.log(data);
                             let muchFurther = ajax - lap;
-                            if (muchFurther == (-1)) {
+                            if (muchFurther == (0)) {
                                 for (i = 0; i < tbl.rows.length; i++) {
                                     if (i == 0) {
-                                        let x = tbl.rows[i].insertCell(10 + muchFurther);
-                                        x.innerHTML = "<b>Lap ".concat(ajax + 1).concat("</b>");
+                                        let x = tbl.rows[i].insertCell(9);
+                                        x.innerHTML = "<b>Lap ".concat((ajax).toString()).concat("</b>");
 
                                     }
                                     else {
-                                        let x = tbl.rows[i].insertCell(10 + muchFurther);
+                                        let x = tbl.rows[i].insertCell(9);
 
                                     }
                                 }
-                                tbl.rows[rowNum + 1].deleteCell(10 + muchFurther);
-                                let x = tbl.rows[rowNum + 1].insertCell(10 + muchFurther);
+                                tbl.rows[rowNum + 1].deleteCell(9 + muchFurther);
+                                let x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                 $.ajax({
                                     url: "/Folder/GetLapTime",
                                     data: { boat: JSON.stringify(boatin), lapNumber: lap },
@@ -211,7 +211,9 @@ async function newlap(boatin: any, rowNumber: string) {
                                 let x = tbl.rows[rowNum + 1].insertCell(9 + muchFurther);
                                 $.ajax({
                                     url: "/Folder/GetLapTime",
-                                    data: { boat: JSON.stringify(boatin), lapNumber: lap+1 },
+                                    data: {
+                                        boat: JSON.stringify(boatin), lapNumber: lap
+                                    },
                                     headers: {
                                         RequestVerificationToken:
                                             $('input:hidden[name="__RequestVerificationToken"]').val()as any
