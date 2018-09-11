@@ -120,7 +120,7 @@
             if ((bool)ViewData["Alreadyin"])
             {
                 <script>
-                                                                                bootbox.alert("You have been entered into the race with your crew.")
+                    bootbox.alert("You have been entered into the race with your crew.")
                 </script>
             }
             else
@@ -336,11 +336,11 @@
                             var x = tbl.rows[i].insertCell(1);
                             x.innerHTML = resulting[i - 1].crew;
                             var y = tbl.rows[i].insertCell(2);
-                            y.innerHTML = resulting[i-1].boat;
+                            y.innerHTML = resulting[i - 1].boat;
                             var z = tbl.rows[i].insertCell(3);
-                            z.innerHTML = resulting[i-1].boatNumber;
+                            z.innerHTML = resulting[i - 1].boatNumber;
                             var a = tbl.rows[i].insertCell(4);
-                            a.innerHTML = resulting[i-1].py;
+                            a.innerHTML = resulting[i - 1].py;
                         }
 
 
@@ -434,7 +434,7 @@
 
     </form>
     <!--<div><a asp-page="/New Boat">Bought a new boat/New to the club?</a></div>-->
-    <iframe align="top" src="https://widgets.windalert.com/widgets/web/modelTable?spot_id=67554&units_wind=mph&units_temp=F&type=daily&width=700&height=420&color=870100&name=Alert&app=windalert" width="700" height="420" frameborder="0" scrolling="no" allowtransparency="no"></iframe>
+    <script type="text/javascript" src="https://www.windfinder.com/widget/forecast/js/cotswold-water-park_south-cerney?unit_wave=m&unit_rain=mm&unit_temperature=c&unit_wind=kts&days=1&show_day=0&show_waves=0"></script><noscript><a rel='nofollow' href='https://www.windfinder.com/forecast/cotswold-water-park_south-cerney?utm_source=forecast&utm_medium=web&utm_campaign=homepageweather&utm_content=noscript-forecast'>Wind forecast for Cotswold Water Park/S Cerney</a> provided by <a rel='nofollow' href='https://www.windfinder.com?utm_source=forecast&utm_medium=web&utm_campaign=homepageweather&utm_content=noscript-logo'>windfinder.com</a></noscript>
 </body>
 
 </html>
