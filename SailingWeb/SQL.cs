@@ -367,7 +367,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Runs query.
-                List<BoatClass> list = connection.Query<BoatClass>("call returnclass").ToList();
+                List<BoatClass> list = connection.Query<BoatClass>("select * from boatdata").ToList();
                 List<string> stringlist = new List<string>();
                 foreach (BoatClass boat in list)
                 {
@@ -386,7 +386,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Runs query.
-                List<BoatClass> list = connection.Query<BoatClass>("call returnclass").ToList();
+                List<BoatClass> list = connection.Query<BoatClass>("select * from boatdata").ToList();
                 return list;
             }
         }
@@ -402,7 +402,7 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
                 // Returns a list of all the distinct names in the fulllist db.
-                IEnumerable<string> listOfNames = connection.Query<string>("call returnnames").Distinct();
+                IEnumerable<string> listOfNames = connection.Query<string>("select name from fulllist").Distinct();
                 listOfNames = listOfNames.Where(x => x != Program.Globals.LastName).ToArray();
 
                 return listOfNames;
@@ -694,12 +694,13 @@ namespace SailingWeb
             using (IDbConnection connection = new MySql.Data.MySqlClient.MySqlConnection(Helper.CnnVal()))
             {
 
-                connection.Query("call newcalendar(@summary, @description, @date)", new
+                connection.Query("insert into calendar values (@summary, @description, @date, @sailingClub, @startTime)", new
                 {
                     summary = cal.Summary,
                     description = cal.Description,
-                    date = cal.DateTime
-
+                    date = cal.DateTime,
+                    sailingClub = "Whitefriars Sailing Club",
+                    startTime = new DateTime()
                 });
             }
 

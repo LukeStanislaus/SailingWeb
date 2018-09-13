@@ -42,7 +42,7 @@ var $ = require("jquery");
 //import "bootstrap";
 //import * as bootbox from "bootbox";
 //import "moment";
-//import "countup-timer-js";
+require("countup-timer-js");
 //import "jquery.countdown";
 setTimeout(function () {
     console.log("check check");
@@ -265,14 +265,23 @@ function newlap(boatin, rowNumber) {
     });
 }
 function myTimer(resulting) {
+    Date.prototype.addHours = function (h) {
+        this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+        return this;
+    };
     console.log("Repeating function invoked.");
     var d = new Date();
+    // if (!!window.chrome && !!window.chrome.webstore) {
+    if (true) {
+        d = d.addHours(-1);
+    }
     var x = d.valueOf();
     var f = x - resulting;
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(f).toLocaleTimeString();
     new CountUpTimer(date, function (times, parameters) {
+        console.log(times);
         if (parameters.isNextDay) {
             document.getElementById("demo").innerHTML = "Elapsed Time: 1:".concat(times);
         }

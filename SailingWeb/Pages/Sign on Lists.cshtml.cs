@@ -22,6 +22,7 @@ namespace SailingWeb.Pages
         {
             Program.Globals.Event1 = Program.GetCalendar().Result;
             Message = "Your contact page.";
+           
         }
         public async Task<IActionResult> OnPostAsync()
         {/*
