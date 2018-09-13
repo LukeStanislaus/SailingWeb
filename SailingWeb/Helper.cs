@@ -17,7 +17,7 @@ namespace SailingWeb
         public static string CnnVal()
         {
 
-            return @"Server=whitefriarssc.mysql.database.azure.com;Database=sailing;Uid=luke@whitefriarssc;Pwd=Topgear23;Encrypt=false;";
+            return @"Server=whitefriarssc.mysql.database.azure.com;Database=sailing;Uid=luke@whitefriarssc;Pwd=abc123;Encrypt=false;";
 
         }
 
